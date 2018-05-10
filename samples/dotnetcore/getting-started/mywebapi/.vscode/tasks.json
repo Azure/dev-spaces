@@ -1,12 +1,13 @@
 {
     "tasks": [
         {
-            "label": "build (VSCE)",
-            "command": "vsce",
+            "label": "build (AZDS)",
+            "command": "azds",
             "args": [
                 "up",
                 "--iterate",
-                "--no-command"
+                "--no-command",
+                "--no-telemetry"
             ],
             "options": {
                 "cwd": "${workspaceRoot}"

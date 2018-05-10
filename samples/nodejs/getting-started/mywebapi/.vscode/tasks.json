@@ -1,16 +1,17 @@
 {
     "tasks": [
         {
-            "label": "vsce: ready",
-            "command": "vsce",
+            "label": "azds: ready",
+            "command": "azds",
             "args": [
                 "up",
                 "--iterate",
                 "--port",
-                "54159:9229",
+                "56624:9229",
                 "--no-command",
                 "--config",
                 "develop",
+                "--no-telemetry",
                 "--",
                 "npm",
                 "start"
@@ -21,15 +22,16 @@
             "problemMatcher": []
         },
         {
-            "label": "nodemon: server.js (VSCE)",
-            "command": "vsce",
+            "label": "nodemon: server.js (AZDS)",
+            "command": "azds",
             "args": [
                 "up",
                 "--iterate",
                 "--port",
-                "54159:9229",
+                "56624:9229",
                 "--config",
                 "develop.attach",
+                "--no-telemetry",
                 "--",
                 "node_modules/.bin/nodemon",
                 "--inspect=0.0.0.0:9229",

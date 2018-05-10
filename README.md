@@ -1,8 +1,8 @@
-# VS Connected Environment
-VSCE is an Azure developer service that helps teams develop with speed on Kubernetes. [Sign up for the private preview.](https://aka.ms/signup-vsce)
+# Azure Dev Spaces
+AZDS is an Azure developer service that helps teams develop with speed on Kubernetes. [Sign up for the private preview.](https://aka.ms/signup-azds)
 
 # Purpose of this repository
-This source repository primarily hosts *VSCE code samples* to support product guides, as well as provide high-level insight into our product roadmap. Product documentation is hosted here: http://aka.ms/get-vsce.
+This source repository primarily hosts *AZDS code samples* to support product guides, as well as provide high-level insight into our product roadmap. Product documentation is hosted here: http://aka.ms/get-azds.
 
 
 # Contributing

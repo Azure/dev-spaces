@@ -1,23 +1,24 @@
 {
     "configurations": [
         {
-            "name": ".NET Core Launch (VSCE)",
+            "name": ".NET Core Launch (AZDS)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build (VSCE)",
+            "preLaunchTask": "build (AZDS)",
             "cwd": "/src",
             "program": "/src/bin/Debug/netcoreapp2.0/mywebapi.dll",
             "sourceFileMap": {
                 "/src": "${workspaceRoot}"
             },
             "pipeTransport": {
-                "pipeProgram": "vsce",
+                "pipeProgram": "azds",
                 "pipeCwd": "${workspaceRoot}",
                 "debuggerPath": "/vsdbg/vsdbg",
                 "pipeArgs": [
                     "exec",
                     "-i",
                     "--restore-command",
+                    "--no-telemetry",
                     "--"
                 ],
                 "quoteArgs": false
