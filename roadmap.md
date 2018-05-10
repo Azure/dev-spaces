@@ -1,5 +1,5 @@
 # Azure Dev Spaces Roadmap
-AZDS is an Azure developer service that enables a fast, iterative development experience for Kubernetes. Teams can work within the same Azure Dev Spaces, and test code end-to-end without simulating or mocking dependencies.
+AZDS is an Azure developer service that enables a fast, iterative development experience for Kubernetes. Teams can work within the same Azure Dev Spaces resource, and test code end-to-end without simulating or mocking dependencies.
 
 These are examples of the work we will be focusing on in the next 3-6 months. It is not a complete list, but it is a good reflection of our direction. We continuously tune the plan based on feedback. Please follow along and let us know what you think!
 
