@@ -1,18 +1,26 @@
 kind: helm-release
+apiVersion: 1.0
 build:
   context: .
+  dockerfile: Dockerfile
 install:
   chart: charts/mywebapi
+  values:
+  - values.dev.yaml?
+  - secrets.dev.yaml?
   set:
     image:
       tag: $(tag)
       pullPolicy: Never
-    # This ingress section specifies whether VSCE should expose a secure
-    # public development endpoint like https://mywebapi-myenv.vsce.io
+    disableProbes: true
+    # This ingress section specifies whether AZDS should expose
+    # an endpoint like http://mywebapi.<guid>.<region>.aksapp.io
     # ingress:
     #   enabled: true
+    #   hosts:
+    #   - $(spacePrefix)mywebapi$(hostSuffix)
     #   annotations:
-    #     kubernetes.io/ingress.class: vsce
+    #     kubernetes.io/ingress.class: addon-http-application-routing
 configurations:
   develop:
     build:

@@ -6,7 +6,7 @@ EXPOSE 80
 
 WORKDIR /src
 COPY mywebapi.csproj .
-RUN dotnet restore
+RUN dotnet restore -nowarn:msb3202,nu1503
 COPY . .
 RUN dotnet build
 

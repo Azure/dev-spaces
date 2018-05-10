@@ -6,4 +6,6 @@
 charts
 Dockerfile
 node_modules
-vsce.yaml
+secrets.dev.yaml
+values.dev.yaml
+azds.yaml
