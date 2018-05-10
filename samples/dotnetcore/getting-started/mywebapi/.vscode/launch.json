@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "name": ".NET Core Launch (VSCE)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build (VSCE)",
+            "cwd": "/src",
+            "program": "/src/bin/Debug/netcoreapp2.0/mywebapi.dll",
+            "sourceFileMap": {
+                "/src": "${workspaceRoot}"
+            },
+            "pipeTransport": {
+                "pipeProgram": "vsce",
+                "pipeCwd": "${workspaceRoot}",
+                "debuggerPath": "/vsdbg/vsdbg",
+                "pipeArgs": [
+                    "exec",
+                    "-i",
+                    "--restore-command",
+                    "--"
+                ],
+                "quoteArgs": false
+            }
+        }
+    ]
+}

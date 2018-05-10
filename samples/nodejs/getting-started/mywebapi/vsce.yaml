@@ -1,0 +1,32 @@
+kind: helm-release
+build:
+  context: .
+install:
+  chart: charts/mywebapi
+  set:
+    image:
+      tag: $(tag)
+      pullPolicy: Never
+    # This ingress section specifies whether VSCE should expose a secure
+    # public development endpoint like https://mywebapi-myenv.vsce.io
+    # ingress:
+    #   enabled: true
+    #   annotations:
+    #     kubernetes.io/ingress.class: vsce
+configurations:
+  develop:
+    build:
+      useGitIgnore: true
+    container:
+      syncTarget: /app
+      sync:
+      - "!**/package.json"
+      iterate:
+        processesToKill: [node]
+  develop.attach:
+    build:
+      useGitIgnore: true
+    container:
+      syncTarget: /app
+      sync:
+      - "!**/package.json"

@@ -1,0 +1,9 @@
+.dockerignore
+.git
+.gitignore
+.vs
+.vscode
+charts
+Dockerfile
+node_modules
+vsce.yaml

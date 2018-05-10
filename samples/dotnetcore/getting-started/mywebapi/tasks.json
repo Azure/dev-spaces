@@ -1,0 +1,43 @@
+{
+    "tasks": [
+        {
+            "label": "build (VSCE)",
+            "dependsOn": "vsce: ready",
+            "command": "vsce",
+            "args": [
+                "exec",
+                "--kill",
+                "dotnet",
+                "--",
+                "dotnet",
+                "build"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "presentation": {
+                "panel": "dedicated"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "vsce: ready",
+            "command": "vsce",
+            "args": [
+                "up",
+                "--incremental",
+                "--no-command",
+                "--sync",
+                "!**/*.{sln,csproj}",
+                "--detach"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "presentation": {
+                "panel": "dedicated"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

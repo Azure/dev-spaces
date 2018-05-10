@@ -1,0 +1,15 @@
+{
+  "name": "mywebapi",
+  "version": "0.1.0",
+  "devDependencies": {
+    "nodemon": "^1.14.7"
+  },
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "main": "server.js",
+  "scripts": {
+    "watch": "nodemon --inspect --nolazy",
+    "start": "node server.js"
+  }
+}

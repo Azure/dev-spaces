@@ -1,0 +1,45 @@
+{
+    "tasks": [
+        {
+            "label": "vsce: ready",
+            "command": "vsce",
+            "args": [
+                "up",
+                "--iterate",
+                "--port",
+                "54159:9229",
+                "--no-command",
+                "--config",
+                "develop",
+                "--",
+                "npm",
+                "start"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "nodemon: server.js (VSCE)",
+            "command": "vsce",
+            "args": [
+                "up",
+                "--iterate",
+                "--port",
+                "54159:9229",
+                "--config",
+                "develop.attach",
+                "--",
+                "node_modules/.bin/nodemon",
+                "--inspect=0.0.0.0:9229",
+                "--nolazy",
+                "server.js"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

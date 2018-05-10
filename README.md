@@ -1,6 +1,11 @@
+# VS Connected Environment
+VSCE is an Azure developer service that helps teams develop with speed on Kubernetes. [Sign up for the private preview.](https://aka.ms/signup-vsce)
+
+# Purpose of this repository
+This source repository primarily hosts *VSCE code samples* to support product guides, as well as provide high-level insight into our product roadmap. Product documentation is hosted here: http://aka.ms/get-vsce.
+
 
 # Contributing
-
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
 the rights to use your contribution. For details, visit https://cla.microsoft.com.

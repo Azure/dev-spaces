@@ -1,0 +1,43 @@
+{
+    "configurations": [
+        {
+            "name": "Launch Program (VSCE)",
+            "type": "node",
+            "request": "launch",
+            "protocol": "inspector",
+            "preLaunchTask": "vsce: ready",
+            "cwd": "${workspaceRoot}",
+            "port": 54159,
+            "address": "127.0.0.1",
+            "localRoot": "${workspaceRoot}",
+            "remoteRoot": "/app",
+            "runtimeExecutable": "vsce",
+            "runtimeArgs": [
+                "exec",
+                "--config",
+                "develop",
+                "--restore-command",
+                "--",
+                "node",
+                "--inspect=0.0.0.0:9229",
+                "--inspect-brk",
+                "--nolazy",
+                "server.js"
+            ],
+            "timeout": 30000
+        },
+        {
+            "name": "Attach (VSCE)",
+            "type": "node",
+            "request": "attach",
+            "protocol": "inspector",
+            "preLaunchTask": "nodemon: server.js (VSCE)",
+            "cwd": "${workspaceRoot}",
+            "port": 54159,
+            "address": "127.0.0.1",
+            "localRoot": "${workspaceRoot}",
+            "remoteRoot": "/app",
+            "restart": true
+        }
+    ]
+}

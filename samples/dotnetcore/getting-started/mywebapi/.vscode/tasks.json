@@ -1,0 +1,17 @@
+{
+    "tasks": [
+        {
+            "label": "build (VSCE)",
+            "command": "vsce",
+            "args": [
+                "up",
+                "--iterate",
+                "--no-command"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
