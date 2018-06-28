@@ -14,18 +14,18 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    // @RequestMapping(value = "/greeting", produces = "text/plain")
-    // public String greeting() {
-    //     return "Hello from webfrontend";
-    // }
-
     @RequestMapping(value = "/greeting", produces = "text/plain")
-    public String greeting(@RequestHeader(value = "azds-route-as", required = false) String azdsRouteAs) throws Exception {
-        URLConnection conn = new URL("http://mywebapi/").openConnection();
-        conn.setRequestProperty("azds-route-as", azdsRouteAs);
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream())))
-        {
-            return "Hello from webfrontend and " + reader.lines().reduce("\n", String::concat);
-        }
+    public String greeting() {
+        return "Hello from webfrontend";
     }
+
+    // @RequestMapping(value = "/greeting", produces = "text/plain")
+    // public String greeting(@RequestHeader(value = "azds-route-as", required = false) String azdsRouteAs) throws Exception {
+    //     URLConnection conn = new URL("http://mywebapi/").openConnection();
+    //     conn.setRequestProperty("azds-route-as", azdsRouteAs);
+    //     try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream())))
+    //     {
+    //         return "Hello from webfrontend and " + reader.lines().reduce("\n", String::concat);
+    //     }
+    // }
 }
