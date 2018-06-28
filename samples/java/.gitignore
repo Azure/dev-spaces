@@ -25,7 +25,6 @@ target/
 .settings/
 .classpath
 .project
-.vscode/
 
 
 ### STS ###
