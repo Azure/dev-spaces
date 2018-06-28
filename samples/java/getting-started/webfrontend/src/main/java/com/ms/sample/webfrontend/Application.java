@@ -1,7 +1,7 @@
 package com.ms.sample.webfrontend;
 
-import java.io.*;
-import java.net.*;
+// import java.io.*;
+// import java.net.*;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
