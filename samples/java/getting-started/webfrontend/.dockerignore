@@ -8,4 +8,6 @@
 azds.yaml
 charts
 Dockerfile
+secrets.dev.yaml
 target
+values.dev.yaml

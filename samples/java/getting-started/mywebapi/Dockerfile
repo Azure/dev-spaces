@@ -1,5 +1,5 @@
 FROM maven:3.5-jdk-8-slim
-EXPOSE 5000
+EXPOSE 8080
 
 WORKDIR /usr/src/app
 COPY pom.xml .

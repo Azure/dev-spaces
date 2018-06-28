@@ -9,6 +9,7 @@ install:
   - values.dev.yaml?
   - secrets.dev.yaml?
   set:
+    replicaCount: 1
     image:
       tag: $(tag)
       pullPolicy: Never
