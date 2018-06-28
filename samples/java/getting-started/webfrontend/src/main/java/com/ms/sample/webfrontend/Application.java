@@ -23,7 +23,7 @@ public class Application {
     /**
      * a flag control whether or not to call backup service "mywebapi".
      */
-    private static boolean CALL_SEPARATE_SERVICE = true;
+    private static boolean CALL_SEPARATE_SERVICE = false;
 
     /**
      * Say hello or call backend service "mywebapi".
