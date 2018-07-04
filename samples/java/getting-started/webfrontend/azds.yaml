@@ -1,0 +1,32 @@
+kind: helm-release
+apiVersion: 1.0
+build:
+  context: .
+  dockerfile: Dockerfile
+install:
+  chart: charts/webfrontend
+  values:
+  - values.dev.yaml?
+  - secrets.dev.yaml?
+  set:
+    replicaCount: 1
+    image:
+      tag: $(tag)
+      pullPolicy: Never
+    ingress:
+      hosts:
+      # This expands to [space.s.]webfrontend.<guid>.<region>.aksapp.io
+      - $(spacePrefix)webfrontend$(hostSuffix)
+configurations:
+  develop:
+    build:
+      useGitIgnore: true
+    container:
+      imports:
+      - azuredevjava/javadebug:latest@/javadebug:/javadebug
+      sync:
+      - "!**/pom.xml"
+      iterate:
+        processesToKill: [java, mvn]
+        buildCommands:
+        - [mvn, package]
