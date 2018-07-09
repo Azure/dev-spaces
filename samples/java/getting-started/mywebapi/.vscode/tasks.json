@@ -1,0 +1,24 @@
+{
+    "tasks": [
+        {
+            "label": "azds: prelaunch",
+            "command": "azds",
+            "args": [
+                "up",
+                "--port=54356:7000",
+                "--detach",
+                "--keep-alive",
+                "--",
+                "/javadebug/start.sh",
+                "java",
+                "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000",
+                "-jar",
+                "target/mywebapi-0.1.0.jar"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

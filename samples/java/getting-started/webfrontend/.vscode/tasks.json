@@ -1,0 +1,22 @@
+{
+    "tasks": [
+        {
+            "label": "azds: prelaunch",
+            "command": "azds",
+            "args": [
+                "up",
+                "--port=57583:7000",
+                "--detach",
+                "--keep-alive",
+                "--",
+                "/javadebug/start.sh",
+                "mvn",
+                "spring-boot:run"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

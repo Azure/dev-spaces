@@ -1,0 +1,24 @@
+{
+    "tasks": [
+        {
+            "label": "azds: prelaunch",
+            "command": "azds",
+            "args": [
+                "up",
+                "--port=53456:7000",
+                "--detach",
+                "--keep-alive",
+                "--",
+                "/javadebug/start.sh",
+                "java",
+                "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000",
+                "-jar",
+                "target/simpleapp-1.0-SNAPSHOT.jar"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
