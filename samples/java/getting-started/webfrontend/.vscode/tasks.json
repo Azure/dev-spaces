@@ -9,11 +9,7 @@
                 "--detach",
                 "--keep-alive",
                 "--",
-                "/javadebug/start.sh",
-                "java",
-                "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000",
-                "-jar",
-                "target/webfrontend-0.1.0.jar"
+                "/javadebug/start.sh"
             ],
             "options": {
                 "cwd": "${workspaceRoot}"
