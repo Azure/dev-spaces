@@ -20,13 +20,14 @@ install:
 configurations:
   develop:
     build:
+      dockerfile: Dockerfile.develop
       useGitIgnore: true
     container:
       imports:
-      - stephpr/javadebug@/javadebug:/javadebug
+      - azuredevjava/javadebug:test@/javadebug:/javadebug
       sync:
-      - "!**/pom.xml"
+      - "**/**"
       iterate:
-        processesToKill: [java, mvn]
+        processesToKill: [java]
         buildCommands:
         - [mvn, package]
