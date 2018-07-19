@@ -5,7 +5,7 @@
             "command": "azds",
             "args": [
                 "up",
-                "--port=57583:7000",
+                "--port=57044:7000",
                 "--detach",
                 "--keep-alive",
                 "--",

@@ -1,12 +1,12 @@
 {
     "configurations": [
         {
-            "name": "Attach to Server (AZDS)",
-            "type": "javaremote",
-            "request": "attach",
+            "name": "Launch Java Server (AZDS)",
+            "type": "java-azds",
+            "request": "launch",
             "preLaunchTask": "azds: prelaunch",
-            "hostName": "localhost",
-            "port": 54356
+            "port": 56092,
+            "cwd": "/usr/src/app"
         }
     ]
 }
