@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>{{.PageTitle}}</title>
+</head>
+
+<body>
+  <h1> Total Visits</h1>
+    <input type="button" value={{.PageButton}} onClick="window.location.reload()" style="float: right;">
+  {{with $1:=.PageMessage}}
+    <p>{{.Value}}</p>
+  {{end}}
+</body>
+
+</html>
