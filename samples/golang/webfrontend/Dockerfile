@@ -1,11 +1,11 @@
 FROM golang:1.10
+EXPOSE 80
 
-RUN mkdir -p /go/src
+WORKDIR /go/src
 
-COPY src /go/src/
+COPY src .
 WORKDIR /go/src/app
 
 RUN go install app
-EXPOSE 80
 
 ENTRYPOINT /go/bin/app
