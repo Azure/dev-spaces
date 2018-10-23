@@ -33,7 +33,6 @@ func main() {
 		log.Fatal("Listen failed: ", err)
 	}
 	fmt.Println("Server is listening on port", listener.Addr().(*net.TCPAddr).Port)
-	fmt.Println("press Ctrl+C to detach")
 	log.Fatal(http.Serve(listener, nil))
 }
 
