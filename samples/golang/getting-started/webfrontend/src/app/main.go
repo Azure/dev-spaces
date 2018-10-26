@@ -13,12 +13,10 @@ import (
 type pageVariables struct {
 	PageTitle      string
 	PageButton     string
-	TargetPort     int
 	DefaultCounter int
 }
 
 var counter int
-var targetPort int
 
 func main() {
 	counter = 0
@@ -33,8 +31,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Listen failed: ", err)
 	}
-	targetPort = listener.Addr().(*net.TCPAddr).Port
-	fmt.Println("Server is listening on port", targetPort)
+	fmt.Println("Server is listening on port", listener.Addr().(*net.TCPAddr).Port)
 	log.Fatal(http.Serve(listener, nil))
 }
 
@@ -45,7 +42,6 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	myPageVariables := pageVariables{
 		PageTitle:      title,
 		PageButton:     myButton,
-		TargetPort:     targetPort,
 		DefaultCounter: counter,
 	}
 

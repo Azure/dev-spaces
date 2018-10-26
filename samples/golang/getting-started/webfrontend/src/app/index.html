@@ -9,7 +9,7 @@
 			$(document).ready(function() {
 				$("#callGo").on('click', function() {
 					$.ajax({
-						url: "http://localhost:{{.TargetPort}}/counter",
+						url: "/counter",
 						method: "GET",
 						success: function(data) {
 							$("#response").html(data);
