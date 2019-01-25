@@ -48,7 +48,7 @@ Support a Kubernetes debugging experience for Java containers, similar to curren
 ## More datacenter regions ![Ongoing work](https://placehold.it/15/1589F0/000000?text=+)
 Our goal is for Dev Spaces to support [all regions that AKS clusters can run](https://docs.microsoft.com/en-us/azure/aks/container-service-quotas#region-availability). We have continued to expand [regional support for Dev Spaces](https://docs.microsoft.com/azure/dev-spaces/), and more are planned over the coming months (prioritized by demand).
 
-## Improve ingress controller reliability
+## Improve ingress controller reliability ![Work in progress](https://placehold.it/15/1589F0/000000?text=+)
 We've encountered significant reliability and latency issues with providing public endpoints via an ingress controller. We are currently working on switching over to a different ingress implementation using [Traefik](https://docs.traefik.io/).
 
 ## End-to-end Testing with CI/CD
