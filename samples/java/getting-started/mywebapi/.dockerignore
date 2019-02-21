@@ -1,0 +1,14 @@
+.classpath
+.dockerignore
+.git
+.gitignore
+.project
+.settings
+.vscode
+azds.yaml
+charts
+Dockerfile
+Dockerfile.develop
+secrets.dev.yaml
+target
+values.dev.yaml

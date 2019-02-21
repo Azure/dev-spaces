@@ -1,0 +1,10 @@
+# define two variables 'dockerId' and 'dockerPassword' in the build pipeline in UI for your ACR credentials
+trigger:
+  batch: true
+  branches:
+    include:
+    - azds_updates
+jobs:
+- template: ../../azure-pipelines.template.yml
+  parameters:
+    language: 'java'

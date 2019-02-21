@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -23,7 +24,21 @@ func main() {
 	http.HandleFunc("/", HomePage)
 	http.HandleFunc("/counter", ManageCounter)
 	http.HandleFunc("/api", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello from webfrontend")
+		req, err := http.NewRequest("GET", "http://mywebapi", nil)
+		req.Header.Add("azds-route-as", r.Header.Get("azds-route-as"))
+		client := http.Client{}
+		resp, err := client.Do(req)
+		if err != nil {
+			fmt.Fprintf(w, err.Error())
+			return
+		}
+		defer resp.Body.Close()
+		bodyBytes, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			fmt.Fprintf(w, err.Error())
+			return
+		}
+		fmt.Fprintf(w, fmt.Sprintf("Hello from webfrontend and %s", string(bodyBytes)))
 	})
 
 	// Start the server at http://localhost:80

@@ -1,0 +1,32 @@
+kind: helm-release
+apiVersion: 1.0
+build:
+  context: .
+  dockerfile: Dockerfile
+install:
+  chart: charts/mywebapi
+  values:
+  - values.dev.yaml?
+  - secrets.dev.yaml?
+  set:
+    replicaCount: 1
+    image:
+      repository: mywebapi
+      tag: $(tag)
+      pullPolicy: Never
+    ingress:
+      hosts:
+      # This expands to [space.s.]mywebapi.<guid>.<region>.aksapp.io
+      - $(spacePrefix)mywebapi$(hostSuffix)
+configurations:
+  develop:
+    build:
+      dockerfile: Dockerfile.develop
+      useGitIgnore: true
+    container:
+      sync:
+      - "**/**"
+      iterate:
+        processesToKill: [java]
+        buildCommands:
+        - [mvn, package, -Dmaven.test.skip=true, -Dcheckstyle.skip=true, -Dmaven.javadoc.skip=true]

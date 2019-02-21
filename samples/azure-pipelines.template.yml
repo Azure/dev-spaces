@@ -1,0 +1,54 @@
+# define two variables 'dockerId' and 'dockerPassword' in the build pipeline in UI for your ACR credentials
+parameters:
+  language: '' # Overridden in each language's pipeline file
+jobs:
+- job: Build_webfrontend
+  pool:
+    vmImage: 'Ubuntu 16.04'
+  variables:
+    acrUrl: '$(dockerId).azurecr.io'
+    imageRepo: '$(acrUrl)/webfrontend'
+    imageTag: '$(Build.BuildId)'
+  steps:
+  - script: |
+      set -e
+      set -x
+      docker build -f samples/${{ parameters.language }}/getting-started/webfrontend/Dockerfile -t $(imageRepo):$(imageTag) samples/${{ parameters.language }}/getting-started/webfrontend/
+      docker login -u $(dockerId) -p $pswd $(acrUrl)
+      docker push $(imageRepo):$(imageTag)
+      docker logout $(acrUrl)
+      cp -r samples/${{ parameters.language }}/getting-started/webfrontend/charts/webfrontend $(Build.ArtifactStagingDirectory)/chart
+      mkdir -p $(Build.ArtifactStagingDirectory)/image
+      echo '$(imageRepo)' > $(Build.ArtifactStagingDirectory)/image/repo.txt
+      echo '$(imageTag)' > $(Build.ArtifactStagingDirectory)/image/tag.txt
+    env:
+      pswd: $(dockerPassword)
+  - task: PublishBuildArtifacts@1
+    inputs:
+      artifactName: webfrontend
+      pathtoPublish: $(Build.ArtifactStagingDirectory)
+- job: Build_mywebapi
+  pool:
+    vmImage: 'Ubuntu 16.04'
+  variables:
+    acrUrl: '$(dockerId).azurecr.io'
+    imageRepo: '$(acrUrl)/mywebapi'
+    imageTag: '$(Build.BuildId)'
+  steps:
+  - script: |
+      set -e
+      set -x
+      docker build -f samples/${{ parameters.language }}/getting-started/mywebapi/Dockerfile -t $(imageRepo):$(imageTag) samples/${{ parameters.language }}/getting-started/mywebapi/
+      docker login -u $(dockerId) -p $pswd $(acrUrl)
+      docker push $(imageRepo):$(imageTag)
+      docker logout $(acrUrl)
+      cp -r samples/${{ parameters.language }}/getting-started/mywebapi/charts/mywebapi $(Build.ArtifactStagingDirectory)/chart
+      mkdir -p $(Build.ArtifactStagingDirectory)/image
+      echo '$(imageRepo)' > $(Build.ArtifactStagingDirectory)/image/repo.txt
+      echo '$(imageTag)' > $(Build.ArtifactStagingDirectory)/image/tag.txt
+    env:
+      pswd: $(dockerPassword)
+  - task: PublishBuildArtifacts@1
+    inputs:
+      artifactName: mywebapi
+      pathtoPublish: $(Build.ArtifactStagingDirectory)

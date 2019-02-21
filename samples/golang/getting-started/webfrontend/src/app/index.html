@@ -17,6 +17,14 @@
 					});
 				});
 			});
+
+			$.ajax({
+				url: "/api",
+				method: "GET",
+				success: function(data) {
+					$("#message").html(data);
+				}
+			})
 		</script>
   </head>
 
@@ -24,6 +32,7 @@
     <h1> Total Clicks</h1>
     <button id="callGo" type="submit" style="float: right; font-weight: bold;">{{.PageButton}}</button>
     <div id="response">{{.DefaultCounter}}</div>
+    <h2> Message: <b id="message"></b></h2>
   </body>
 
 </html>

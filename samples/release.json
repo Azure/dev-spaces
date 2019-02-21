@@ -1,0 +1,801 @@
+{
+    "environments": [
+        {
+            "name": "dev",
+            "rank": 1,
+            "variables": {
+                "Environment": {
+                    "value": "dev"
+                }
+            },
+            "preDeployApprovals": {
+                "approvals": [
+                    {
+                        "rank": 1,
+                        "isAutomated": true,
+                        "isNotificationOn": false
+                    }
+                ],
+                "approvalOptions": {
+                    "requiredApproverCount": null,
+                    "releaseCreatorCanBeApprover": false,
+                    "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+                    "enforceIdentityRevalidation": false,
+                    "timeoutInMinutes": 0,
+                    "executionOrder": 1
+                }
+            },
+            "postDeployApprovals": {
+                "approvals": [
+                    {
+                        "rank": 1,
+                        "isAutomated": true,
+                        "isNotificationOn": false
+                    }
+                ],
+                "approvalOptions": {
+                    "requiredApproverCount": null,
+                    "releaseCreatorCanBeApprover": false,
+                    "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+                    "enforceIdentityRevalidation": false,
+                    "timeoutInMinutes": 0,
+                    "executionOrder": 2
+                }
+            },
+            "deployPhases": [
+                {
+                    "deploymentInput": {
+                        "parallelExecution": {
+                            "parallelExecutionType": 0
+                        },
+                        "skipArtifactsDownload": false,
+                        "demands": [],
+                        "enableAccessToken": false,
+                        "timeoutInMinutes": 0,
+                        "jobCancelTimeoutInMinutes": 1,
+                        "condition": "succeeded()",
+                        "overrideInputs": {}
+                    },
+                    "rank": 1,
+                    "phaseType": 1,
+                    "name": "Agent job",
+                    "refName": null,
+                    "workflowTasks": [
+                        {
+                            "environment": {},
+                            "taskId": "46e4be58-730b-4389-8a2f-ea10b3e5e815",
+                            "version": "1.*",
+                            "name": "Fetch HTTPApplicationRoutingZone",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "connectedServiceNameARM": "$(Parameters.azureSubscriptionEndpoint)",
+                                "scriptLocation": "inlineScript",
+                                "scriptPath": "",
+                                "inlineScript": "httpApplicationRoutingZone=$(az aks show -g $PARAMETERS_AZURERESOURCEGROUP -n $PARAMETERS_KUBERNETESCLUSTER -o json | jq -r .addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName)\necho \"##vso[task.setvariable variable=httpApplicationRoutingZone;]$httpApplicationRoutingZone\"",
+                                "args": "",
+                                "addSpnToEnvironment": "false",
+                                "useGlobalConfig": "false",
+                                "cwd": "",
+                                "failOnStandardError": "false"
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "068d5909-43e6-48c5-9e01-7c8a94816220",
+                            "version": "0.*",
+                            "name": "Install Helm 2.11.0",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "helmVersion": "2.11.0",
+                                "checkLatestHelmVersion": "false",
+                                "installKubeCtl": "true",
+                                "kubectlVersion": "1.10.9",
+                                "checkLatestKubeCtl": "false"
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "afa7d54d-537b-4dc8-b60a-e0eeea2c9a87",
+                            "version": "0.*",
+                            "name": "helm init",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": null,
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "connectionType": "$(Parameters.connectionType)",
+                                "azureSubscriptionEndpoint": "$(Parameters.azureSubscriptionEndpoint)",
+                                "azureResourceGroup": "$(Parameters.azureResourceGroup)",
+                                "kubernetesCluster": "$(Parameters.kubernetesCluster)",
+                                "namespace": "",
+                                "command": "init",
+                                "chartType": "Name",
+                                "chartName": "",
+                                "chartPath": "",
+                                "version": "",
+                                "releaseName": "",
+                                "overrideValues": "",
+                                "valueFile": "",
+                                "destination": "$(Build.ArtifactStagingDirectory)",
+                                "canaryimage": "false",
+                                "upgradetiller": "true",
+                                "updatedependency": "false",
+                                "save": "true",
+                                "install": "true",
+                                "recreate": "false",
+                                "resetValues": "false",
+                                "force": "false",
+                                "waitForExecution": "true",
+                                "arguments": "",
+                                "enableTls": "false",
+                                "caCert": "",
+                                "certificate": "",
+                                "privatekey": "",
+                                "tillernamespace": ""
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "6c731c3c-3c68-459a-a5c9-bde6e6595b5b",
+                            "version": "3.*",
+                            "name": "Set mywebapi image vars",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "targetType": "inline",
+                                "filePath": "",
+                                "arguments": "",
+                                "script": "repo=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/mywebapi/image/repo.txt\")\ntag=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/mywebapi/image/tag.txt\")\necho \"##vso[task.setvariable variable=mywebapiRepo;]$repo\"\necho \"##vso[task.setvariable variable=mywebapiTag;]$tag\"",
+                                "workingDirectory": "",
+                                "failOnStderr": "false"
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "afa7d54d-537b-4dc8-b60a-e0eeea2c9a87",
+                            "version": "0.*",
+                            "name": "helm upgrade mywebapi",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": null,
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "connectionType": "$(Parameters.connectionType)",
+                                "azureSubscriptionEndpoint": "$(Parameters.azureSubscriptionEndpoint)",
+                                "azureResourceGroup": "$(Parameters.azureResourceGroup)",
+                                "kubernetesCluster": "$(Parameters.kubernetesCluster)",
+                                "namespace": "$(Environment)",
+                                "command": "upgrade",
+                                "chartType": "FilePath",
+                                "chartName": "",
+                                "chartPath": "$(System.DefaultWorkingDirectory)/drop/mywebapi/chart",
+                                "version": "",
+                                "releaseName": "mywebapi-$(Environment)",
+                                "overrideValues": "image.repository=$(mywebapiRepo),image.tag=$(mywebapiTag)",
+                                "valueFile": "",
+                                "destination": "",
+                                "canaryimage": "false",
+                                "upgradetiller": "false",
+                                "updatedependency": "false",
+                                "save": "true",
+                                "install": "true",
+                                "recreate": "false",
+                                "resetValues": "false",
+                                "force": "true",
+                                "waitForExecution": "true",
+                                "arguments": "",
+                                "enableTls": "false",
+                                "caCert": "",
+                                "certificate": "",
+                                "privatekey": "",
+                                "tillernamespace": ""
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "6c731c3c-3c68-459a-a5c9-bde6e6595b5b",
+                            "version": "3.*",
+                            "name": "Set webfrontend image vars",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "targetType": "inline",
+                                "filePath": "",
+                                "arguments": "",
+                                "script": "repo=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/webfrontend/image/repo.txt\")\ntag=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/webfrontend/image/tag.txt\")\necho \"##vso[task.setvariable variable=webfrontendRepo;]$repo\"\necho \"##vso[task.setvariable variable=webfrontendTag;]$tag\"",
+                                "workingDirectory": "",
+                                "failOnStderr": "false"
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "afa7d54d-537b-4dc8-b60a-e0eeea2c9a87",
+                            "version": "0.*",
+                            "name": "helm upgrade webfrontend",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": null,
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "connectionType": "$(Parameters.connectionType)",
+                                "azureSubscriptionEndpoint": "$(Parameters.azureSubscriptionEndpoint)",
+                                "azureResourceGroup": "$(Parameters.azureResourceGroup)",
+                                "kubernetesCluster": "$(Parameters.kubernetesCluster)",
+                                "namespace": "$(Environment)",
+                                "command": "upgrade",
+                                "chartType": "FilePath",
+                                "chartName": "",
+                                "chartPath": "$(System.DefaultWorkingDirectory)/drop/webfrontend/chart",
+                                "version": "",
+                                "releaseName": "webfrontend-$(Environment)",
+                                "overrideValues": "image.repository=$(webfrontendRepo),image.tag=$(webfrontendTag),ingress.hosts[0]=$(Environment).webfrontend.$(httpApplicationRoutingZone)",
+                                "valueFile": "",
+                                "destination": "",
+                                "canaryimage": "false",
+                                "upgradetiller": "false",
+                                "updatedependency": "false",
+                                "save": "true",
+                                "install": "true",
+                                "recreate": "false",
+                                "resetValues": "false",
+                                "force": "true",
+                                "waitForExecution": "true",
+                                "arguments": "",
+                                "enableTls": "false",
+                                "caCert": "",
+                                "certificate": "",
+                                "privatekey": "",
+                                "tillernamespace": ""
+                            }
+                        }
+                    ]
+                }
+            ],
+            "environmentOptions": {
+                "emailNotificationType": "OnlyOnFailure",
+                "emailRecipients": "release.environment.owner;release.creator",
+                "skipArtifactsDownload": false,
+                "timeoutInMinutes": 0,
+                "enableAccessToken": false,
+                "publishDeploymentStatus": true,
+                "badgeEnabled": false,
+                "autoLinkWorkItems": false,
+                "pullRequestDeploymentEnabled": false
+            },
+            "demands": [],
+            "conditions": [
+                {
+                    "name": "ReleaseStarted",
+                    "conditionType": 1,
+                    "value": ""
+                }
+            ],
+            "executionPolicy": {
+                "concurrencyCount": 1,
+                "queueDepthCount": 0
+            },
+            "schedules": [],
+            "retentionPolicy": {
+                "daysToKeep": 30,
+                "releasesToKeep": 3,
+                "retainBuild": true
+            },
+            "processParameters": {
+                "inputs": [
+                    {
+                        "options": {
+                            "Azure Resource Manager": "Azure Resource Manager"
+                        },
+                        "properties": {
+                            "EditableOptions": "false"
+                        },
+                        "name": "connectionType",
+                        "label": "Connection Type.",
+                        "defaultValue": "Azure Resource Manager",
+                        "type": "pickList",
+                        "helpMarkDown": "",
+                        "groupName": ""
+                    },
+                    {
+                        "name": "azureSubscriptionEndpoint",
+                        "label": "Azure subscription",
+                        "defaultValue": "",
+                        "required": true,
+                        "type": "connectedService:AzureRM",
+                        "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
+                        "visibleRule": "connectionType = Azure Resource Manager",
+                        "groupName": ""
+                    },
+                    {
+                        "properties": {
+                            "EditableOptions": "True"
+                        },
+                        "name": "azureResourceGroup",
+                        "label": "Resource group",
+                        "defaultValue": "",
+                        "required": true,
+                        "type": "pickList",
+                        "helpMarkDown": "Select an Azure Resource Group.",
+                        "visibleRule": "connectionType = Azure Resource Manager",
+                        "groupName": ""
+                    },
+                    {
+                        "properties": {
+                            "EditableOptions": "True"
+                        },
+                        "name": "kubernetesCluster",
+                        "label": "Kubernetes cluster",
+                        "defaultValue": "",
+                        "required": true,
+                        "type": "pickList",
+                        "helpMarkDown": "Select an Azure Kubernetes Service cluster.",
+                        "visibleRule": "connectionType = Azure Resource Manager",
+                        "groupName": ""
+                    }
+                ],
+                "dataSourceBindings": [
+                    {
+                        "parameters": {},
+                        "endpointId": "$(azureSubscriptionEndpoint)",
+                        "target": "kubernetesCluster",
+                        "resultTemplate": "{{{name}}}",
+                        "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+                        "resultSelector": "jsonpath:$.value[*]"
+                    },
+                    {
+                        "parameters": {},
+                        "endpointId": "$(azureSubscriptionEndpoint)",
+                        "target": "azureResourceGroup",
+                        "resultTemplate": "{{{ #extractResource id resourcegroups}}}",
+                        "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+                        "resultSelector": "jsonpath:$.value[*]"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "prod",
+            "rank": 2,
+            "variables": {
+                "Environment": {
+                    "value": "prod"
+                }
+            },
+            "preDeployApprovals": {
+                "approvals": [
+                    {
+                        "rank": 1,
+                        "isAutomated": true,
+                        "isNotificationOn": false
+                    }
+                ],
+                "approvalOptions": {
+                    "requiredApproverCount": null,
+                    "releaseCreatorCanBeApprover": false,
+                    "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+                    "enforceIdentityRevalidation": false,
+                    "timeoutInMinutes": 0,
+                    "executionOrder": 1
+                }
+            },
+            "postDeployApprovals": {
+                "approvals": [
+                    {
+                        "rank": 1,
+                        "isAutomated": true,
+                        "isNotificationOn": false
+                    }
+                ],
+                "approvalOptions": {
+                    "requiredApproverCount": null,
+                    "releaseCreatorCanBeApprover": false,
+                    "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+                    "enforceIdentityRevalidation": false,
+                    "timeoutInMinutes": 0,
+                    "executionOrder": 2
+                }
+            },
+            "deployPhases": [
+                {
+                    "deploymentInput": {
+                        "parallelExecution": {
+                            "parallelExecutionType": 0
+                        },
+                        "skipArtifactsDownload": false,
+                        "demands": [],
+                        "enableAccessToken": false,
+                        "timeoutInMinutes": 0,
+                        "jobCancelTimeoutInMinutes": 1,
+                        "condition": "succeeded()",
+                        "overrideInputs": {}
+                    },
+                    "rank": 1,
+                    "phaseType": 1,
+                    "name": "Agent job",
+                    "refName": null,
+                    "workflowTasks": [
+                        {
+                            "environment": {},
+                            "taskId": "46e4be58-730b-4389-8a2f-ea10b3e5e815",
+                            "version": "1.*",
+                            "name": "Fetch HTTPApplicationRoutingZone",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "connectedServiceNameARM": "$(Parameters.azureSubscriptionEndpoint)",
+                                "scriptLocation": "inlineScript",
+                                "scriptPath": "",
+                                "inlineScript": "httpApplicationRoutingZone=$(az aks show -g $PARAMETERS_AZURERESOURCEGROUP -n $PARAMETERS_KUBERNETESCLUSTER -o json | jq -r .addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName)\necho \"##vso[task.setvariable variable=httpApplicationRoutingZone;]$httpApplicationRoutingZone\"",
+                                "args": "",
+                                "addSpnToEnvironment": "false",
+                                "useGlobalConfig": "false",
+                                "cwd": "",
+                                "failOnStandardError": "false"
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "068d5909-43e6-48c5-9e01-7c8a94816220",
+                            "version": "0.*",
+                            "name": "Install Helm 2.11.0",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "helmVersion": "2.11.0",
+                                "checkLatestHelmVersion": "false",
+                                "installKubeCtl": "true",
+                                "kubectlVersion": "1.10.9",
+                                "checkLatestKubeCtl": "false"
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "afa7d54d-537b-4dc8-b60a-e0eeea2c9a87",
+                            "version": "0.*",
+                            "name": "helm init",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": null,
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "connectionType": "$(Parameters.connectionType)",
+                                "azureSubscriptionEndpoint": "$(Parameters.azureSubscriptionEndpoint)",
+                                "azureResourceGroup": "$(Parameters.azureResourceGroup)",
+                                "kubernetesCluster": "$(Parameters.kubernetesCluster)",
+                                "namespace": "",
+                                "command": "init",
+                                "chartType": "Name",
+                                "chartName": "",
+                                "chartPath": "",
+                                "version": "",
+                                "releaseName": "",
+                                "overrideValues": "",
+                                "valueFile": "",
+                                "destination": "$(Build.ArtifactStagingDirectory)",
+                                "canaryimage": "false",
+                                "upgradetiller": "true",
+                                "updatedependency": "false",
+                                "save": "true",
+                                "install": "true",
+                                "recreate": "false",
+                                "resetValues": "false",
+                                "force": "false",
+                                "waitForExecution": "true",
+                                "arguments": "",
+                                "enableTls": "false",
+                                "caCert": "",
+                                "certificate": "",
+                                "privatekey": "",
+                                "tillernamespace": ""
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "6c731c3c-3c68-459a-a5c9-bde6e6595b5b",
+                            "version": "3.*",
+                            "name": "Set mywebapi image vars",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "targetType": "inline",
+                                "filePath": "",
+                                "arguments": "",
+                                "script": "repo=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/mywebapi/image/repo.txt\")\ntag=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/mywebapi/image/tag.txt\")\necho \"##vso[task.setvariable variable=mywebapiRepo;]$repo\"\necho \"##vso[task.setvariable variable=mywebapiTag;]$tag\"",
+                                "workingDirectory": "",
+                                "failOnStderr": "false"
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "afa7d54d-537b-4dc8-b60a-e0eeea2c9a87",
+                            "version": "0.*",
+                            "name": "helm upgrade mywebapi",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": null,
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "connectionType": "$(Parameters.connectionType)",
+                                "azureSubscriptionEndpoint": "$(Parameters.azureSubscriptionEndpoint)",
+                                "azureResourceGroup": "$(Parameters.azureResourceGroup)",
+                                "kubernetesCluster": "$(Parameters.kubernetesCluster)",
+                                "namespace": "$(Environment)",
+                                "command": "upgrade",
+                                "chartType": "FilePath",
+                                "chartName": "",
+                                "chartPath": "$(System.DefaultWorkingDirectory)/drop/mywebapi/chart",
+                                "version": "",
+                                "releaseName": "mywebapi-$(Environment)",
+                                "overrideValues": "image.repository=$(mywebapiRepo),image.tag=$(mywebapiTag)",
+                                "valueFile": "",
+                                "destination": "",
+                                "canaryimage": "false",
+                                "upgradetiller": "false",
+                                "updatedependency": "false",
+                                "save": "true",
+                                "install": "true",
+                                "recreate": "false",
+                                "resetValues": "false",
+                                "force": "true",
+                                "waitForExecution": "true",
+                                "arguments": "",
+                                "enableTls": "false",
+                                "caCert": "",
+                                "certificate": "",
+                                "privatekey": "",
+                                "tillernamespace": ""
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "6c731c3c-3c68-459a-a5c9-bde6e6595b5b",
+                            "version": "3.*",
+                            "name": "Set webfrontend image vars",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "targetType": "inline",
+                                "filePath": "",
+                                "arguments": "",
+                                "script": "repo=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/webfrontend/image/repo.txt\")\ntag=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/webfrontend/image/tag.txt\")\necho \"##vso[task.setvariable variable=webfrontendRepo;]$repo\"\necho \"##vso[task.setvariable variable=webfrontendTag;]$tag\"",
+                                "workingDirectory": "",
+                                "failOnStderr": "false"
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "afa7d54d-537b-4dc8-b60a-e0eeea2c9a87",
+                            "version": "0.*",
+                            "name": "helm upgrade webfrontend",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": null,
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "connectionType": "$(Parameters.connectionType)",
+                                "azureSubscriptionEndpoint": "$(Parameters.azureSubscriptionEndpoint)",
+                                "azureResourceGroup": "$(Parameters.azureResourceGroup)",
+                                "kubernetesCluster": "$(Parameters.kubernetesCluster)",
+                                "namespace": "$(Environment)",
+                                "command": "upgrade",
+                                "chartType": "FilePath",
+                                "chartName": "",
+                                "chartPath": "$(System.DefaultWorkingDirectory)/drop/webfrontend/chart",
+                                "version": "",
+                                "releaseName": "webfrontend-$(Environment)",
+                                "overrideValues": "image.repository=$(webfrontendRepo),image.tag=$(webfrontendTag),ingress.hosts[0]=$(Environment).webfrontend.$(httpApplicationRoutingZone)",
+                                "valueFile": "",
+                                "destination": "",
+                                "canaryimage": "false",
+                                "upgradetiller": "false",
+                                "updatedependency": "false",
+                                "save": "true",
+                                "install": "true",
+                                "recreate": "false",
+                                "resetValues": "false",
+                                "force": "true",
+                                "waitForExecution": "true",
+                                "arguments": "",
+                                "enableTls": "false",
+                                "caCert": "",
+                                "certificate": "",
+                                "privatekey": "",
+                                "tillernamespace": ""
+                            }
+                        }
+                    ]
+                }
+            ],
+            "environmentOptions": {
+                "emailNotificationType": "OnlyOnFailure",
+                "emailRecipients": "release.environment.owner;release.creator",
+                "skipArtifactsDownload": false,
+                "timeoutInMinutes": 0,
+                "enableAccessToken": false,
+                "publishDeploymentStatus": true,
+                "badgeEnabled": false,
+                "autoLinkWorkItems": false,
+                "pullRequestDeploymentEnabled": false
+            },
+            "executionPolicy": {
+                "concurrencyCount": 1,
+                "queueDepthCount": 0
+            },
+            "retentionPolicy": {
+                "daysToKeep": 30,
+                "releasesToKeep": 3,
+                "retainBuild": true
+            },
+            "processParameters": {
+                "inputs": [
+                    {
+                        "options": {
+                            "Azure Resource Manager": "Azure Resource Manager"
+                        },
+                        "properties": {
+                            "EditableOptions": "false"
+                        },
+                        "name": "connectionType",
+                        "label": "Connection Type.",
+                        "defaultValue": "Azure Resource Manager",
+                        "type": "pickList",
+                        "helpMarkDown": "",
+                        "groupName": ""
+                    },
+                    {
+                        "name": "azureSubscriptionEndpoint",
+                        "label": "Azure subscription",
+                        "defaultValue": "",
+                        "required": true,
+                        "type": "connectedService:AzureRM",
+                        "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
+                        "visibleRule": "connectionType = Azure Resource Manager",
+                        "groupName": ""
+                    },
+                    {
+                        "properties": {
+                            "EditableOptions": "True"
+                        },
+                        "name": "azureResourceGroup",
+                        "label": "Resource group",
+                        "defaultValue": "",
+                        "required": true,
+                        "type": "pickList",
+                        "helpMarkDown": "Select an Azure Resource Group.",
+                        "visibleRule": "connectionType = Azure Resource Manager",
+                        "groupName": ""
+                    },
+                    {
+                        "properties": {
+                            "EditableOptions": "True"
+                        },
+                        "name": "kubernetesCluster",
+                        "label": "Kubernetes cluster",
+                        "defaultValue": "",
+                        "required": true,
+                        "type": "pickList",
+                        "helpMarkDown": "Select an Azure Kubernetes Service cluster.",
+                        "visibleRule": "connectionType = Azure Resource Manager",
+                        "groupName": ""
+                    }
+                ],
+                "dataSourceBindings": [
+                    {
+                        "parameters": {},
+                        "endpointId": "$(azureSubscriptionEndpoint)",
+                        "target": "kubernetesCluster",
+                        "resultTemplate": "{{{name}}}",
+                        "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+                        "resultSelector": "jsonpath:$.value[*]"
+                    },
+                    {
+                        "parameters": {},
+                        "endpointId": "$(azureSubscriptionEndpoint)",
+                        "target": "azureResourceGroup",
+                        "resultTemplate": "{{{ #extractResource id resourcegroups}}}",
+                        "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+                        "resultSelector": "jsonpath:$.value[*]"
+                    }
+                ]
+            }
+        }
+    ],
+    "artifacts": [],
+    "triggers": [
+        {
+            "artifactAlias": "drop",
+            "triggerConditions": [
+                {
+                    "sourceBranch": "azds_updates",
+                    "tags": [],
+                    "useBuildDefinitionBranch": false,
+                    "createReleaseOnBuildTagging": false
+                }
+            ],
+            "triggerType": 1
+        }
+    ],
+    "releaseNameFormat": "Release-$(rev:r)",
+    "properties": {
+        "DefinitionCreationSource": {
+            "$type": "System.String",
+            "$value": "Other"
+        }
+    },
+    "name": "DevSpaces SampleApp Release",
+    "path": "\\"
+}

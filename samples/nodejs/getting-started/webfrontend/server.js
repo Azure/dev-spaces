@@ -1,4 +1,5 @@
 var express = require('express');
+var request = require('request');
 var app = express();
 app.use(express.static(__dirname + '/public'));
 
@@ -7,8 +8,16 @@ app.get('/', function (req, res) {
 });
 
 app.get('/api', function (req, res) {
-    res.send('Hello from webfrontend');
-});
+    request({
+       uri: 'http://mywebapi',
+       headers: {
+          /* propagate the dev space routing header */
+          'azds-route-as': req.headers['azds-route-as']
+       }
+    }, function (error, response, body) {
+        res.send('Hello from webfrontend and ' + body);
+    });
+ });
 
 var port = process.env.PORT || 80;
 var server = app.listen(port, function () {
@@ -21,5 +30,4 @@ process.on("SIGINT", () => {
 
 process.on("SIGTERM", () => {
     console.log("Terminating...");
-    server.close();
 });

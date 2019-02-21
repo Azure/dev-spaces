@@ -1,0 +1,38 @@
+kind: helm-release
+apiVersion: 1.0
+build:
+  context: .
+  dockerfile: Dockerfile
+install:
+  chart: charts/webfrontend
+  values:
+  - values.dev.yaml?
+  - secrets.dev.yaml?
+  set:
+    replicaCount: 1
+    image:
+      repository: webfrontend
+      tag: $(tag)
+      pullPolicy: Never
+    ingress:
+      hosts:
+      # This expands to [space.s.]dev.webfrontend.<guid>.<region>.aksapp.io
+      - $(spacePrefix)dev.webfrontend$(hostSuffix)
+configurations:
+  develop:
+    build:
+      dockerfile: Dockerfile.develop
+      useGitIgnore: true
+      args:
+        BUILD_CONFIGURATION: ${BUILD_CONFIGURATION:-Debug}
+    container:
+      sync:
+      - "**/Pages/**"
+      - "**/Views/**"
+      - "**/wwwroot/**"
+      - "!**/*.{sln,csproj}"
+      command: [dotnet, run, --no-restore, --no-build, --no-launch-profile, -c, "${BUILD_CONFIGURATION:-Debug}"]
+      iterate:
+        processesToKill: [dotnet, vsdbg]
+        buildCommands:
+        - [dotnet, build, --no-restore, -c, "${BUILD_CONFIGURATION:-Debug}"]
