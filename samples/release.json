@@ -1,4 +1,9 @@
 {
+    "variables": {
+        "DevSpacesHostSuffix": {
+            "value": "UPDATE_ME"
+        }
+    },
     "environments": [
         {
             "name": "dev",
@@ -63,31 +68,6 @@
                     "workflowTasks": [
                         {
                             "environment": {},
-                            "taskId": "46e4be58-730b-4389-8a2f-ea10b3e5e815",
-                            "version": "1.*",
-                            "name": "Fetch HTTPApplicationRoutingZone",
-                            "refName": "",
-                            "enabled": true,
-                            "alwaysRun": false,
-                            "continueOnError": false,
-                            "timeoutInMinutes": 0,
-                            "definitionType": "task",
-                            "overrideInputs": {},
-                            "condition": "succeeded()",
-                            "inputs": {
-                                "connectedServiceNameARM": "$(Parameters.azureSubscriptionEndpoint)",
-                                "scriptLocation": "inlineScript",
-                                "scriptPath": "",
-                                "inlineScript": "httpApplicationRoutingZone=$(az aks show -g $PARAMETERS_AZURERESOURCEGROUP -n $PARAMETERS_KUBERNETESCLUSTER -o json | jq -r .addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName)\necho \"##vso[task.setvariable variable=httpApplicationRoutingZone;]$httpApplicationRoutingZone\"",
-                                "args": "",
-                                "addSpnToEnvironment": "false",
-                                "useGlobalConfig": "false",
-                                "cwd": "",
-                                "failOnStandardError": "false"
-                            }
-                        },
-                        {
-                            "environment": {},
                             "taskId": "068d5909-43e6-48c5-9e01-7c8a94816220",
                             "version": "0.*",
                             "name": "Install Helm 2.11.0",
@@ -102,9 +82,77 @@
                             "inputs": {
                                 "helmVersion": "2.11.0",
                                 "checkLatestHelmVersion": "false",
-                                "installKubeCtl": "true",
+                                "installKubeCtl": "false",
                                 "kubectlVersion": "1.10.9",
                                 "checkLatestKubeCtl": "false"
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "cbc316a2-586f-4def-be79-488a1f503564",
+                            "version": "1.*",
+                            "name": "kubectl login",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "connectionType": "$(Parameters.connectionType)",
+                                "azureSubscriptionEndpoint": "$(Parameters.azureSubscriptionEndpoint)",
+                                "azureResourceGroup": "$(Parameters.azureResourceGroup)",
+                                "kubernetesCluster": "$(Parameters.kubernetesCluster)",
+                                "namespace": "",
+                                "command": "login",
+                                "useConfigurationFile": "false",
+                                "configurationType": "configuration",
+                                "configuration": "",
+                                "inline": "",
+                                "arguments": "",
+                                "secretType": "dockerRegistry",
+                                "secretArguments": "",
+                                "containerRegistryType": "Azure Container Registry",
+                                "dockerRegistryEndpoint": "",
+                                "azureSubscriptionEndpointForSecrets": "",
+                                "azureContainerRegistry": "",
+                                "secretName": "",
+                                "forceUpdate": "true",
+                                "configMapName": "",
+                                "forceUpdateConfigMap": "false",
+                                "useConfigMapFile": "false",
+                                "configMapFile": "",
+                                "configMapArguments": "",
+                                "versionOrLocation": "version",
+                                "versionSpec": "1.13.2",
+                                "checkLatest": "false",
+                                "specifyLocation": "",
+                                "cwd": "$(System.DefaultWorkingDirectory)",
+                                "outputFormat": "json"
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "6c731c3c-3c68-459a-a5c9-bde6e6595b5b",
+                            "version": "3.*",
+                            "name": "Ensure tiller service account exists",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "targetType": "inline",
+                                "filePath": "",
+                                "arguments": "",
+                                "script": "kubectl get sa tiller -n kube-system\nSA_EXISTS=$?\nkubectl get clusterrolebinding -n kube-system tiller-binding\nBINDING_EXISTS=$?\n\nset -e\nif [ $SA_EXISTS -ne 0 ]; then\n  kubectl create sa tiller -n kube-system\nfi\nif [ $BINDING_EXISTS -ne 0 ]; then\n  kubectl create clusterrolebinding tiller-binding --clusterrole=cluster-admin --serviceaccount=kube-system:tiller -n kube-system\n  sleep 10\nfi",
+                                "workingDirectory": "",
+                                "failOnStderr": "false"
                             }
                         },
                         {
@@ -144,7 +192,7 @@
                                 "resetValues": "false",
                                 "force": "false",
                                 "waitForExecution": "true",
-                                "arguments": "",
+                                "arguments": "--service-account tiller --history-max 10",
                                 "enableTls": "false",
                                 "caCert": "",
                                 "certificate": "",
@@ -169,7 +217,7 @@
                                 "targetType": "inline",
                                 "filePath": "",
                                 "arguments": "",
-                                "script": "repo=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/mywebapi/image/repo.txt\")\ntag=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/mywebapi/image/tag.txt\")\necho \"##vso[task.setvariable variable=mywebapiRepo;]$repo\"\necho \"##vso[task.setvariable variable=mywebapiTag;]$tag\"",
+                                "script": "set -e\nrepo=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/mywebapi/image/repo.txt\")\ntag=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/mywebapi/image/tag.txt\")\necho \"##vso[task.setvariable variable=mywebapiRepo;]$repo\"\necho \"##vso[task.setvariable variable=mywebapiTag;]$tag\"",
                                 "workingDirectory": "",
                                 "failOnStderr": "false"
                             }
@@ -236,7 +284,7 @@
                                 "targetType": "inline",
                                 "filePath": "",
                                 "arguments": "",
-                                "script": "repo=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/webfrontend/image/repo.txt\")\ntag=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/webfrontend/image/tag.txt\")\necho \"##vso[task.setvariable variable=webfrontendRepo;]$repo\"\necho \"##vso[task.setvariable variable=webfrontendTag;]$tag\"",
+                                "script": "set -e\nrepo=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/webfrontend/image/repo.txt\")\ntag=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/webfrontend/image/tag.txt\")\necho \"##vso[task.setvariable variable=webfrontendRepo;]$repo\"\necho \"##vso[task.setvariable variable=webfrontendTag;]$tag\"",
                                 "workingDirectory": "",
                                 "failOnStderr": "false"
                             }
@@ -266,7 +314,7 @@
                                 "chartPath": "$(System.DefaultWorkingDirectory)/drop/webfrontend/chart",
                                 "version": "",
                                 "releaseName": "webfrontend-$(Environment)",
-                                "overrideValues": "image.repository=$(webfrontendRepo),image.tag=$(webfrontendTag),ingress.hosts[0]=$(Environment).webfrontend.$(httpApplicationRoutingZone)",
+                                "overrideValues": "image.repository=$(webfrontendRepo),image.tag=$(webfrontendTag),ingress.hosts[0]=$(Environment).webfrontend.$(DevSpacesHostSuffix),ingress.annotations.\"kubernetes\\.io/ingress\\.class\"=traefik-azds",
                                 "valueFile": "",
                                 "destination": "",
                                 "canaryimage": "false",
@@ -284,6 +332,30 @@
                                 "certificate": "",
                                 "privatekey": "",
                                 "tillernamespace": ""
+                            }
+                        },
+                        {
+                            "environment": {
+                                "ENVIRONMENT": "$(Environment)"
+                            },
+                            "taskId": "6c731c3c-3c68-459a-a5c9-bde6e6595b5b",
+                            "version": "3.*",
+                            "name": "Print webfrontend public hostname",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "targetType": "inline",
+                                "filePath": "",
+                                "arguments": "",
+                                "script": "set -e\nWEBFRONTEND_HOSTNAME=$(kubectl get ingress webfrontend -n $ENVIRONMENT -o go-template=\"{{(index .spec.rules 0).host}}\")\necho webfrontend can be accessed at http://$WEBFRONTEND_HOSTNAME",
+                                "workingDirectory": "",
+                                "failOnStderr": "false"
                             }
                         }
                     ]
@@ -331,8 +403,7 @@
                         "label": "Connection Type.",
                         "defaultValue": "Azure Resource Manager",
                         "type": "pickList",
-                        "helpMarkDown": "",
-                        "groupName": ""
+                        "helpMarkDown": ""
                     },
                     {
                         "name": "azureSubscriptionEndpoint",
@@ -340,9 +411,7 @@
                         "defaultValue": "",
                         "required": true,
                         "type": "connectedService:AzureRM",
-                        "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
-                        "visibleRule": "connectionType = Azure Resource Manager",
-                        "groupName": ""
+                        "helpMarkDown": "Select an Azure subscription, which has your Azure Kubernetes Service cluster."
                     },
                     {
                         "properties": {
@@ -353,9 +422,7 @@
                         "defaultValue": "",
                         "required": true,
                         "type": "pickList",
-                        "helpMarkDown": "Select an Azure Resource Group.",
-                        "visibleRule": "connectionType = Azure Resource Manager",
-                        "groupName": ""
+                        "helpMarkDown": "Select an Azure Resource Group."
                     },
                     {
                         "properties": {
@@ -366,9 +433,7 @@
                         "defaultValue": "",
                         "required": true,
                         "type": "pickList",
-                        "helpMarkDown": "Select an Azure Kubernetes Service cluster.",
-                        "visibleRule": "connectionType = Azure Resource Manager",
-                        "groupName": ""
+                        "helpMarkDown": "Select an Azure Kubernetes Service cluster."
                     }
                 ],
                 "dataSourceBindings": [
@@ -454,31 +519,6 @@
                     "workflowTasks": [
                         {
                             "environment": {},
-                            "taskId": "46e4be58-730b-4389-8a2f-ea10b3e5e815",
-                            "version": "1.*",
-                            "name": "Fetch HTTPApplicationRoutingZone",
-                            "refName": "",
-                            "enabled": true,
-                            "alwaysRun": false,
-                            "continueOnError": false,
-                            "timeoutInMinutes": 0,
-                            "definitionType": "task",
-                            "overrideInputs": {},
-                            "condition": "succeeded()",
-                            "inputs": {
-                                "connectedServiceNameARM": "$(Parameters.azureSubscriptionEndpoint)",
-                                "scriptLocation": "inlineScript",
-                                "scriptPath": "",
-                                "inlineScript": "httpApplicationRoutingZone=$(az aks show -g $PARAMETERS_AZURERESOURCEGROUP -n $PARAMETERS_KUBERNETESCLUSTER -o json | jq -r .addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName)\necho \"##vso[task.setvariable variable=httpApplicationRoutingZone;]$httpApplicationRoutingZone\"",
-                                "args": "",
-                                "addSpnToEnvironment": "false",
-                                "useGlobalConfig": "false",
-                                "cwd": "",
-                                "failOnStandardError": "false"
-                            }
-                        },
-                        {
-                            "environment": {},
                             "taskId": "068d5909-43e6-48c5-9e01-7c8a94816220",
                             "version": "0.*",
                             "name": "Install Helm 2.11.0",
@@ -493,9 +533,77 @@
                             "inputs": {
                                 "helmVersion": "2.11.0",
                                 "checkLatestHelmVersion": "false",
-                                "installKubeCtl": "true",
+                                "installKubeCtl": "false",
                                 "kubectlVersion": "1.10.9",
                                 "checkLatestKubeCtl": "false"
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "cbc316a2-586f-4def-be79-488a1f503564",
+                            "version": "1.*",
+                            "name": "kubectl login",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "connectionType": "$(Parameters.connectionType)",
+                                "azureSubscriptionEndpoint": "$(Parameters.azureSubscriptionEndpoint)",
+                                "azureResourceGroup": "$(Parameters.azureResourceGroup)",
+                                "kubernetesCluster": "$(Parameters.kubernetesCluster)",
+                                "namespace": "",
+                                "command": "login",
+                                "useConfigurationFile": "false",
+                                "configurationType": "configuration",
+                                "configuration": "",
+                                "inline": "",
+                                "arguments": "",
+                                "secretType": "dockerRegistry",
+                                "secretArguments": "",
+                                "containerRegistryType": "Azure Container Registry",
+                                "dockerRegistryEndpoint": "",
+                                "azureSubscriptionEndpointForSecrets": "",
+                                "azureContainerRegistry": "",
+                                "secretName": "",
+                                "forceUpdate": "true",
+                                "configMapName": "",
+                                "forceUpdateConfigMap": "false",
+                                "useConfigMapFile": "false",
+                                "configMapFile": "",
+                                "configMapArguments": "",
+                                "versionOrLocation": "version",
+                                "versionSpec": "1.13.2",
+                                "checkLatest": "false",
+                                "specifyLocation": "",
+                                "cwd": "$(System.DefaultWorkingDirectory)",
+                                "outputFormat": "json"
+                            }
+                        },
+                        {
+                            "environment": {},
+                            "taskId": "6c731c3c-3c68-459a-a5c9-bde6e6595b5b",
+                            "version": "3.*",
+                            "name": "Ensure tiller service account exists",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "targetType": "inline",
+                                "filePath": "",
+                                "arguments": "",
+                                "script": "kubectl get sa tiller -n kube-system\nSA_EXISTS=$?\nkubectl get clusterrolebinding -n kube-system tiller-binding\nBINDING_EXISTS=$?\n\nset -e\nif [ $SA_EXISTS -ne 0 ]; then\n  kubectl create sa tiller -n kube-system\nfi\nif [ $BINDING_EXISTS -ne 0 ]; then\n  kubectl create clusterrolebinding tiller-binding --clusterrole=cluster-admin --serviceaccount=kube-system:tiller -n kube-system\n  sleep 10\nfi",
+                                "workingDirectory": "",
+                                "failOnStderr": "false"
                             }
                         },
                         {
@@ -535,7 +643,7 @@
                                 "resetValues": "false",
                                 "force": "false",
                                 "waitForExecution": "true",
-                                "arguments": "",
+                                "arguments": "--service-account tiller --history-max 10",
                                 "enableTls": "false",
                                 "caCert": "",
                                 "certificate": "",
@@ -560,7 +668,7 @@
                                 "targetType": "inline",
                                 "filePath": "",
                                 "arguments": "",
-                                "script": "repo=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/mywebapi/image/repo.txt\")\ntag=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/mywebapi/image/tag.txt\")\necho \"##vso[task.setvariable variable=mywebapiRepo;]$repo\"\necho \"##vso[task.setvariable variable=mywebapiTag;]$tag\"",
+                                "script": "set -e\nrepo=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/mywebapi/image/repo.txt\")\ntag=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/mywebapi/image/tag.txt\")\necho \"##vso[task.setvariable variable=mywebapiRepo;]$repo\"\necho \"##vso[task.setvariable variable=mywebapiTag;]$tag\"",
                                 "workingDirectory": "",
                                 "failOnStderr": "false"
                             }
@@ -627,7 +735,7 @@
                                 "targetType": "inline",
                                 "filePath": "",
                                 "arguments": "",
-                                "script": "repo=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/webfrontend/image/repo.txt\")\ntag=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/webfrontend/image/tag.txt\")\necho \"##vso[task.setvariable variable=webfrontendRepo;]$repo\"\necho \"##vso[task.setvariable variable=webfrontendTag;]$tag\"",
+                                "script": "set -e\nrepo=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/webfrontend/image/repo.txt\")\ntag=$(cat \"$SYSTEM_DEFAULTWORKINGDIRECTORY/drop/webfrontend/image/tag.txt\")\necho \"##vso[task.setvariable variable=webfrontendRepo;]$repo\"\necho \"##vso[task.setvariable variable=webfrontendTag;]$tag\"",
                                 "workingDirectory": "",
                                 "failOnStderr": "false"
                             }
@@ -657,7 +765,7 @@
                                 "chartPath": "$(System.DefaultWorkingDirectory)/drop/webfrontend/chart",
                                 "version": "",
                                 "releaseName": "webfrontend-$(Environment)",
-                                "overrideValues": "image.repository=$(webfrontendRepo),image.tag=$(webfrontendTag),ingress.hosts[0]=$(Environment).webfrontend.$(httpApplicationRoutingZone)",
+                                "overrideValues": "image.repository=$(webfrontendRepo),image.tag=$(webfrontendTag),ingress.enabled=false,service.type=LoadBalancer",
                                 "valueFile": "",
                                 "destination": "",
                                 "canaryimage": "false",
@@ -675,6 +783,30 @@
                                 "certificate": "",
                                 "privatekey": "",
                                 "tillernamespace": ""
+                            }
+                        },
+                        {
+                            "environment": {
+                                "ENVIRONMENT": "$(Environment)"
+                            },
+                            "taskId": "6c731c3c-3c68-459a-a5c9-bde6e6595b5b",
+                            "version": "3.*",
+                            "name": "Print webfrontend public IP",
+                            "refName": "",
+                            "enabled": true,
+                            "alwaysRun": false,
+                            "continueOnError": false,
+                            "timeoutInMinutes": 0,
+                            "definitionType": "task",
+                            "overrideInputs": {},
+                            "condition": "succeeded()",
+                            "inputs": {
+                                "targetType": "inline",
+                                "filePath": "",
+                                "arguments": "",
+                                "script": "set -e\nWEBFRONTEND_PUBLICIP=$(kubectl get service webfrontend -n $ENVIRONMENT -o go-template=\"{{(index .status.loadBalancer.ingress 0).ip}}\")\necho webfrontend can be accessed at http://$WEBFRONTEND_PUBLICIP",
+                                "workingDirectory": "",
+                                "failOnStderr": "false"
                             }
                         }
                     ]
@@ -774,28 +906,7 @@
             }
         }
     ],
-    "artifacts": [],
-    "triggers": [
-        {
-            "artifactAlias": "drop",
-            "triggerConditions": [
-                {
-                    "sourceBranch": "azds_updates",
-                    "tags": [],
-                    "useBuildDefinitionBranch": false,
-                    "createReleaseOnBuildTagging": false
-                }
-            ],
-            "triggerType": 1
-        }
-    ],
     "releaseNameFormat": "Release-$(rev:r)",
-    "properties": {
-        "DefinitionCreationSource": {
-            "$type": "System.String",
-            "$value": "Other"
-        }
-    },
     "name": "DevSpaces SampleApp Release",
     "path": "\\"
 }
