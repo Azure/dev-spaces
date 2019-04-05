@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "name": "Launch Java Program (AZDS)",
+            "type": "java-azds",
+            "request": "launch",
+            "preLaunchTask": "azds: prelaunch",
+            "projectName": "webfrontend",
+            "mainClass": "",
+            "port": 51796,
+            "cwd": "/usr/src/app"
+        }
+    ]
+}
