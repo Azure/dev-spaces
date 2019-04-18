@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 var app = angular.module('myApp', ['ngRoute']);
 
 app.controller('MainController', function($scope, $http) {
