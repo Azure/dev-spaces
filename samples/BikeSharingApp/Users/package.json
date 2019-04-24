@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ContosoBikeRental/BikeSharingSampleApp.git"
+    "url": "git+https://github.com/Azure/dev-spaces.git"
   },
   "author": "",
   "license": "ISC",
@@ -27,7 +27,7 @@
     "nodemon": "^1.18.10"
   },
   "bugs": {
-    "url": "https://github.com/ContosoBikeRental/BikeSharingSampleApp/issues"
+    "url": "https://github.com/Azure/dev-spaces/issues"
   },
-  "homepage": "https://github.com/ContosoBikeRental/BikeSharingSampleApp#readme"
+  "homepage": "https://github.com/Azure/dev-spaces#readme"
 }
