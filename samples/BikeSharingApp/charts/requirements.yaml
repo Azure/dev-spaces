@@ -1,0 +1,28 @@
+dependencies:
+  - name: bikes
+    version: 0.1.0
+    repository: "file://../Bikes/charts/bikes"
+  - name: bikesharingweb
+    version: 0.1.0
+    repository: "file://../BikeSharingWeb/charts/bikesharingweb"
+  - name: billing
+    version: 0.1.0
+    repository: "file://../Billing/charts/billing"
+  - name: databases
+    version: 0.1.0
+    repository: "file://../Databases/charts/databases"
+  - name: gateway
+    version: 0.1.0
+    repository: "file://../Gateway/charts/gateway"
+  - name: populatedatabase
+    version: 0.1.0
+    repository: "file://../PopulateDatabase/charts/populatedatabase"
+  - name: reservation
+    version: 0.1.0
+    repository: "file://../Reservation/charts/reservation"
+  - name: reservationengine
+    version: 0.1.0
+    repository: "file://../ReservationEngine/charts/reservationengine"
+  - name: users
+    version: 0.1.0
+    repository: "file://../Users/charts/users"

@@ -1,0 +1,26 @@
+kind: helm-release
+apiVersion: 1.1
+build:
+  context: .
+  dockerfile: Dockerfile
+install:
+  chart: charts/reservation
+  values:
+  - values.dev.yaml?
+  - secrets.dev.yaml?
+  set:
+    replicaCount: 1
+    image:
+      repository: reservation
+      tag: $(tag)
+      pullPolicy: Never
+    ingress:
+      annotations:
+        kubernetes.io/ingress.class: traefik-azds
+      hosts:
+      # This expands to [space.s.][rootSpace.]reservation.<random suffix>.<region>.azds.io
+      - $(spacePrefix)$(rootSpacePrefix)reservation$(hostSuffix)
+configurations:
+  develop:
+    build:
+      useGitIgnore: true
