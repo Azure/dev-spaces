@@ -1,4 +1,7 @@
 dependencies:
+  - name: databases
+    version: 0.1.0
+    repository: "file://../Databases/charts/databases"
   - name: bikes
     version: 0.1.0
     repository: "file://../Bikes/charts/bikes"
@@ -8,15 +11,9 @@ dependencies:
   - name: billing
     version: 0.1.0
     repository: "file://../Billing/charts/billing"
-  - name: databases
-    version: 0.1.0
-    repository: "file://../Databases/charts/databases"
   - name: gateway
     version: 0.1.0
     repository: "file://../Gateway/charts/gateway"
-  - name: populatedatabase
-    version: 0.1.0
-    repository: "file://../PopulateDatabase/charts/populatedatabase"
   - name: reservation
     version: 0.1.0
     repository: "file://../Reservation/charts/reservation"
@@ -26,3 +23,6 @@ dependencies:
   - name: users
     version: 0.1.0
     repository: "file://../Users/charts/users"
+  - name: populatedatabase
+    version: 0.1.0
+    repository: "file://../PopulateDatabase/charts/populatedatabase"
