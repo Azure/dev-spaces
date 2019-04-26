@@ -93,10 +93,7 @@ function requestIDParser(req, res, next) {
 // find bike ------------------------------------------------------------
 app.get('/api/availableBikes', function (req, res) {
     var requestID = req.header(requestIDHeaderName);
-    
-    var query = {};
-    // BUG! Uncomment code to fix :)
-    // query = { available: true };
+    var query = { available: true };
 
     // Add user filter conditions
     for (var queryParam in req.query) {
