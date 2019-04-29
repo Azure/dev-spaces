@@ -1,0 +1,4 @@
+# Azure Dev Spaces Samples
+These sample projects are used in Azure Dev Spaces documentation to demonstrate product capabilities.
+1. **BikeSharingApp**: A large application implemented as multiple microservices written in various languages. This provides a good example of what Azure Dev Spaces can provide to a team developing large applications. For documentation see: <https://docs.microsoft.com/en-us/azure/dev-spaces/quickstart-team-development>
+1. **dotnetcore/golang/java/nodejs**: Simple applications to demonstrate how Azure Dev Spaces can help developers writing code in specific languages. For documentation see: <https://aka.ms/get-azds>
