@@ -5,7 +5,7 @@ metadata:
   labels:
     app: {{ template "reservationengine.name" . }}
     chart: {{ template "reservationengine.chart" . }}
-    draft: {{ default "draft-app" .Values.draft }}
+    draft: {{ .Values.draft | default "draft-app" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
@@ -18,10 +18,10 @@ spec:
     metadata:
       labels:
         app: {{ template "reservationengine.name" . }}
-        draft: {{ default "draft-app" .Values.draft }}
+        draft: {{ .Values.draft | default "draft-app" }}
         release: {{ .Release.Name }}
       annotations:
-        buildID: {{ .Values.buildID }}
+        buildID: {{ .Values.buildID | default "" | quote }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
