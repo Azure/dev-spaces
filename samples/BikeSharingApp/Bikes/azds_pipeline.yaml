@@ -115,6 +115,7 @@ stages:
               helmChart: '$(System.ArtifactsDirectory)/charts'
               releaseName: bikesharing
               overrides: |
+                image.repository:$(containerRegistry)/$(imageRepository)
                 image.tag:$(Build.BuildId)
                 buildID:"1"
                
