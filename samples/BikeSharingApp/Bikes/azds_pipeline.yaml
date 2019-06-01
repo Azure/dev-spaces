@@ -212,7 +212,7 @@ stages:
               azureSubscription: $(azureServiceConnection)
               scriptLocation: inlineScript
               inlineScript: |
-                az aks use-dev-spaces -n $(AZDSControllerName) -g $(AZDSControllerName) -y -s $(k8sNamespace)/$(system.pullRequest.sourceBranch) --update
+                az aks use-dev-spaces -n $(AZDSControllerName) -g $(AZDSControllerRG) -y -s $(k8sNamespace)/$(system.pullRequest.sourceBranch) --update
                 azds up -d
                 azds list-uris -o json 
                 azds list-uris -o json > $(AGENT.TEMPDIRECTORY)/azdsuri.txt
