@@ -32,7 +32,7 @@ variables:
   AZDSControllerRG: 'winlinuxk8s'
   
   # Create Azure Service connection and provide the connection name or it's GUID here. Learn more https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#sep-azure-rm
-  azureServiceConnection: 'ARME'
+  azureServiceConnection: 'ARM'
   
   # Create GitHub Service connection and provide the connection name or it's GUID here. Learn more https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#sep-github
   githubServiceConnection: 'Github001'
