@@ -30,12 +30,18 @@ namespace app.Middleware
                 await this._next(context);
 
                 context.Response.Body = responseStream;
-                memStream.Seek(0, SeekOrigin.Begin);
-                using (StreamReader reader = new StreamReader(memStream))
+                // Writing to response body is not supported for 204, 205 and 304 responses.
+                if (context.Response.StatusCode != 204 /* NoContent */ &&
+                    context.Response.StatusCode != 205 /* ResetContent */ &&
+                    context.Response.StatusCode != 304 /* NotModified */)
                 {
-                    responseBody = await reader.ReadToEndAsync();
+                    memStream.Seek(0, SeekOrigin.Begin);
+                    using (StreamReader reader = new StreamReader(memStream))
+                    {
+                        responseBody = await reader.ReadToEndAsync();
+                    }
+                    await context.Response.WriteAsync(responseBody);
                 }
-                await context.Response.WriteAsync(responseBody);
             }
 
             if (context.Response.StatusCode >= 500)
