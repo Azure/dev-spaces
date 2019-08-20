@@ -8,6 +8,3 @@ jobs:
 - template: ../../azure-pipelines.template.yml
   parameters:
     language: 'dotnetcore'
-  variables:
-    dockerId: 'acrdevspace'
-    dockerPassword: 'sRChF110J8fSZ30cANz7XQty=M9CPqj2'
