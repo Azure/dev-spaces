@@ -39,7 +39,7 @@
         "ownerUserId": "16a46619738a4865a5afcb5e18ffb138",
         "suitableHeightInMeters": 1.7,
         "maximumWeightInKg": 150,
-        "imageUrl": "https://contosobikerental.blob.core.windows.net/public/images/sample-bike-02.jpg"
+        "imageUrl": "https://github.com/Azure/dev-spaces/blob/master/assets/sample-bike-01.jpg"
       },
       {
         "model": "Men's Comfort",
@@ -49,7 +49,7 @@
         "ownerUserId": "16a46619738a4865a5afcb5e18ffb138",
         "suitableHeightInMeters": 1.7,
         "maximumWeightInKg": 150,
-        "imageUrl": "https://contosobikerental.blob.core.windows.net/public/images/sample-bike-11.jpg"
+        "imageUrl": "https://github.com/Azure/dev-spaces/blob/master/assets/sample-bike-02.jpg"
       },
       {
         "model": "Men's Cruiser",
@@ -59,7 +59,7 @@
         "ownerUserId": "16a46619738a4865a5afcb5e18ffb138",
         "suitableHeightInMeters": 1.7,
         "maximumWeightInKg": 150,
-        "imageUrl": "https://contosobikerental.blob.core.windows.net/public/images/sample-bike-01.jpg"
+        "imageUrl": "https://github.com/Azure/dev-spaces/blob/master/assets/sample-bike-03.jpg"
       },
       {
         "model": "Men's Comfort",
@@ -69,7 +69,7 @@
         "ownerUserId": "16a46619738a4865a5afcb5e18ffb138",
         "suitableHeightInMeters": 1.7,
         "maximumWeightInKg": 150,
-        "imageUrl": "https://contosobikerental.blob.core.windows.net/public/images/sample-bike-14.jpg"
+        "imageUrl": "https://github.com/Azure/dev-spaces/blob/master/assets/sample-bike-04.jpg"
       },
       {
         "model": "Men's Cruiser",
@@ -79,7 +79,7 @@
         "ownerUserId": "16a46619738a4865a5afcb5e18ffb138",
         "suitableHeightInMeters": 1.7,
         "maximumWeightInKg": 150,
-        "imageUrl": "https://contosobikerental.blob.core.windows.net/public/images/sample-bike-03.jpg"
+        "imageUrl": "https://github.com/Azure/dev-spaces/blob/master/assets/sample-bike-05.jpg"
       },
       {
         "model": "Girl's Cruiser",
@@ -89,7 +89,7 @@
         "ownerUserId": "16a46619738a4865a5afcb5e18ffb138",
         "suitableHeightInMeters": 1.2,
         "maximumWeightInKg": 75,
-        "imageUrl": "https://contosobikerental.blob.core.windows.net/public/images/sample-bike-09.jpg"
+        "imageUrl": "https://github.com/Azure/dev-spaces/blob/master/assets/sample-bike-06.jpg"
       },
       {
         "model": "Women's Cruiser",
@@ -99,7 +99,7 @@
         "ownerUserId": "16a46619738a4865a5afcb5e18ffb138",
         "suitableHeightInMeters": 1.7,
         "maximumWeightInKg": 150,
-        "imageUrl": "https://contosobikerental.blob.core.windows.net/public/images/sample-bike-10.jpg"
+        "imageUrl": "https://github.com/Azure/dev-spaces/blob/master/assets/sample-bike-07.jpg"
       },
       {
         "model": "Women's Cruiser",
@@ -109,7 +109,7 @@
         "ownerUserId": "16a46619738a4865a5afcb5e18ffb138",
         "suitableHeightInMeters": 1.7,
         "maximumWeightInKg": 150,
-        "imageUrl": "https://contosobikerental.blob.core.windows.net/public/images/sample-bike-08.jpg"
+        "imageUrl": "https://github.com/Azure/dev-spaces/blob/master/assets/sample-bike-08.jpg"
       },
       {
         "model": "Men's Racing",
@@ -119,7 +119,7 @@
         "ownerUserId": "16a46619738a4865a5afcb5e18ffb138",
         "suitableHeightInMeters": 1.7,
         "maximumWeightInKg": 150,
-        "imageUrl": "https://contosobikerental.blob.core.windows.net/public/images/sample-bike-15.jpg"
+        "imageUrl": "https://github.com/Azure/dev-spaces/blob/master/assets/sample-bike-09.jpg"
       },
       {
         "model": "Men's Cruiser",
@@ -129,7 +129,7 @@
         "ownerUserId": "16a46619738a4865a5afcb5e18ffb138",
         "suitableHeightInMeters": 1.7,
         "maximumWeightInKg": 150,
-        "imageUrl": "https://contosobikerental.blob.core.windows.net/public/images/sample-bike-04.jpg"
+        "imageUrl": "https://github.com/Azure/dev-spaces/blob/master/assets/sample-bike-10.jpg"
       },
       {
         "model": "Women's Racer",
@@ -139,7 +139,7 @@
         "ownerUserId": "16a46619738a4865a5afcb5e18ffb138",
         "suitableHeightInMeters": 1.7,
         "maximumWeightInKg": 150,
-        "imageUrl": "https://contosobikerental.blob.core.windows.net/public/images/sample-bike-05.jpg"
+        "imageUrl": "https://github.com/Azure/dev-spaces/blob/master/assets/sample-bike-11.jpg"
       }
     ]
   }
