@@ -14,8 +14,8 @@ jobs:
     - uses: actions/checkout@master
     
     - name: REF 
-      run: ${ GITHUB_REF }
-    
+      run: $GITHUB_REF
+      
     - uses: azure/container-actions/docker-login@master
       with:
         login-server: nickgdemo.azurecr.io
