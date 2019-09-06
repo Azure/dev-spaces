@@ -52,6 +52,6 @@ jobs:
     - run: |
         cd samples/BikeSharingApp/Bikes
         az aks use-dev-spaces -n NickGDemo -g NickGDemo -y -s dev/$GITHUB_SHA --update
-        azds up
+        azds up -d
         azds list-uris
       
