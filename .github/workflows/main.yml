@@ -1,0 +1,60 @@
+name: PRFlow
+
+on:
+  pull_request:
+    branches:
+    - master
+    paths:
+    - samples/BikeSharingApp/Bikes/*    
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    
+    - name: list 
+      run: ls -R
+    
+    - uses: azure/container-actions/docker-login@master
+      with:
+        login-server: nickgdemo.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    
+    - run: |
+        docker build samples/BikeSharingApp/Bikes/ -t nickgdemo.azurecr.io/bikes:${{ github.sha }}
+        docker push nickgdemo.azurecr.io/bikes:${{ github.sha }}
+      
+    # Set the target AKS cluster. 
+    - uses: azure/k8s-actions/aks-set-context@master
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: NickGDemo
+        resource-group: NickGDemo
+        
+    - uses: azure/k8s-actions/k8s-create-secret@master
+      with:
+        container-registry-url: nickgdemo.azurecr.io
+        container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        secret-name: nick-demo-secret
+        
+    - name: Create Child Namespace
+      run:  kubectl create namespace ${{ GITHUB_REF }}
+      
+    - name: Add Dev Spaces label to namespace
+      run:  kubectl label --overwrite ${{ GITHUB_REF }} azds.io/parent-space=dev
+      
+    - name: Install the Dev Spaces CLI
+      run:  az aks use-dev-spaces -n NickGDemo -g NickGDemo -y -s dev/${{ GITHUB_REF }} --update
+      
+    - name: CD 
+      run: cd samples/BikeSharingApp/Bikes
+      
+    - name: AZDS List Uris
+      run:  azds up
+      
+    - name: AZDS List Uris
+      run:  azds list-uris
+      
