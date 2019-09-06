@@ -53,6 +53,9 @@ jobs:
     - name: CD 
       run: cd samples/BikeSharingApp/Bikes
       
+    - name: CD 
+      run: ls -R
+      
     - name: AZDS List Uris
       run:  azds up
       
