@@ -41,8 +41,10 @@ jobs:
       run:  kubectl create namespace $GITHUB_SHA
       
     - name: Add Dev Spaces label to namespace
-      run:  kubectl label pods --all --namespace=$GITHUB_SHA azds.io/parent-space=dev
-      
+      run:  |
+        kubectl label namespace $GITHUB_SHA azds.io/parent-space=dev 
+        kubectl label namespace $GITHUB_SHA azds.io/space=true
+        
     - uses: azure/actions/login@master
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
