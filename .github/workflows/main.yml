@@ -48,17 +48,8 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         
     - run: |
-        az aks use-dev-spaces -n NickGDemo -g NickGDemo -y -s dev/$GITHUB_SHA --update
-      
-    - name: CD 
-      run: |
         cd samples/BikeSharingApp/Bikes
-        ls -R
+        az aks use-dev-spaces -n NickGDemo -g NickGDemo -y -s dev/$GITHUB_SHA --update
         azds up
-      
-    - name: AZDS List Uris
-      run:  azds up
-      
-    - name: AZDS List Uris
-      run:  azds list-uris
+        azds list-uris
       
