@@ -51,10 +51,10 @@ jobs:
         az aks use-dev-spaces -n NickGDemo -g NickGDemo -y -s dev/$GITHUB_SHA --update
       
     - name: CD 
-      run: cd samples/BikeSharingApp/Bikes
-      
-    - name: CD 
-      run: ls -R
+      run: |
+        cd samples/BikeSharingApp/Bikes
+        ls -R
+        azds up
       
     - name: AZDS List Uris
       run:  azds up
