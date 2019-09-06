@@ -43,8 +43,12 @@ jobs:
     - name: Add Dev Spaces label to namespace
       run:  kubectl label pods --all --namespace=$GITHUB_SHA azds.io/parent-space=dev
       
-    - name: Install the Dev Spaces CLI
-      run:  az aks use-dev-spaces -n NickGDemo -g NickGDemo -y -s dev/$GITHUB_SHA --update
+    - uses: azure/actions/login@master
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - run: |
+        az aks use-dev-spaces -n NickGDemo -g NickGDemo -y -s dev/$GITHUB_SHA --update
       
     - name: CD 
       run: cd samples/BikeSharingApp/Bikes
