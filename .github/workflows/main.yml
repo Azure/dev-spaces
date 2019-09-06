@@ -12,9 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    
-    - name: REF 
-      run: echo $GITHUB_REF
       
     - uses: azure/container-actions/docker-login@master
       with:
@@ -41,13 +38,13 @@ jobs:
         secret-name: nick-demo-secret
         
     - name: Create Child Namespace
-      run:  kubectl create namespace ${ GITHUB_REF }
+      run:  kubectl create namespace $GITHUB_REF
       
     - name: Add Dev Spaces label to namespace
-      run:  kubectl label --overwrite ${ GITHUB_REF } azds.io/parent-space=dev
+      run:  kubectl label --overwrite $GITHUB_REF azds.io/parent-space=dev
       
     - name: Install the Dev Spaces CLI
-      run:  az aks use-dev-spaces -n NickGDemo -g NickGDemo -y -s dev/${ GITHUB_REF } --update
+      run:  az aks use-dev-spaces -n NickGDemo -g NickGDemo -y -s dev/$GITHUB_REF --update
       
     - name: CD 
       run: cd samples/BikeSharingApp/Bikes
