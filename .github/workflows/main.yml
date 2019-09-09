@@ -13,15 +13,9 @@ jobs:
     steps:
     - uses: actions/checkout@master
       
-    - uses: azure/container-actions/docker-login@master
-      with:
-        login-server: nickgdemo.azurecr.io
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
-    
-    - run: |
-        docker build samples/BikeSharingApp/Bikes/ -t nickgdemo.azurecr.io/bikes:${{ github.sha }}
-        docker push nickgdemo.azurecr.io/bikes:${{ github.sha }}
+    - name: Print env
+      run: |
+        printenv
       
     # Set the target AKS cluster. 
     - uses: azure/k8s-actions/aks-set-context@master
