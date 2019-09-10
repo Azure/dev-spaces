@@ -1,4 +1,4 @@
-name: PRFlow BikeSharingWeb
+name: PRFlowBikeSharingWeb
 
 on:
   pull_request:
