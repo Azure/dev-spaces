@@ -3,7 +3,7 @@ name: PRFlow
 on:
   pull_request:
     branches:
-    - master
+    - ${{ secrets.REGISTRY_USERNAME }}
     paths:
     - samples/BikeSharingApp/Bikes/*    
 
@@ -13,7 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@master
 
-    # Set the target AKS cluster. 
     - uses: azure/k8s-actions/aks-set-context@master
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
