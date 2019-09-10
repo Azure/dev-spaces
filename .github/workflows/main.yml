@@ -31,7 +31,7 @@ jobs:
       
     - name: Add Dev Spaces label to namespace
       run:  |
-        kubectl label namespace $GITHUB_SHA azds.io/parent-space=${{ secrets.REGISTRY_USERNAME }} 
+        kubectl label namespace $GITHUB_SHA azds.io/parent-space=${{ secrets.PARENT_SPACE }} 
         kubectl label namespace $GITHUB_SHA azds.io/space=true
         
     - uses: azure/actions/login@master
@@ -40,7 +40,7 @@ jobs:
         
     - run: |
         cd samples/BikeSharingApp/Bikes
-        az aks use-dev-spaces -n NickGDemo -g NickGDemo -y -s ${{ secrets.REGISTRY_USERNAME }}/$GITHUB_SHA --update
+        az aks use-dev-spaces -n NickGDemo -g NickGDemo -y -s ${{ secrets.PARENT_SPACE }}/$GITHUB_SHA --update
         azds up -d
         azds list-uris
       
