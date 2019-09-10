@@ -6,6 +6,7 @@ on:
     - master
     paths:
     - samples/BikeSharingApp/BikeSharingWeb/*    
+    - samples/BikeSharingApp/BikeSharingWeb/*/*
 
 jobs:
   build:
