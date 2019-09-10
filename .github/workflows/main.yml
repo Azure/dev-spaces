@@ -12,11 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-      
-    - name: Print env
-      run: |
-        printenv
-      
+
     # Set the target AKS cluster. 
     - uses: azure/k8s-actions/aks-set-context@master
       with:
