@@ -3,7 +3,7 @@ name: PRFlow
 on:
   pull_request:
     branches:
-    - ${{ secrets.REGISTRY_USERNAME }}
+    - ${{ secrets.BASE_BRANCH }}
     paths:
     - samples/BikeSharingApp/Bikes/*    
 
