@@ -48,4 +48,4 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         
     - run: |
-        helm upgrade --install -n $GITHUB_SHA bikesharing_$GITHUB_SHA samples/BikeSharingApp/Bikes/charts/bikes --set "image.repository=nickgdemo.azurecr.io/bikes,image.tag=$GITHUB_SHA,ingress.hosts[0]=$GITHUB_SHA.s.${{ secrets.PARENT_SPACE }}.bikesharing.${{ secrets.HOST_SUFFIX }},ingress.annotations.\"kubernetes\\.io/ingress\\.class\"=traefik-azds"
+        helm upgrade --install --namespace $GITHUB_SHA bikesharing_$GITHUB_SHA samples/BikeSharingApp/Bikes/charts/bikes --set "image.repository=nickgdemo.azurecr.io/bikes,image.tag=$GITHUB_SHA,ingress.hosts[0]=$GITHUB_SHA.s.${{ secrets.PARENT_SPACE }}.bikesharing.${{ secrets.HOST_SUFFIX }},ingress.annotations.\"kubernetes\\.io/ingress\\.class\"=traefik-azds"
