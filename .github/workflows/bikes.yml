@@ -46,4 +46,4 @@ jobs:
         kubectl label namespace $GITHUB_SHA azds.io/space=true
 
     - run: |
-        helm upgrade --install --namespace $GITHUB_SHA bikesharing-$GITHUB_SHA samples/BikeSharingApp/Bikes/charts/bikes --set "image.repository=nickgdemo.azurecr.io/bikes,image.tag=$GITHUB_SHA,ingress.hosts[0]=$GITHUB_SHA.s.${{ secrets.PARENT_SPACE }}.bikesharing.${{ secrets.HOST_SUFFIX }},ingress.annotations.\"kubernetes\\.io/ingress\\.class\"=traefik-azds"
+        helm upgrade --install --namespace $GITHUB_SHA bikesharing-$GITHUB_SHA samples/BikeSharingApp/Bikes/charts/bikes --set "image.repository=nickgdemo.azurecr.io/bikes,image.tag=$GITHUB_SHA,imagePullSecrets[0]=nick-demo-secret,ingress.hosts[0]=$GITHUB_SHA.s.${{ secrets.PARENT_SPACE }}.bikesharing.${{ secrets.HOST_SUFFIX }},ingress.annotations.\"kubernetes\\.io/ingress\\.class\"=traefik-azds"
