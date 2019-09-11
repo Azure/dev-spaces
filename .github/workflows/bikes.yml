@@ -48,4 +48,4 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         
     - run: |
-      helm upgrade bikesharing samples/BikeSharingApp/Bikes/charts/bikes --set "image.repository=nickgdemo.azurecr.io/bikes,image.tag=018691ea609fa6cca5f16d135f41319dce5df3fe,ingress.hosts[0]=018691ea609fa6cca5f16d135f41319dce5df3fe.dev.8fjkpxfmdj.eus.azds.io"
+      helm upgrade bikesharing samples/BikeSharingApp/Bikes/charts/bikes --set "image.repository=nickgdemo.azurecr.io/bikes,image.tag=018691ea609fa6cca5f16d135f41319dce5df3fe"
