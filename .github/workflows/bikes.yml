@@ -48,4 +48,4 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         
     - run: |
-        helm upgrade bikesharing samples/BikeSharingApp/Bikes/charts/bikes --set "image.repository=nickgdemo.azurecr.io/bikes,image.tag=$GITHUB_SHA,ingress.hosts[0]=$GITHUB_SHA.s.${{ secrets.PARENT_SPACE }}.${{ secrets.HOST_SUFFIX }},ingress.annotations.\"kubernetes\\.io/ingress\\.class\"=traefik-azds"
+        helm upgrade bikesharing samples/BikeSharingApp/Bikes/charts/bikes --set "image.repository=nickgdemo.azurecr.io/bikes,image.tag=$GITHUB_SHA,ingress.hosts[0]=$GITHUB_SHA.s.${{ secrets.PARENT_SPACE }}.bikesharing.${{ secrets.HOST_SUFFIX }},ingress.annotations.\"kubernetes\\.io/ingress\\.class\"=traefik-azds"
