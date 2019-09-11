@@ -20,7 +20,7 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
     
     - run: |
-        echo $GITHUB_REF
+        cat samples/BikeSharingApp/Bikes/server.js
         docker build samples/BikeSharingApp/Bikes/ -t nickgdemo.azurecr.io/bikes:$GITHUB_SHA
         docker push nickgdemo.azurecr.io/bikes:$GITHUB_SHA
       
