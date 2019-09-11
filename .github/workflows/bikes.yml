@@ -11,8 +11,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      env:
-        release_name: bikesharing
     - uses: actions/checkout@master
     - uses: azure/container-actions/docker-login@master
       with:
@@ -50,6 +48,6 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         
     - run: |
-        helm upgrade ${ RELEASE_NAME } samples/BikeSharingApp/Bikes/charts/bikes --set image.repository=nickgdemo.azurecr.io/bikes --set image.tag=${{ github.sha }}
+        helm upgrade bikesharing samples/BikeSharingApp/Bikes/charts/bikes --set image.repository=nickgdemo.azurecr.io/bikes --set image.tag=${{ github.sha }}
         azds list-uris
       
