@@ -38,14 +38,9 @@ jobs:
         kubectl label namespace $GITHUB_SHA azds.io/parent-space=${{ secrets.PARENT_SPACE }} 
         kubectl label namespace $GITHUB_SHA azds.io/space=true
         
-    - uses: azure/k8s-actions/k8s-create-secret@master
-      with:
-        namespace: ${ GITHUB_SHA }
-        secret-type: 'generic'
-        container-registry-url: nickgdemo.azurecr.io
-        container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
-        container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-        secret-name: nick-demo-secret
+    - name: Create K8s Secret
+      run:  |
+        kubectl create secret docker-registry nick-demo-secret --docker-username=${{ secrets.REGISTRY_USERNAME }} --docker-password=${{ secrets.REGISTRY_PASSWORD }} --docker-server=nickgdemo.azurecr.io --docker-email=nick@microsoft.com --namespace $GITHUB_SHA 
 
     - run: |
         helm upgrade --install --namespace $GITHUB_SHA bikesharing-$GITHUB_SHA samples/BikeSharingApp/Bikes/charts/bikes --set "image.repository=nickgdemo.azurecr.io/bikes,image.tag=$GITHUB_SHA,imagePullSecrets[0].name=nick-demo-secret,ingress.hosts[0]=$GITHUB_SHA.s.${{ secrets.PARENT_SPACE }}.bikesharing.${{ secrets.HOST_SUFFIX }},ingress.annotations.\"kubernetes\\.io/ingress\\.class\"=traefik-azds"
