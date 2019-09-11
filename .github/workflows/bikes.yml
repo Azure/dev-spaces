@@ -40,7 +40,7 @@ jobs:
         
     - uses: azure/k8s-actions/k8s-create-secret@master
       with:
-        namespace: '$GITHUB_SHA'
+        namespace: ${ GITHUB_SHA }
         secret-type: 'generic'
         container-registry-url: nickgdemo.azurecr.io
         container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
