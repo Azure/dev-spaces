@@ -48,6 +48,5 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         
     - run: |
-        helm upgrade bikesharing samples/BikeSharingApp/Bikes/charts/bikes --set image.repository=nickgdemo.azurecr.io/bikes --set image.tag=${{ github.sha }}
-        azds list-uris
+        helm upgrade bikesharing samples/BikeSharingApp/Bikes/charts/bikes --set image.repository=nickgdemo.azurecr.io/bikes --set image.tag=$GITHUB_SHA
       
