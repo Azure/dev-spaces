@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@$GITHUB_SHA
+    - uses: actions/checkout
     
     - uses: azure/container-actions/docker-login@master
       with:
