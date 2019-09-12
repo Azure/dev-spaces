@@ -11,6 +11,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    
+    - run: echo $GITHUB_REF
+    
     - uses: actions/checkout@master
     
     - uses: azure/container-actions/docker-login@master
@@ -20,7 +23,6 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
     
     - run: |
-        echo $GITHUB_REF
         docker build samples/BikeSharingApp/Bikes/ -t nickgdemo.azurecr.io/bikes:$GITHUB_SHA
         docker push nickgdemo.azurecr.io/bikes:$GITHUB_SHA
       
