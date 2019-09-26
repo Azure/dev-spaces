@@ -51,8 +51,8 @@ jobs:
     - uses: azure/k8s-actions/aks-set-context@master
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
-        cluster-name: NickGDemo
-        resource-group: NickGDemo
+        cluster-name: BikeSharingAKS
+        resource-group: bikesharing
          
     - name: Helm Install Master
       run: |
