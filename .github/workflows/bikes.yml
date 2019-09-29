@@ -48,4 +48,4 @@ jobs:
     - name: Helm Instal PR
       run: |
         helm upgrade --install --namespace $GITHUB_HEAD_REF bikesharing-$GITHUB_HEAD_REF samples/BikeSharingApp/Bikes/charts/bikes --set "image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes,image.tag=$GITHUB_SHA,imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }},ingress.hosts[0]=$GITHUB_HEAD_REF.s.${{ secrets.PARENT_SPACE }}.bikesharing.${{ secrets.HOST_SUFFIX }},ingress.annotations.\"kubernetes\\.io/ingress\\.class\"=traefik-azds"
- 
+        echo This succeeded: http://$GITHUB_HEAD_REF.s.${{ secrets.PARENT_SPACE }}.bikesharingweb.${{ secrets.HOST_SUFFIX }}/
