@@ -11,5 +11,5 @@ spec:
     spec:
       containers:
       - name: webfrontend
-        image: rifiel.azurecr.io/dev-spaces-frontend:944
+        image: __registryname__/__imagename__:__imagetag__
         imagePullPolicy: IfNotPresent
