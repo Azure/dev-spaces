@@ -11,5 +11,5 @@ spec:
     spec:
       containers:
       - name: mywebapi
-        image: $(imagename):$(Build.BuildId)
+        image: __imagename__:__Build.BuildId__
         imagePullPolicy: IfNotPresent
