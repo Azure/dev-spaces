@@ -8,7 +8,7 @@ app.get('/', function (req, res) {
     res.send('Hello from mywebapi');
 });
 
-var port = 80;
+var port = process.env.PORT || 3001;
 var server = app.listen(port, function () {
     console.log('Listening on port ' + port);
 });
