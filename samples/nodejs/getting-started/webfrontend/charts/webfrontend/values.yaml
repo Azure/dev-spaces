@@ -4,7 +4,7 @@
 fullnameOverride: webfrontend
 replicaCount: 1
 image:
-  repository: webfrontend
+  repository: rifiel.azurecr.io/dev-spaces-frontend
   tag: stable
   pullPolicy: IfNotPresent
 imagePullSecrets: []
