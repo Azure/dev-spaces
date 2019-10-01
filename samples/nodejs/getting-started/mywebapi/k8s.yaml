@@ -11,5 +11,5 @@ spec:
     spec:
       containers:
       - name: mywebapi
-        image: __imagename__:__Build.BuildId__
+        image: __registryname__/__imagename__:__imagetag__
         imagePullPolicy: IfNotPresent
