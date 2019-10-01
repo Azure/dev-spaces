@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mywebapi
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        editor: vscode
+    spec:
+      containers:
+      - name: mywebapi
+        image: $(imagename):$(Build.BuildId)
+        imagePullPolicy: IfNotPresent
