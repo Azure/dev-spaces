@@ -13,3 +13,5 @@ spec:
       - name: webfrontend
         image: __registryname__/__imagename__:__imagetag__
         imagePullPolicy: IfNotPresent
+
+
