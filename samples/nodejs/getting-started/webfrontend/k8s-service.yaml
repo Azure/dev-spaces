@@ -4,7 +4,7 @@ metadata:
   name:  webfrontend
 spec:
   selector:
-    name:  webfrontend
+    app:  webfrontend
   type:  LoadBalancer
   ports:
   - name:  http

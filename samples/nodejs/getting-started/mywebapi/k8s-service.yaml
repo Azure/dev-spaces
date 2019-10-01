@@ -4,7 +4,7 @@ metadata:
   name:  mywebapi
 spec:
   selector:
-    name:  mywebapi
+    app:  mywebapi
   type:  ClusterIP
   ports:
   - name:  http

@@ -8,6 +8,7 @@ spec:
     metadata:
       labels:
         editor: vscode
+        app: mywebapi
     spec:
       containers:
       - name: mywebapi
