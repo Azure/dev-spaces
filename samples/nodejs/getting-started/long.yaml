@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: longrunning
+spec:
+  selector:
+    matchLabels:
+      app: longrunning
+  template:
+    metadata:
+      labels:
+        app: longrunning
+    spec:
+      containers:
+      - name: longrunning
+        image: nginx
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "0.5"
+      # tolerations:
+      # - key: virtual-kubelet.io/provider
+      #   operator: Exists
+      # - key: azure.com/aci
+      #   effect: NoSchedule
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: longrunning
+spec:
+  selector:
+    app: longrunning
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80
+
+        

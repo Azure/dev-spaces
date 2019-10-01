@@ -23,6 +23,15 @@ app.get('/api', function (req, res) {
     });
  });
 
+ app.get('/long', function(req, res) {
+     request({
+         uri: 'http://longrunning'
+     }, function(errors, response, body) {
+         // If status==200
+         res.send('Done');
+     });
+ });
+
 var port = process.env.PORT || 3000;
 var server = app.listen(port, function () {
     console.log('Listening on port ' + port);
