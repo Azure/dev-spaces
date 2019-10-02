@@ -13,4 +13,17 @@ app.controller('MainController', function($scope, $http) {
     };
     
     $scope.sayHelloToServer();
+
+    $scope.longRunningStatus = [];
+    $scope.longRunningCount = 2;
+    $scope.launchLongRunning = function() {
+        $scope.longRunningCount = angular.element(document.querySelector('#longRunning')).val();
+        console.log($scope.longRunningCount);
+        $scope.longRunningStatus = [];
+        for(var i=0; i < $scope.longRunningCount; ++i) {
+            $http.get("/long").then(function(response){
+                $scope.longRunningStatus.push(response.data);
+            });
+        }
+    }
 });

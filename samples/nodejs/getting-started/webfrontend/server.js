@@ -27,8 +27,10 @@ app.get('/api', function (req, res) {
      request({
          uri: 'http://longrunning'
      }, function(errors, response, body) {
-         // If status==200
-         res.send('Done');
+         if(!errors && response.statusCode == 200)
+            res.send('Done');
+        else
+            res.send("ERROR");
      });
  });
 
