@@ -14,7 +14,16 @@ jobs:
     
     - uses: actions/checkout@master
     
-       
+    - uses: s-tuli/githubactioncomment/actions/AddComment@master
+      with:
+        owner: s-tuli
+        repo: dev-spaces
+        pull_number: 3
+        body: Hi, this is my test! Success http://$GITHUB_HEAD_REF.s.${{ secrets.PARENT_SPACE }}.bikesharingweb.${{ secrets.HOST_SUFFIX }}/
+        commit_id: $GITHUB_SHA
+        path: samples/BikeSharingApp/Bikes/server.js
+        position: 1
+        token: ${{ secrets.TOKEN }}
     
     - uses: azure/container-actions/docker-login@master
       with:
