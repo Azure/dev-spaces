@@ -13,14 +13,6 @@ jobs:
     steps:
     
     - uses: actions/checkout@master
-    - uses: actions/setup-node@v1
-      with:
-        node-version: 12
-        registry-url: https://npm.pkg.github.com/
-        scope: 's-tuli'
-    - run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
     - uses: s-tuli/githubactioncomment/actions/AddComment@master
       with:        
         repo: $GITHUB_REPOSITORY
