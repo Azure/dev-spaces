@@ -15,9 +15,8 @@ jobs:
     - uses: actions/checkout@master
     
     - uses: s-tuli/githubactioncomment/actions/AddComment@master
-      with:
-        owner: s-tuli
-        repo: dev-spaces
+      with:        
+        repo: $GITHUB_REPOSITORY
         pull_number: 3
         body: Hi, this is my test! Success http://$GITHUB_HEAD_REF.s.${{ secrets.PARENT_SPACE }}.bikesharingweb.${{ secrets.HOST_SUFFIX }}/
         commit_id: $GITHUB_SHA
