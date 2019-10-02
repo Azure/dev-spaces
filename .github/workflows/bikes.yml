@@ -45,7 +45,7 @@ jobs:
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         secret-name: ${{ secrets.IMAGE_PULL_SECRET }}
         
-    - name: Helm Instal PR
+    - name: Helm Install PR
       run: |
         helm upgrade --install --namespace $GITHUB_HEAD_REF bikesharing-$GITHUB_HEAD_REF samples/BikeSharingApp/Bikes/charts/bikes --set "image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes,image.tag=$GITHUB_SHA,imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }},ingress.hosts[0]=$GITHUB_HEAD_REF.s.${{ secrets.PARENT_SPACE }}.bikesharing.${{ secrets.HOST_SUFFIX }},ingress.annotations.\"kubernetes\\.io/ingress\\.class\"=traefik-azds"
  
