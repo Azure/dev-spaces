@@ -1,0 +1,57 @@
+name: Master
+
+on:
+  push:
+    branches:
+    - master
+    paths:
+    - samples/BikeSharingApp/**
+    - "!**/*.md"
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - uses: actions/checkout@master
+    
+    - uses: azure/container-actions/docker-login@master
+      with:
+        login-server: '${{ secrets.CONTAINER_REGISTRY }}'
+        username: '${{ secrets.REGISTRY_USERNAME }}'
+        password: '${{ secrets.REGISTRY_PASSWORD }}'
+    
+    - run: |
+        docker build samples/BikeSharingApp/Bikes/ -t ${{ secrets.CONTAINER_REGISTRY }}/bikes:$GITHUB_SHA
+        docker push ${{ secrets.CONTAINER_REGISTRY }}/bikes:$GITHUB_SHA
+        
+        docker build samples/BikeSharingApp/BikeSharingWeb/ -t ${{ secrets.CONTAINER_REGISTRY }}/bikesharingweb:$GITHUB_SHA
+        docker push ${{ secrets.CONTAINER_REGISTRY }}/bikesharingweb:$GITHUB_SHA
+        
+        docker build samples/BikeSharingApp/Billing/ -t ${{ secrets.CONTAINER_REGISTRY }}/billing:$GITHUB_SHA
+        docker push ${{ secrets.CONTAINER_REGISTRY }}/billing:$GITHUB_SHA
+        
+        docker build samples/BikeSharingApp/Gateway/ -t ${{ secrets.CONTAINER_REGISTRY }}/gateway:$GITHUB_SHA
+        docker push ${{ secrets.CONTAINER_REGISTRY }}/gateway:$GITHUB_SHA
+        
+        docker build samples/BikeSharingApp/Reservation/ -t ${{ secrets.CONTAINER_REGISTRY }}/reservation:$GITHUB_SHA
+        docker push ${{ secrets.CONTAINER_REGISTRY }}/reservation:$GITHUB_SHA
+        
+        docker build samples/BikeSharingApp/ReservationEngine/ -t ${{ secrets.CONTAINER_REGISTRY }}/reservationengine:$GITHUB_SHA
+        docker push ${{ secrets.CONTAINER_REGISTRY }}/reservationengine:$GITHUB_SHA
+        
+        docker build samples/BikeSharingApp/Users/ -t ${{ secrets.CONTAINER_REGISTRY }}/users:$GITHUB_SHA
+        docker push ${{ secrets.CONTAINER_REGISTRY }}/users:$GITHUB_SHA
+      
+    - uses: azure/k8s-actions/aks-set-context@master
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: '${{ secrets.CLUSTER_NAME }}'
+        resource-group: '${{ secrets.RESOURCE_GROUP }}'
+         
+    - name: Helm Install Master
+      run: |
+        cd samples/BikeSharingApp/charts
+        helm init --client-only
+        helm dependency update
+        helm upgrade --install --namespace ${{ secrets.PARENT_SPACE }} bikesharing . --set "bikes.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes, bikesharingweb.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikesharingweb, billing.image.repository=${{ secrets.CONTAINER_REGISTRY }}/billing, gateway.image.repository=${{ secrets.CONTAINER_REGISTRY }}/gateway, reservation.image.repository=${{ secrets.CONTAINER_REGISTRY }}/reservation, reservationengine.image.repository=${{ secrets.CONTAINER_REGISTRY }}/reservationengine, users.image.repository=${{ secrets.CONTAINER_REGISTRY }}/users, image.tag=$GITHUB_SHA"
