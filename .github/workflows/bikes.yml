@@ -34,7 +34,7 @@ jobs:
       run:  |
         if [ -n "$(kubectl get namespace $GITHUB_HEAD_REF --ignore-not-found -o name)" ]; then exit 0; fi
         kubectl create namespace $GITHUB_HEAD_REF
-        kubectl label namespace $GITHUB_HEAD_REF azds.io/parent-space=${{ secrets.PARENT_SPACE }} 
+        kubectl label namespace $GITHUB_HEAD_REF azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
         kubectl label namespace $GITHUB_HEAD_REF azds.io/space=true
         
     - uses: azure/k8s-actions/k8s-create-secret@master
@@ -47,5 +47,5 @@ jobs:
         
     - name: Helm Install PR
       run: |
-        helm upgrade --install --namespace $GITHUB_HEAD_REF bikesharing-$GITHUB_HEAD_REF samples/BikeSharingApp/Bikes/charts/bikes --set "image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes,image.tag=$GITHUB_SHA,imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }},ingress.hosts[0]=$GITHUB_HEAD_REF.s.${{ secrets.PARENT_SPACE }}.bikesharing.${{ secrets.HOST_SUFFIX }},ingress.annotations.\"kubernetes\\.io/ingress\\.class\"=traefik-azds"
+        helm upgrade --install --namespace $GITHUB_HEAD_REF bikesharing-$GITHUB_HEAD_REF samples/BikeSharingApp/Bikes/charts/bikes --set "image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes,image.tag=$GITHUB_SHA,imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }},ingress.hosts[0]=$GITHUB_HEAD_REF.s.${{ secrets.MASTER_SPACE }}.bikesharing.${{ secrets.HOST_SUFFIX }},ingress.annotations.\"kubernetes\\.io/ingress\\.class\"=traefik-azds"
  
