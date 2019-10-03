@@ -367,6 +367,7 @@ process.on("SIGTERM", () => {
     if (server) {
         server.close();
     }
+    
     var tmp = mongoDB;
     mongoDB = null;
     tmp.close();
