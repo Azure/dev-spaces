@@ -231,8 +231,8 @@ app.get('/api/bikes/:bikeId', function(req, res) {
         var theBike = result;
         
         theBike.id = theBike._id;
-        delete theBike._id;
-
+        delete theBike._id;    
+        
         res.send(theBike);
     });
 });
@@ -311,18 +311,18 @@ function processReservation(res, bikeId, changeTo, requestID) {
                     dbError(res, err, requestID);
                     return;
                 }
-
                 if (!result) {
                     bikeDoesNotExist(res, bikeId);
                 }
                 else {
                     // Invalid reservation request
                     res.status(400).send('Invalid reservation request was made for BikeId ' + bikeId);
-                }
+                }                
             });
             
             return;
         }
+        
         if (result.matchedCount !== 1 && result.modifiedCount !== 1) {
             var msg = 'Unexpected number of bikes changed availability! Matched: "' + result.matchedCount + '" Modified: "' + result.modifiedCount + '"';
             console.log(requestID + " - " + msg);
@@ -366,6 +366,7 @@ process.on("SIGTERM", () => {
     if (server) {
         server.close();
     }
+
     var tmp = mongoDB;
     mongoDB = null;
     tmp.close();
