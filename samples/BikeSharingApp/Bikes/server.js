@@ -328,7 +328,6 @@ function processReservation(res, bikeId, changeTo, requestID) {
             res.status(500).send(msg);
             return;
         }
-
         res.sendStatus(200);
     });
 }
