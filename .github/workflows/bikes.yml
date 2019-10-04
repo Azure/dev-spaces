@@ -5,24 +5,23 @@ on:
     branches:
     - master
     paths:
-    - samples/BikeSharingApp/Bikes/*    
+    - samples/BikeSharingApp/Bikes/**  
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-    
+    steps:    
     - uses: actions/checkout@master
     - uses: s-tuli/githubactioncomment/actions/AddComment@master
-      env:
-        TOKEN: ${{secrets.PERSONAL_TOKEN}}
+      env:        
         GITHUB_HOST_SUFFIX: ${{ secrets.HOST_SUFFIX }}
         GITHUB_PARENT_SPACE: ${{ secrets.PARENT_SPACE }}
       with:        
-        pull_number: 3
+        pull_number: '4'
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
         body: 'Hi, this is my test!'        
         path: 'samples/BikeSharingApp/Bikes/server.js'
-        position: 1    
+        position: '1'    
     - uses: azure/container-actions/docker-login@master
       with:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
