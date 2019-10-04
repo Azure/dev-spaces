@@ -322,6 +322,7 @@ function processReservation(res, bikeId, changeTo, requestID) {
             
             return;
         }
+        
         if (result.matchedCount !== 1 && result.modifiedCount !== 1) {
             var msg = 'Unexpected number of bikes changed availability! Matched: "' + result.matchedCount + '" Modified: "' + result.modifiedCount + '"';
             console.log(requestID + " - " + msg);
