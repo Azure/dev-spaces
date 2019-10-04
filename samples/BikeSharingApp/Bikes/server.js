@@ -318,11 +318,10 @@ function processReservation(res, bikeId, changeTo, requestID) {
                     // Invalid reservation request
                     res.status(400).send('Invalid reservation request was made for BikeId ' + bikeId);
                 }                
-            });
-            
+            });            
             return;
         }
-        
+
         if (result.matchedCount !== 1 && result.modifiedCount !== 1) {
             var msg = 'Unexpected number of bikes changed availability! Matched: "' + result.matchedCount + '" Modified: "' + result.modifiedCount + '"';
             console.log(requestID + " - " + msg);
