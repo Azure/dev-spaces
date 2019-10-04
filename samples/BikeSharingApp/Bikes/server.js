@@ -311,7 +311,6 @@ function processReservation(res, bikeId, changeTo, requestID) {
                     dbError(res, err, requestID);
                     return;
                 }
-
                 if (!result) {
                     bikeDoesNotExist(res, bikeId);
                 }
