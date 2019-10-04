@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@master
     - uses: s-tuli/githubactioncomment/actions/AddComment@master
       env:
-        TOKEN: ${{secrets.PERSONAL_TOKEN}}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITHUB_HOST_SUFFIX: ${{ secrets.HOST_SUFFIX }}
         GITHUB_PARENT_SPACE: ${{ secrets.PARENT_SPACE }}
       with:        
