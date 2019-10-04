@@ -19,10 +19,10 @@ jobs:
         GITHUB_HOST_SUFFIX: ${{ secrets.HOST_SUFFIX }}
         GITHUB_PARENT_SPACE: ${{ secrets.PARENT_SPACE }}
       with:        
-        pull_number: 3
+        pull_number: '3'
         body: 'Hi, this is my test!'        
         path: 'samples/BikeSharingApp/Bikes/server.js'
-        position: 1    
+        position: '1'    
     - uses: azure/container-actions/docker-login@master
       with:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
