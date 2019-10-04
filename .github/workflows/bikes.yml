@@ -5,7 +5,7 @@ on:
     branches:
     - master
     paths:
-    - samples/BikeSharingApp/Bikes/*    
+    - samples/BikeSharingApp/Bikes/**  
 
 jobs:
   build:
