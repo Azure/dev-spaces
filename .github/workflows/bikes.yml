@@ -10,8 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-    
+    steps:    
     - uses: actions/checkout@master
     - uses: s-tuli/githubactioncomment/actions/AddComment@master
       env:        
