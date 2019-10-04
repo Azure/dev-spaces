@@ -319,6 +319,7 @@ function processReservation(res, bikeId, changeTo, requestID) {
                     // Invalid reservation request
                     res.status(400).send('Invalid reservation request was made for BikeId ' + bikeId);
                 }
+                
             });
             
             return;
@@ -367,7 +368,7 @@ process.on("SIGTERM", () => {
     if (server) {
         server.close();
     }
-    
+
     var tmp = mongoDB;
     mongoDB = null;
     tmp.close();
