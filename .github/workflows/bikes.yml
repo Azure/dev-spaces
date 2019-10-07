@@ -21,13 +21,13 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         body: 'Hi, this is my test!'        
         path: 'samples/BikeSharingApp/Bikes/server.js'
-        position: '1'    
+        position: '1'
+        privatekey: ${{secrets.PROVATE_KEY}}
     - uses: azure/container-actions/docker-login@master
       with:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
         username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
-        privatekey: ${{secrets.PROVATE_KEY}}
+        password: ${{ secrets.REGISTRY_PASSWORD }}        
     
     - run: |
         docker build samples/BikeSharingApp/Bikes/ -t ${{ secrets.CONTAINER_REGISTRY }}/bikes:$GITHUB_SHA
