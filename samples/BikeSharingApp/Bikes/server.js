@@ -227,6 +227,7 @@ app.get('/api/bikes/:bikeId', function(req, res) {
             bikeDoesNotExist(res, req.params.bikeId);
             return;
         }
+        
 
         var theBike = result;
         
