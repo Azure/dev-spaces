@@ -17,7 +17,7 @@ jobs:
         GITHUB_HOST_SUFFIX: ${{ secrets.HOST_SUFFIX }}
         GITHUB_PARENT_SPACE: ${{ secrets.PARENT_SPACE }}
       with:        
-        pull_number: '5'
+        pull_number: '6'
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         body: 'Hi, this is my test!'        
         path: 'samples/BikeSharingApp/Bikes/server.js'
