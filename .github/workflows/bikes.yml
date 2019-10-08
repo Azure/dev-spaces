@@ -36,8 +36,8 @@ jobs:
     - uses: azure/k8s-actions/aks-set-context@master
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
-        cluster-name: BikeSharingAKS
-        resource-group: bikesharing
+        cluster-name: PRFlowAKS
+        resource-group: PRFlow
                 
     - name: Create child namespaces and add Dev Spaces labels
       run:  |
