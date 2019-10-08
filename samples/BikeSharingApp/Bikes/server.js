@@ -19,7 +19,6 @@ console.log("MongoDB connection string: " + mongoDBConnStr);
 // Init to prototype to enable Intellisense
 var mongoDB = require('mongodb').Db.prototype;
 
-
 validate.validators.illegal = function(value, options, key, attributes) {
     if (value !== undefined && options) {
         return "cannot be provided";
