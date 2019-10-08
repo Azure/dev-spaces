@@ -17,7 +17,7 @@ jobs:
         GITHUB_HOST_SUFFIX: ${{ secrets.HOST_SUFFIX }}
         GITHUB_PARENT_SPACE: ${{ secrets.PARENT_SPACE }}
       with:        
-        pull_number: '6'
+        pull_number: '7'
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         body: 'Hi, this is my test!'        
         path: 'samples/BikeSharingApp/Bikes/server.js'
@@ -36,8 +36,8 @@ jobs:
     - uses: azure/k8s-actions/aks-set-context@master
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
-        cluster-name: BikeSharingAKS
-        resource-group: bikesharing
+        cluster-name: PRFlowAKS
+        resource-group: PRFlow
                 
     - name: Create child namespaces and add Dev Spaces labels
       run:  |
