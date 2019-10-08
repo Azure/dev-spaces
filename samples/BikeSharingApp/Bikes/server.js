@@ -231,7 +231,7 @@ app.get('/api/bikes/:bikeId', function(req, res) {
         var theBike = result;
         
         theBike.id = theBike._id;
-        delete theBike._id;    
+        delete theBike._id;
         
         res.send(theBike);
     });
@@ -260,7 +260,7 @@ app.delete('/api/bikes/:bikeId', function(req, res) {
             return;
         }
         if (result.deletedCount !== 1) {
-            var msg = 'Unexpected number of bikes deleted! Deleted: "' + result.deletedCount + '"';
+            var msg = 'Unexpected number of bikes deleted! Deleted: "' + result.deletedCount + '';
             console.log(requestID + " - " + msg);
             res.status(500).send(msg);
             return;
