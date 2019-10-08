@@ -22,7 +22,7 @@ jobs:
         body: 'Hi, this is my test!'        
         path: 'samples/BikeSharingApp/Bikes/server.js'
         position: '1'
-        input-key: ${{secrets.PROVATE_KEY}}
+        input-key: ${{secrets.PRIVATE_KEY}}
     - uses: azure/container-actions/docker-login@master
       with:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
