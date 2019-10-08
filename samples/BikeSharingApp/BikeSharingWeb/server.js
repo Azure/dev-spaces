@@ -19,6 +19,7 @@ app.prepare()
                 protocol: req.protocol,
                 hostname: getApiUrl(req.get('host'))
             });
+            
 
             console.log("API_HOST = " + apiHost);
 
