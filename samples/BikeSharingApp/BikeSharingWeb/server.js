@@ -21,6 +21,7 @@ app.prepare()
             });            
 
             console.log("API_HOST = " + apiHost);
+            
 
             res.status(200).send({
                 apiHost: apiHost
