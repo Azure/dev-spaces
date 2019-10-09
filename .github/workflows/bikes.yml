@@ -12,17 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:    
     - uses: actions/checkout@master
-    - uses: s-tuli/githubactioncomment/actions/AddComment@master
-      env:        
-        GITHUB_HOST_SUFFIX: ${{ secrets.HOST_SUFFIX }}
-        GITHUB_PARENT_SPACE: ${{ secrets.PARENT_SPACE }}
+    - uses: s-tuli/githubactioncomment/actions/AddComment@master      
       with:        
-        pull_number: '7'
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        body: 'Hi, this is my test!'        
-        path: 'samples/BikeSharingApp/Bikes/server.js'
-        position: '1'
-        input-key: ${{secrets.PRIVATE_KEY}}
+        pull_number: '74'
+        repo-token: ${{ secrets.GITHUB_TOKEN }}        
     - uses: azure/container-actions/docker-login@master
       with:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
