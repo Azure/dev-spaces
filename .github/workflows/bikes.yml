@@ -13,8 +13,10 @@ jobs:
     steps:    
     - uses: actions/checkout@master
     - uses: s-tuli/githubactioncomment/actions/AddComment@master      
-      with:        
-        pull_number: 7
+      env:        
+        GITHUB_HOST_SUFFIX: ${{ secrets.HOST_SUFFIX }}
+        GITHUB_PARENT_SPACE: ${{ secrets.PARENT_SPACE }}
+      with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}        
     - uses: azure/container-actions/docker-login@master
       with:
