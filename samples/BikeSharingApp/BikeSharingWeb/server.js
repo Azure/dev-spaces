@@ -20,7 +20,8 @@ app.prepare()
                 hostname: getApiUrl(req.get('host'))
             });            
 
-            console.log("API_HOST = " + apiHost);            
+            console.log("API_HOST = " + apiHost);
+            
 
             res.status(200).send({
                 apiHost: apiHost
