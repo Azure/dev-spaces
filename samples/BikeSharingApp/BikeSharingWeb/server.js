@@ -13,7 +13,6 @@ const handle = app.getRequestHandler();
 app.prepare()
     .then(() => {
         const server = express()
-        
 
         server.get('/api/host', (req, res) => {
             var apiHost = url.format({
