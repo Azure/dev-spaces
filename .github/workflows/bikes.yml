@@ -53,4 +53,10 @@ jobs:
           --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
           --set ingress.hosts[0]=$GITHUB_HEAD_REF.s.${{ secrets.MASTER_SPACE }}.bikesharing.${{ secrets.HOST_SUFFIX }} \
           --set ingress.annotations.kubernetes\\.io/ingress\\.class=traefik-azds
- 
+           
+    - uses: s-tuli/githubactioncomment/actions/AddComment@master     
+      env:       
+        GITHUB_HOST_SUFFIX: ${{ secrets.HOST_SUFFIX }}
+        GITHUB_PARENT_SPACE: ${{ secrets.MASTER_SPACE }}
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
