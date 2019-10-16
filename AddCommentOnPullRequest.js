@@ -10,7 +10,7 @@ let repoNameWithOwnerArray = repo.split("/", 2);
 const owner = repoNameWithOwnerArray[0];
 const actualRepo = repoNameWithOwnerArray[1];
 
-const host = process.env.GITHUB_HOST_SUFFIX.toString();
+const host = process.env.GITHUB_HOST.toString();
 
 const parent = process.env.GITHUB_PARENT_SPACE.toString();
 
