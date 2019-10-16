@@ -1,0 +1,10 @@
+name: 'Add Comment'
+description: 'Add a comment on a PR'
+author: 's-tuli'
+inputs:  
+  repo-token:  # GitHub Auth Token
+    description: 'repo token'
+    required: true  
+runs:
+  using: 'node12'
+  main: 'AddReviewUrl.js'
