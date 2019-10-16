@@ -12,8 +12,6 @@ const actualRepo = repoNameWithOwnerArray[1];
 
 const host = core.getInput('host');
 
-const parent = process.env.GITHUB_PARENT_SPACE.toString();
-
 const headref = process.env.GITHUB_HEAD_REF.toString();    
    
 const bodyprime = `You can see a private version of the changes made in this pull request here:\nhttp://${headref}.s.${host}/`;
