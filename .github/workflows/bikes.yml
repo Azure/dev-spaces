@@ -12,12 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:    
     - uses: actions/checkout@master
-    - uses: Azure/dev-spaces/@Releases/v1
-      env:        
-        GITHUB_HOST: ${{ secrets.HOST }}
-        GITHUB_PARENT_SPACE: ${{ secrets.PARENT_SPACE }}
+    - uses: Azure/dev-spaces/actions/add-review-url@Releases/v1              
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}        
+        repo-token: ${{ secrets.GITHUB_TOKEN }}  
+        host: ${{ secrets.HOST }}      
     - uses: azure/container-actions/docker-login@master
       with:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
