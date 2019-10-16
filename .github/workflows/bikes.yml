@@ -14,7 +14,7 @@ jobs:
     - uses: actions/checkout@master
     - uses: Azure/dev-spaces/@Releases/v1
       env:        
-        GITHUB_HOST_SUFFIX: ${{ secrets.HOST_SUFFIX }}
+        GITHUB_HOST: ${{ secrets.HOST }}
         GITHUB_PARENT_SPACE: ${{ secrets.PARENT_SPACE }}
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}        
