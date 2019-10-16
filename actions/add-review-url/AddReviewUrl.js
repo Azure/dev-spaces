@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 const { graphql } = require("@octokit/graphql");
 const core = require('@actions/core');
 const { App } = require("@octokit/app");
