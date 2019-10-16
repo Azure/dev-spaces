@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:    
     - uses: actions/checkout@master
-    - uses: azure/Add-Comment-On-PullRequest-Action/@Releases/v1
+    - uses: Azure/dev-spaces/@Releases/v1
       env:        
         GITHUB_HOST_SUFFIX: ${{ secrets.HOST_SUFFIX }}
         GITHUB_PARENT_SPACE: ${{ secrets.PARENT_SPACE }}
