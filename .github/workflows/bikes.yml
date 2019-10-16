@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:    
     - uses: actions/checkout@master
-    - uses: Azure/dev-spaces/@Releases/v1              
+    - uses: Azure/dev-spaces/actions/add-review-url@Releases/v1              
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
         host: ${{ secrets.HOST }}      
