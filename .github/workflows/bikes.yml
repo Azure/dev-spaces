@@ -36,7 +36,7 @@ jobs:
         kubectl create namespace $GITHUB_HEAD_REF
         kubectl label namespace $GITHUB_HEAD_REF azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
         kubectl label namespace $GITHUB_HEAD_REF azds.io/space=true
-        kubectl label namespace $GITHUB_HEAD_REF azds.io/pull-request=true
+        kubectl label namespace $GITHUB_HEAD_REF azds.io/pull-request-space=true
         
     - uses: azure/k8s-actions/k8s-create-secret@master
       with:
