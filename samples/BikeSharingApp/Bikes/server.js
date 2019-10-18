@@ -231,7 +231,6 @@ app.get('/api/bikes/:bikeId', function(req, res) {
         }        
 
         var theBike = result;
-        
         theBike.id = theBike._id;
         delete theBike._id;
         
