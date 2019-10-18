@@ -5,22 +5,20 @@ on:
     branches:
     - master
     paths:
-    - samples/BikeSharingApp/Bikes/*  
+    - samples/BikeSharingApp/Bikes/**
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:    
+    steps:
+    
     - uses: actions/checkout@master
-    - uses: Azure/dev-spaces/actions/add-review-url@Releases/v1              
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}  
-        host: ${{ secrets.HOST }}      
+    
     - uses: azure/container-actions/docker-login@master
       with:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
         username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}        
+        password: ${{ secrets.REGISTRY_PASSWORD }}
     
     - run: |
         docker build samples/BikeSharingApp/Bikes/ -t ${{ secrets.CONTAINER_REGISTRY }}/bikes:$GITHUB_SHA
@@ -29,15 +27,16 @@ jobs:
     - uses: azure/k8s-actions/aks-set-context@master
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
-        cluster-name: PRFlowAKS
-        resource-group: PRFlow
+        cluster-name: ${{ secrets.CLUSTER_NAME }}
+        resource-group: ${{ secrets.RESOURCE_GROUP }}
                 
     - name: Create child namespaces and add Dev Spaces labels
       run:  |
         if [ -n "$(kubectl get namespace $GITHUB_HEAD_REF --ignore-not-found -o name)" ]; then exit 0; fi
         kubectl create namespace $GITHUB_HEAD_REF
-        kubectl label namespace $GITHUB_HEAD_REF azds.io/parent-space=${{ secrets.PARENT_SPACE }} 
+        kubectl label namespace $GITHUB_HEAD_REF azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
         kubectl label namespace $GITHUB_HEAD_REF azds.io/space=true
+        kubectl label namespace $GITHUB_HEAD_REF azds.io/pull-request-space=true
         
     - uses: azure/k8s-actions/k8s-create-secret@master
       with:
@@ -47,7 +46,16 @@ jobs:
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         secret-name: ${{ secrets.IMAGE_PULL_SECRET }}
         
-    - name: Helm Instal PR
+    - name: Helm Install PR
       run: |
-        helm upgrade --install --namespace $GITHUB_HEAD_REF bikesharing-$GITHUB_HEAD_REF samples/BikeSharingApp/Bikes/charts/bikes --set "image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes,image.tag=$GITHUB_SHA,imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }},ingress.hosts[0]=$GITHUB_HEAD_REF.s.${{ secrets.PARENT_SPACE }}.bikesharing.${{ secrets.HOST_SUFFIX }},ingress.annotations.\"kubernetes\\.io/ingress\\.class\"=traefik-azds"
-        echo This succeeded: http://$GITHUB_HEAD_REF.s.${{ secrets.PARENT_SPACE }}.bikesharingweb.${{ secrets.HOST_SUFFIX }}/
+        helm upgrade --install --namespace $GITHUB_HEAD_REF bikesharing-$GITHUB_HEAD_REF samples/BikeSharingApp/Bikes/charts/bikes \
+          --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
+          --set image.tag=$GITHUB_SHA \
+          --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
+          --set ingress.hosts[0]=$GITHUB_HEAD_REF.s.${{ secrets.MASTER_SPACE }}.bikesharing.${{ secrets.HOST_SUFFIX }} \
+          --set ingress.annotations.kubernetes\\.io/ingress\\.class=traefik-azds
+ 
+    - uses: azure/dev-spaces/actions/add-review-url@Releases/v1              
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}  
+        host: ${{ secrets.HOST }}
