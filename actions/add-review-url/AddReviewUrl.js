@@ -19,12 +19,14 @@ const headref = process.env.GITHUB_HEAD_REF.toString();
    
 const bodyprime = `You can see a private version of the changes made in this pull request here:\nhttp://${headref}.s.${host}/`;
 
+/// Function to get the Pull number from the environment variable: process.env.GITHUB_REF
 function getPullNumber(){
     let commitIdArray = commitId.split("/", 3);
     const pullNumber = commitIdArray[2];
     return parseInt(pullNumber, 10);
 }
 
+/// Get graphql with Auth
 function getGraphqlWithAuth(token) {
     return graphql.defaults({
         headers: {
@@ -33,6 +35,7 @@ function getGraphqlWithAuth(token) {
     });
 }
 
+///Add Comment to the Pull Request
 function addCommentToPullRequest(body, pullRequestId){
     let obj = JSON.parse(JSON.stringify(pullRequestId));
     const  graphqlWithAuth =  getGraphqlWithAuth(token);
@@ -44,6 +47,8 @@ function addCommentToPullRequest(body, pullRequestId){
     ).catch(err => console.log(err)).then(result => console.log(result));
 
 }
+
+///Find the Pull Request and add comment
 function findPullRequestAndAddComment(owner, repo, commentBody) {
 
     const  graphqlWithAuth =  getGraphqlWithAuth(token);
@@ -84,4 +89,5 @@ function findPullRequestQuery() {
 }`;
 }
 
+/// This is the entry point
 findPullRequestAndAddComment(owner,actualRepo,bodyprime);
