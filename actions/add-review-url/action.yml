@@ -1,5 +1,5 @@
-name: 'Add_Review_Url
-description: 'Add Review Url as a comment on PR'
+name: 'Add Comment'
+description: 'Add a comment on a PR'
 author: 's-tuli'
 inputs:  
   repo-token:  # GitHub Auth Token
