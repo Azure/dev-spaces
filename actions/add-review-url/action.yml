@@ -10,4 +10,4 @@ inputs:
     required: true    
 runs:
   using: 'node12'
-  main: 'lib/AddReviewUrl.js'
+  main: 'addComment.js'
