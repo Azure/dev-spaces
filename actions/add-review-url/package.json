@@ -5,22 +5,18 @@
   "main": "AddReviewUrl.js",
   "scripts": {
     "test": "jasmine/spec.js",
-    "build": "babel src -d dist --source-maps"
+    "build": "babel src -d lib"
   },
   "keywords": [],
   "author": "s-tuli",
   "license": "ISC",
   "dependencies": {
     "@actions/core": "^1.1.1",
-    "@actions/github": "^1.1.0",
-    "@babel/polyfill": "^7.6.0",
-    "@babel/register": "^7.6.2",
-    "@octokit/graphql": "^4.2.0",
-    "@octokit/rest": "^16.30.1",
-    "babel-node": "0.0.1-security"
+    "@octokit/graphql": "^4.2.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
     "babel-preset-env": "^1.7.0",
     "grunt": "^1.0.4",
     "grunt-contrib-jshint": "^2.1.0",

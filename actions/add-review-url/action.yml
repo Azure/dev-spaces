@@ -10,4 +10,4 @@ inputs:
     required: true    
 runs:
   using: 'node12'
-  main: 'dist/AddReviewUrl.js'
+  main: 'lib/AddReviewUrl.js'
