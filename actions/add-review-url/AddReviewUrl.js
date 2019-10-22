@@ -20,9 +20,8 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 var _require = require('@octokit/graphql'),
     graphql = _require.graphql;
 
-var _require2 = require('@actions/core'),
-    core = _require2.core;
-
+var core = require('@actions/core');
+    
 var AddComment =
 /*#__PURE__*/
 function () {
