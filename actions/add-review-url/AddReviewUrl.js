@@ -1,5 +1,5 @@
 const {graphql} = require('@octokit/graphql');
-const {core} = require('@actions/core');
+const core = require('@actions/core');
 
 class AddComment {
 
