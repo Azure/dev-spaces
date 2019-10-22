@@ -1,4 +1,4 @@
-const addReviewUrl = require('./lib/AddReviewUrl');
+const addReviewUrl = require('./AddReviewUrl');
 //const {core} = require('@actions/core');
 async function run() {
     try { 
