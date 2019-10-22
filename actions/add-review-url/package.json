@@ -12,8 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "@actions/core": "^1.1.1",
-    "@octokit/app": "4.1.0",
-    "@octokit/graphql": "^4.2.0"
+    "@actions/github": "^1.1.0",
+    "@babel/polyfill": "^7.6.0",
+    "@babel/register": "^7.6.2",
+    "@octokit/graphql": "^4.2.0",
+    "@octokit/rest": "^16.30.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
