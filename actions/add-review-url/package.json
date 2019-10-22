@@ -1,0 +1,17 @@
+{
+  "name": "AddReviewUrl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "commentOnPullRequest.js",
+  "scripts": {
+    "test": "echo \"Error: no url specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/core": "^1.1.1",
+    "@octokit/app": "4.1.0",
+    "@octokit/graphql": "^4.2.0"
+  }
+}
