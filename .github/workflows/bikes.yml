@@ -13,7 +13,7 @@ jobs:
     steps:
     
     - uses: actions/checkout@master
-    - uses: azure/dev-spaces/actions/add-review-url@anutuli/AddReviewUrlGitHubAction
+    - uses: azure/dev-spaces/actions/add-review-url@s-tuli/add-review-url-action
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
         host: ${{ secrets.HOST }}
