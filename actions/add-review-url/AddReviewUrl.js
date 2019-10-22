@@ -3,7 +3,6 @@
 
 const { graphql } = require("@octokit/graphql");
 const core = require('@actions/core');
-const { App } = require("@octokit/app");
 
 const token =  core.getInput('repo-token');
 
