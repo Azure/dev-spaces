@@ -1,4 +1,5 @@
 const addReviewUrl = require('./lib/AddReviewUrl');
+const {core} = require('@actions/core');
 async function run() {
     try { 
         const host = core.getInput('host');
