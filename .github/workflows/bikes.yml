@@ -13,7 +13,10 @@ jobs:
     steps:
     
     - uses: actions/checkout@master
-    
+    - uses: azure/dev-spaces/actions/add-review-url@s-tuli/add-review-url-action
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}  
+        host: ${{ secrets.HOST }}
     - uses: azure/container-actions/docker-login@master
       with:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
@@ -55,7 +58,4 @@ jobs:
           --set ingress.hosts[0]=$GITHUB_HEAD_REF.s.${{ secrets.MASTER_SPACE }}.bikesharing.${{ secrets.HOST_SUFFIX }} \
           --set ingress.annotations.kubernetes\\.io/ingress\\.class=traefik-azds
  
-    - uses: azure/dev-spaces/actions/add-review-url@s-tuli/add-review-url-action
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}  
-        host: ${{ secrets.HOST }}
+    
