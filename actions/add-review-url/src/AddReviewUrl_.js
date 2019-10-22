@@ -96,4 +96,3 @@ class AddComment {
 }
 
 export default AddComment;
-
