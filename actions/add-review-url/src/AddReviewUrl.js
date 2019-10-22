@@ -1,9 +1,5 @@
 const {graphql} = require('@octokit/graphql');
 const {core} = require('@actions/core');
-const host = core.getInput('host');
-const headref = process.env.GITHUB_HEAD_REF.toString();    
-   
-const comment = `You can see a private version of the changes made in this pull request here:\nhttp://${headref}.s.${host}/`;
 
 class AddComment {
 
