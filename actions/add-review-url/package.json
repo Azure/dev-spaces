@@ -12,11 +12,13 @@
   "license": "ISC",
   "dependencies": {
     "@actions/core": "^1.1.1",
+    "@babel/runtime": "^7.6.3",
     "@octokit/graphql": "^4.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.6.2",
     "babel-preset-env": "^1.7.0",
     "grunt": "^1.0.4",
     "grunt-contrib-jshint": "^2.1.0",
