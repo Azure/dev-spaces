@@ -217,8 +217,7 @@ app.get('/api/bikes/:bikeId', function(req, res) {
     if (!ObjectId.isValid(req.params.bikeId))
     {
         res.status(400).send(req.params.bikeId + ' is not a valid bikeId!');
-        return;
-                
+        return;                
     }
 
     mongoDB.collection(mongoDBCollection).findOne({ _id: new ObjectId(req.params.bikeId) }, function(err, result) {
