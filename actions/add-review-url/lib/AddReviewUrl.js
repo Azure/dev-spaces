@@ -108,11 +108,11 @@ function () {
             switch (_context.prev = _context.next) {
               case 0:
                 nameAndRepo = this.getOwnerAndRepo();
-                console.log("after getowner and repo");
+                console.log("after getowner and repo: ".concat(nameAndRepo));
                 graphqlWithAuth = this.getGraphqlWithAuth();
-                console.log("after getGraphqlWithAuth");
+                console.log("after getGraphqlWithAuth: ".concat(graphqlWithAuth));
                 findPullRequestIdQuery = this.findPullRequestQuery();
-                console.log("after findPullRequestQuery");
+                console.log("after findPullRequestQuery ".concat(findPullRequestIdQuery));
                 _context.prev = 6;
                 _context.next = 9;
                 return this.getSubjectId(graphqlWithAuth, findPullRequestIdQuery, nameAndRepo);

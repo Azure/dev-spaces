@@ -83,11 +83,11 @@ class AddComment {
 
   async addComment(comment) {
     const nameAndRepo = this.getOwnerAndRepo();
-    console.log("after getowner and repo");
+    console.log(`after getowner and repo: ${nameAndRepo}`);
     const graphqlWithAuth = this.getGraphqlWithAuth();
-    console.log("after getGraphqlWithAuth");
+    console.log(`after getGraphqlWithAuth: ${graphqlWithAuth}`);
     const findPullRequestIdQuery = this.findPullRequestQuery();
-    console.log("after findPullRequestQuery");
+    console.log(`after findPullRequestQuery ${findPullRequestIdQuery}`);
     try {
       const subjectId = await this.getSubjectId(graphqlWithAuth, findPullRequestIdQuery, nameAndRepo);
       console.log(`subjectId: ${subjectId}`);
