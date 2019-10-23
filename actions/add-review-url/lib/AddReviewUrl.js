@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -17,6 +17,8 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 var _require = require('@octokit/graphql'),
     graphql = _require.graphql;
 
@@ -26,16 +28,16 @@ var AddComment =
 /*#__PURE__*/
 function () {
   function AddComment(comment) {
-    (0, _classCallCheck2.default)(this, AddComment);
+    (0, _classCallCheck2["default"])(this, AddComment);
     this.addComment(comment);
   }
 
-  (0, _createClass2.default)(AddComment, [{
+  (0, _createClass2["default"])(AddComment, [{
     key: "getOwnerAndRepo",
     value: function getOwnerAndRepo() {
       if (process.env.GITHUB_REPOSITORY) {
         var _process$env$GITHUB_R = process.env.GITHUB_REPOSITORY.split('/'),
-            _process$env$GITHUB_R2 = (0, _slicedToArray2.default)(_process$env$GITHUB_R, 2),
+            _process$env$GITHUB_R2 = (0, _slicedToArray2["default"])(_process$env$GITHUB_R, 2),
             owner = _process$env$GITHUB_R2[0],
             repo = _process$env$GITHUB_R2[1];
 
@@ -97,11 +99,11 @@ function () {
   }, {
     key: "addComment",
     value: function () {
-      var _addComment = (0, _asyncToGenerator2.default)(
+      var _addComment = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
-      _regenerator.default.mark(function _callee(comment) {
+      _regenerator["default"].mark(function _callee(comment) {
         var nameAndRepo, graphqlWithAuth, findPullRequestIdQuery, subjectId;
-        return _regenerator.default.wrap(function _callee$(_context) {
+        return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -153,4 +155,4 @@ function () {
 }();
 
 var _default = AddComment;
-exports.default = _default;
+exports["default"] = _default;
