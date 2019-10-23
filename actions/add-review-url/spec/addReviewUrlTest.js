@@ -14,7 +14,6 @@ describe("Add comment tests", function () {
       var a = value.getOwnerAndRepo();
       var obj = JSON.parse(JSON.stringify(a));
       expect(obj.owner).toBe("someactionowner");
-      console.log("obj.owner = ".concat(obj.owner));
       expect(obj.repo).toBe("reponame");
     });
   });

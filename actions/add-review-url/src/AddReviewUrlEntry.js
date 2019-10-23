@@ -9,9 +9,9 @@ async function run() {
         const comment = `You can see a private version of the changes made in this pull request here:\nhttp://${headref}.s.${host}/`;
         console.log("before the actual call");
         console.log(`addReviewUrl: ${addReviewUrl}`);
-        //new addReviewUrl().addComment("Hello from check");
         new addReviewUrl(comment);
-        console.log("before the actual call");
+        console.log(`addReviewUrl: ${addReviewUrl}`);
+        console.log("after the actual call");
     } 
     catch (error) {
       core.setFailed(error.message);
