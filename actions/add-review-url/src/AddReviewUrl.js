@@ -49,7 +49,7 @@ class AddComment {
     if (process.env.GITHUB_REF) {
       console.log(`process.env.GITHUB_REF: ${process.env.GITHUB_REF}`);
       var commitid =process.env.GITHUB_REF;
-      let commitIdArray = commitId.split("/", 3);
+      let commitIdArray = commitId.split("/");
       const pullNumber = commitIdArray[2];
       var pull = parseInt(pullNumber, 10);
       console.log(`The pull: ${pull}`);

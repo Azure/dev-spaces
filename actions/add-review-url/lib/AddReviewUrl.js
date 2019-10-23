@@ -70,7 +70,7 @@ function () {
       if (process.env.GITHUB_REF) {
         console.log("process.env.GITHUB_REF: ".concat(process.env.GITHUB_REF));
         var commitid = process.env.GITHUB_REF;
-        var commitIdArray = commitId.split("/", 3);
+        var commitIdArray = commitId.split("/");
         var pullNumber = commitIdArray[2];
         var pull = parseInt(pullNumber, 10);
         console.log("The pull: ".concat(pull)); //return parseInt(pullNumber, 10);
