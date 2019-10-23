@@ -68,7 +68,16 @@ function () {
     key: "getPullNumber",
     value: function getPullNumber() {
       if (process.env.GITHUB_REF) {
-        return parseInt(process.env.GITHUB_REF.split('/')[2]);
+        console.log("process.env.GITHUB_REF: ".concat(process.env.GITHUB_REF));
+        var commitid = process.env.GITHUB_REF;
+        var commitIdArray = commitId.split("/", 3);
+        var pullNumber = commitIdArray[2];
+        var pull = parseInt(pullNumber, 10);
+        console.log("The pull: ".concat(pull)); //return parseInt(pullNumber, 10);
+
+        actualpull = parseInt(process.env.GITHUB_REF.split('/')[2], 10);
+        console.log("actualpull: ".concat(actualpull));
+        return parseInt(process.env.GITHUB_REF.split('/')[2], 10);
       }
     }
   }, {
@@ -90,6 +99,8 @@ function () {
     key: "addCommentUsingSubjectId",
     value: function addCommentUsingSubjectId(pullRequestId, comment) {
       var obj = JSON.parse(JSON.stringify(pullRequestId));
+      console.log("obj: ".concat(obj));
+      console.log("obj.repository.pullRequest.id: ".concat(obj.repository.pullRequest.id));
       var graphqlWithAuth = this.getGraphqlWithAuth();
       graphqlWithAuth(this.addPullRequestCommentMutation(), {
         subjectId: obj.repository.pullRequest.id,

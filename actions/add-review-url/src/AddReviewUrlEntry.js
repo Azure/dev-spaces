@@ -9,8 +9,7 @@ async function run() {
         const comment = `You can see a private version of the changes made in this pull request here:\nhttp://${headref}.s.${host}/`;
         console.log("before *** the actual call");
         console.log(`addReviewUrl: ${addReviewUrl}`);
-        var call = new addReviewUrl(comment);
-        call.addComment(comment);
+        var call = new addReviewUrl(comment);        
         console.log(`addReviewUrl: ${call}`);
         console.log("after ***** the actual call");
     } 

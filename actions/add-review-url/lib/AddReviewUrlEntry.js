@@ -32,7 +32,6 @@ function _run() {
               console.log("before *** the actual call");
               console.log("addReviewUrl: ".concat(addReviewUrl));
               call = new addReviewUrl(comment);
-              call.addComment(comment);
               console.log("addReviewUrl: ".concat(call));
               console.log("after ***** the actual call");
             } catch (error) {

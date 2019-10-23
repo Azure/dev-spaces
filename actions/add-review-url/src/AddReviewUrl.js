@@ -47,7 +47,16 @@ class AddComment {
 
   getPullNumber() {
     if (process.env.GITHUB_REF) {
-      return parseInt(process.env.GITHUB_REF.split('/')[2]);
+      console.log(`process.env.GITHUB_REF: ${process.env.GITHUB_REF}`);
+      var commitid =process.env.GITHUB_REF;
+      let commitIdArray = commitId.split("/", 3);
+      const pullNumber = commitIdArray[2];
+      var pull = parseInt(pullNumber, 10);
+      console.log(`The pull: ${pull}`);
+      //return parseInt(pullNumber, 10);
+      actualpull = parseInt(process.env.GITHUB_REF.split('/')[2], 10);
+      console.log(`actualpull: ${actualpull}`);
+      return parseInt(process.env.GITHUB_REF.split('/')[2], 10);
     }
   }
 
@@ -72,6 +81,8 @@ class AddComment {
 
   addCommentUsingSubjectId(pullRequestId, comment) {
     let obj = JSON.parse(JSON.stringify(pullRequestId));
+    console.log(`obj: ${obj}`);
+    console.log(`obj.repository.pullRequest.id: ${obj.repository.pullRequest.id}`);
     const graphqlWithAuth = this.getGraphqlWithAuth();
     graphqlWithAuth(this.addPullRequestCommentMutation(), {
         subjectId: obj.repository.pullRequest.id,
