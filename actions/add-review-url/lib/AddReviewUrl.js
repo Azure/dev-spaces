@@ -108,31 +108,35 @@ function () {
             switch (_context.prev = _context.next) {
               case 0:
                 nameAndRepo = this.getOwnerAndRepo();
+                console.log("after getowner and repo");
                 graphqlWithAuth = this.getGraphqlWithAuth();
+                console.log("after getGraphqlWithAuth");
                 findPullRequestIdQuery = this.findPullRequestQuery();
-                _context.prev = 3;
-                _context.next = 6;
+                console.log("after findPullRequestQuery");
+                _context.prev = 6;
+                _context.next = 9;
                 return this.getSubjectId(graphqlWithAuth, findPullRequestIdQuery, nameAndRepo);
 
-              case 6:
+              case 9:
                 subjectId = _context.sent;
-                _context.next = 9;
+                console.log("subjectId: ".concat(subjectId));
+                _context.next = 13;
                 return this.addCommentUsingSubjectId(subjectId, comment);
 
-              case 9:
-                _context.next = 13;
+              case 13:
+                _context.next = 17;
                 break;
 
-              case 11:
-                _context.prev = 11;
-                _context.t0 = _context["catch"](3);
+              case 15:
+                _context.prev = 15;
+                _context.t0 = _context["catch"](6);
 
-              case 13:
+              case 17:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[3, 11]]);
+        }, _callee, this, [[6, 15]]);
       }));
 
       function addComment(_x) {
