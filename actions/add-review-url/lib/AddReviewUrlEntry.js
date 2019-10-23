@@ -20,7 +20,7 @@ function _run() {
   _run = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee() {
-    var host, headref, comment, value;
+    var host, headref, comment, call;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -29,12 +29,12 @@ function _run() {
               host = core.getInput('host');
               headref = process.env.GITHUB_HEAD_REF.toString();
               comment = "You can see a private version of the changes made in this pull request here:\nhttp://".concat(headref, ".s.").concat(host, "/");
-              console.log("before the actual call"); //console.log(`addReviewUrl: ${addReviewUrl}`);
-              //new addReviewUrl().addComment("Hello from check");
-
-              value = new addReviewUrl(comment);
-              console.log("addReviewUrl: ".concat(value));
               console.log("before the actual call");
+              console.log("addReviewUrl: ".concat(addReviewUrl));
+              call = new addReviewUrl(comment);
+              call.addComment(comment);
+              console.log("addReviewUrl: ".concat(call));
+              console.log("after the actual call");
             } catch (error) {
               core.setFailed(error.message);
             }
