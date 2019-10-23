@@ -68,16 +68,7 @@ function () {
     key: "getPullNumber",
     value: function getPullNumber() {
       if (process.env.GITHUB_REF) {
-        console.log("process.env.GITHUB_REF: ".concat(process.env.GITHUB_REF));
-        var commitid = process.env.GITHUB_REF;
-        var commitIdArray = commitId.split("/");
-        var pullNumber = commitIdArray[2];
-        var pull = parseInt(pullNumber, 10);
-        console.log("The pull: ".concat(pull)); //return parseInt(pullNumber, 10);
-
-        actualpull = parseInt(process.env.GITHUB_REF.split('/')[2], 10);
-        console.log("actualpull: ".concat(actualpull));
-        return parseInt(process.env.GITHUB_REF.split('/')[2], 10);
+        return parseInt(process.env.GITHUB_REF.split('/')[2]);
       }
     }
   }, {

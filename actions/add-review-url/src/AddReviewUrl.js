@@ -43,20 +43,11 @@ class AddComment {
     }
   }
 }`;
-  }
+  }  
 
   getPullNumber() {
     if (process.env.GITHUB_REF) {
-      console.log(`process.env.GITHUB_REF: ${process.env.GITHUB_REF}`);
-      var commitid =process.env.GITHUB_REF;
-      let commitIdArray = commitId.split("/");
-      const pullNumber = commitIdArray[2];
-      var pull = parseInt(pullNumber, 10);
-      console.log(`The pull: ${pull}`);
-      //return parseInt(pullNumber, 10);
-      actualpull = parseInt(process.env.GITHUB_REF.split('/')[2], 10);
-      console.log(`actualpull: ${actualpull}`);
-      return parseInt(process.env.GITHUB_REF.split('/')[2], 10);
+      return parseInt(process.env.GITHUB_REF.split('/')[2]);
     }
   }
 
