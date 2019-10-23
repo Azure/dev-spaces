@@ -150,7 +150,7 @@ function () {
   }, {
     key: "getSubjectId",
     value: function getSubjectId(graphqlWithAuth, findPullRequestIdQuery, nameAndRepo) {
-      graphqlWithAuth(findPullRequestIdQuery, {
+      return graphqlWithAuth(findPullRequestIdQuery, {
         owner: nameAndRepo.owner,
         repo: nameAndRepo.repo,
         pullNumber: this.getPullNumber()
