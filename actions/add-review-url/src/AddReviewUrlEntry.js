@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
-const addReviewUrl = require('./AddReviewUrl.js');
+const addReviewUrl = require('./AddReviewUrl.js').default;
 const core = require('@actions/core');
 async function run() {
     try { 
