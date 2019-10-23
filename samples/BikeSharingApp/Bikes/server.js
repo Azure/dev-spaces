@@ -14,7 +14,6 @@ var mongoDBConnStr = process.env.mongo_connectionstring;
 console.log("Collection: " + mongoDBCollection);
 console.log("MongoDB connection string: " + mongoDBConnStr);
 
-
 // Will be initialized on server startup at the bottom
 // Init to prototype to enable Intellisense
 var mongoDB = require('mongodb').Db.prototype;
@@ -233,7 +232,7 @@ app.get('/api/bikes/:bikeId', function(req, res) {
         var theBike = result;
         theBike.id = theBike._id;
         delete theBike._id;
-                
+
         res.send(theBike);
     });
 });
