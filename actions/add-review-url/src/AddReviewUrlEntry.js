@@ -6,16 +6,11 @@ async function run() {
     try { 
         const host = core.getInput('host');
         const headref = process.env.GITHUB_HEAD_REF.toString();
-        const comment = `You can see a private version of the changes made in this pull request here:\nhttp://${headref}.s.${host}/`;
-        console.log("before *** the actual call");
-        console.log(`addReviewUrl: ${addReviewUrl}`);
+        const comment = `You can see a private version of the changes made in this pull request here:\nhttp://${headref}.s.${host}/`;        
         var call = new addReviewUrl(comment);        
-        console.log(`addReviewUrl: ${call}`);
-        console.log("after ***** the actual call");
     } 
     catch (error) {
       core.setFailed(error.message);
     }
   }
-  run()
-  
+  run()  

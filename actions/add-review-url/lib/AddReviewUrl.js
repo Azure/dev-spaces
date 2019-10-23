@@ -90,8 +90,6 @@ function () {
     key: "addCommentUsingSubjectId",
     value: function addCommentUsingSubjectId(pullRequestId, comment) {
       var obj = JSON.parse(JSON.stringify(pullRequestId));
-      console.log("obj: ".concat(obj));
-      console.log("obj.repository.pullRequest.id: ".concat(obj.repository.pullRequest.id));
       var graphqlWithAuth = this.getGraphqlWithAuth();
       graphqlWithAuth(this.addPullRequestCommentMutation(), {
         subjectId: obj.repository.pullRequest.id,
@@ -110,35 +108,31 @@ function () {
             switch (_context.prev = _context.next) {
               case 0:
                 nameAndRepo = this.getOwnerAndRepo();
-                console.log("after getowner and repo: ".concat(nameAndRepo));
                 graphqlWithAuth = this.getGraphqlWithAuth();
-                console.log("after getGraphqlWithAuth: ".concat(graphqlWithAuth));
                 findPullRequestIdQuery = this.findPullRequestQuery();
-                console.log("after findPullRequestQuery ".concat(findPullRequestIdQuery));
-                _context.prev = 6;
-                _context.next = 9;
+                _context.prev = 3;
+                _context.next = 6;
                 return this.getSubjectId(graphqlWithAuth, findPullRequestIdQuery, nameAndRepo);
 
-              case 9:
+              case 6:
                 subjectId = _context.sent;
-                console.log("subjectId: ".concat(subjectId));
-                _context.next = 13;
+                _context.next = 9;
                 return this.addCommentUsingSubjectId(subjectId, comment);
 
-              case 13:
-                _context.next = 17;
+              case 9:
+                _context.next = 13;
                 break;
 
-              case 15:
-                _context.prev = 15;
-                _context.t0 = _context["catch"](6);
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context["catch"](3);
 
-              case 17:
+              case 13:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[6, 15]]);
+        }, _callee, this, [[3, 11]]);
       }));
 
       function addComment(_x) {

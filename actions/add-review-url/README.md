@@ -22,7 +22,7 @@ Navigate to the directory: .\actions\add-review-url\src and run
 ```
 ## Test infrastucture for the GitHub Action
 Using Jasmine Test Framework. Please refer: https://medium.com/backticks-tildes/how-to-test-javascript-with-jasmine-framework-2e2b8dfa7a9e
-Refer to tests in \actions\add-review-url\src
+Refer to tests in \actions\add-review-url\test
 ```     
         npm install
         npm run build

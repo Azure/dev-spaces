@@ -72,8 +72,6 @@ class AddComment {
 
   addCommentUsingSubjectId(pullRequestId, comment) {
     let obj = JSON.parse(JSON.stringify(pullRequestId));
-    console.log(`obj: ${obj}`);
-    console.log(`obj.repository.pullRequest.id: ${obj.repository.pullRequest.id}`);
     const graphqlWithAuth = this.getGraphqlWithAuth();
     graphqlWithAuth(this.addPullRequestCommentMutation(), {
         subjectId: obj.repository.pullRequest.id,
@@ -85,14 +83,10 @@ class AddComment {
 
   async addComment(comment) {
     const nameAndRepo = this.getOwnerAndRepo();
-    console.log(`after getowner and repo: ${nameAndRepo}`);
     const graphqlWithAuth = this.getGraphqlWithAuth();
-    console.log(`after getGraphqlWithAuth: ${graphqlWithAuth}`);
     const findPullRequestIdQuery = this.findPullRequestQuery();
-    console.log(`after findPullRequestQuery ${findPullRequestIdQuery}`);
     try {
       const subjectId = await this.getSubjectId(graphqlWithAuth, findPullRequestIdQuery, nameAndRepo);
-      console.log(`subjectId: ${subjectId}`);
       await this.addCommentUsingSubjectId(subjectId, comment);
     } catch (e) {
     }
