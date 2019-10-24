@@ -1,0 +1,13 @@
+name: 'Add Review Url'
+description: 'Add Review Url as a comment on PR'
+author: ''
+inputs:  
+  repo-token:  # GitHub Auth Token
+    description: 'repo token'
+    required: true
+  host:  # host
+    description: 'complete host'
+    required: true    
+runs:
+  using: 'node12'
+  main: 'lib/AddReviewUrlEntry.js'
