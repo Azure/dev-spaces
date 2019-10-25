@@ -1,26 +1,26 @@
 # Azure Dev Spaces GitHub Action for adding the review url on pull request
-add-review-url GitHub Action can be used to write a comment on the pull request which is the app review url hence enabling the testing prior to checkin
+Azure Dev Spaces can provide reviewers a live, sandboxed preview of the pull request's changes before code is merged into the main branch. The add-review-url GitHub Action writes the URL of the preview app as a comment on the pull request.
 
-## Pull Request workflow can have the below snippet
-Refer to the documentation for [Azure Dev-spaces sample app](https://github.com/Azure/dev-spaces/) - [Pull Request Flow Documentation for Azure Dev Spaces](https://review.docs.microsoft.com/en-us/azure/dev-spaces/how-to/github-actions?branch=pr-en-us-91033)
+## How to include this action in our pull request workflow
+Refer to the documentation for [Azure Dev-spaces sample app](https://github.com/Azure/dev-spaces/) - [Pull Request Flow Documentation for Azure Dev Spaces](https://aka.ms/devspaces/pr-flow#configure-your-github-action)
 
-## Example workflow syntax on how this GitHub Action can be used 
-Refer: [Pull Request worflow for Azure dev-spaces](https://github.com/Azure/dev-spaces/blob/master/.github/workflows/bikes.yml)
+## Example workflow syntax 
+The following Action snippet is used in the [Bikesharing sample PR workflow ](https://github.com/Azure/dev-spaces/blob/master/.github/workflows/bikes.yml)
 ```
     - uses: azure/dev-spaces/actions/add-review-url@Releases/v1              
         with:
             repo-token: ${{ secrets.GITHUB_TOKEN }}  
             host: ${{ secrets.HOST }}
  ```       
-where secrets.HOST value is the host for your Dev Space. Refer [Pull Request Flow Documentation for Azure Dev Spaces](https://review.docs.microsoft.com/en-us/azure/dev-spaces/how-to/github-actions?branch=pr-en-us-91033#configure-your-github-action)
+where secrets.HOST is the host URL for the app deployed in AKS. See [Pull Request Flow Documentation for Azure Dev Spaces](https://aka.ms/devspaces/pr-flow#configure-your-github-action)
 
-## Try out the code - you will need node_modules to be built
+## How to build this GitHub Action for development
 Navigate to the directory: .\actions\add-review-url\src and run
 ```
     npm install
     npm run build
 ```
-## Test infrastucture for the GitHub Action
+## How to build and test the unit tests for this GitHub Action
 Using Jasmine Test Framework. Please refer: https://medium.com/backticks-tildes/how-to-test-javascript-with-jasmine-framework-2e2b8dfa7a9e
 Refer to tests in \actions\add-review-url\test
 ```     
