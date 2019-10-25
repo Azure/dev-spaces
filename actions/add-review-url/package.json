@@ -1,0 +1,29 @@
+{
+  "name": "AddReviewUrl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "AddReviewUrl.js",
+  "scripts": {
+    "build": "babel src -d lib",
+    "buildtest": "babel test -d spec",
+    "test": "jasmine spec/addReviewUrlTest.js"
+  },
+  "keywords": [],
+  "author": "Azure Dev Spaces",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.2.0",
+    "@babel/runtime": "^7.6.3",
+    "@octokit/graphql": "^4.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.6.4",
+    "@babel/plugin-transform-runtime": "^7.6.2",
+    "@babel/preset-env": "^7.6.3",
+    "babel-preset-env": "^1.7.0",
+    "grunt": "^1.0.4",
+    "grunt-contrib-jshint": "^2.1.0",
+    "jasmine": "^3.5.0"
+  }
+}
