@@ -1,6 +1,6 @@
 # Deploy the Bike Sharing sample application to Azure Kubernetes Service
 
-*Bike Sharing* is a microservices-based sample application that helps showcase the sandboxing capbilities of [Azure Dev Spaces](https://aka.ms/devspaces). 
+*Bike Sharing* is a microservices-based sample application that helps showcase the sandboxing capabilities of [Azure Dev Spaces](https://aka.ms/devspaces). 
 
 Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS).
 
@@ -94,7 +94,7 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
     ```
 
 ## Next Steps
-Now that you have the BikeSharing app deployed in AKS, try these walkthroughs:
+Now that you have the BikeSharing app deployed in AKS, try these walkthroughs try these walkthroughs to learn how Dev Spaces can enhance the Kubernetes development experience:
 
 1. **[Use your public endpoint in the cloud to privately debug backend code that’s running on your local dev machine.](https://aka.ms/devspaces/connect)** This minimizes what you need to set up on your dev machine – the only thing you need to run on your machine is the microservice you’re working on and your preferred dev tools, no need to set up mocks or simulators. You don’t even need Kubernetes YAML or Docker configuration to do this, and you won’t affect the currently deployed app or anyone who’s using the AKS cluster.
 
