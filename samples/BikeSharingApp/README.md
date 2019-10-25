@@ -24,7 +24,7 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
 
 1. **Enable Azure Dev Spaces on the AKS cluster.**
     ```bash
-    az aks use-dev-spaces -g GROUP_NAME -n AKS_NAME --space master --yes
+    az aks use-dev-spaces -g $GROUP_NAME -n $AKS_NAME --space master --yes
     ```
 
 <!-- 1. **Create an Azure Container Registry.** Save the loginServer value from the output because it is used in a later step.
@@ -85,7 +85,7 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
 1. **Open your browser to the app's website.** Navigate to the `bikesharingweb` service by opening the public URL from the `azds list-uris` command. In the below example, the public URL for the `bikesharingweb` service is http://master.bikesharingweb.fedcab0987.eus.azds.io/. Select **Aurelia Briggs (customer)** as the user, then select a bike to rent.
     ```bash
     azds list-uris
-    
+
     Uri                                                   Status
     --------------------------------------------------    ---------
     http://master.bikesharingweb.fedcab0987.eus.azds.io/  Available
