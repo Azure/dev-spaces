@@ -1,4 +1,4 @@
-# BikeSharing sample: Develop Microservices in Kubernetes with Confidence
+# Deploy the Bike Sharing sample application to Azure Kubernetes Service
 
 BikeSharing is a microservices-based sample application that was created to showcase the sandboxing capbilities of [Azure Dev Spaces](https://aka.ms/devspaces). 
 
