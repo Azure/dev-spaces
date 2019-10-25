@@ -1,6 +1,6 @@
 # Deploy the Bike Sharing sample application to Azure Kubernetes Service
 
-BikeSharing is a microservices-based sample application that helps showcase the sandboxing capbilities of [Azure Dev Spaces](https://aka.ms/devspaces). 
+*Bike Sharing* is a microservices-based sample application that helps showcase the sandboxing capbilities of [Azure Dev Spaces](https://aka.ms/devspaces). 
 
 Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS).
 
@@ -18,6 +18,7 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
     AKS_NAME=bikesharing-cluster
     LOCATION=eastus
 
+    az login
     az group create --name $GROUP_NAME --location $LOCATION
     az aks create -g $GROUP_NAME -n $AKS_NAME --location $LOCATION --disable-rbac --generate-ssh-keys
     ```
@@ -55,7 +56,7 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
 
 ## Deploy the BikeSharing sample app
 
-1. **Create a fork of this GitHub repo.** We need a *fork* because we'll be setting some GitHub Secrets to configure GitHub Actions in our workflow.
+1. **Create a fork of this GitHub repo.** It's better to create a *fork* for this exercise so that you can save your own commits and repo configuration.
 
 1. **Clone your fork and navigate into its directory**.
     ```bash
@@ -82,7 +83,7 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
     ```
     Note: **If you are using an RBAC-enabled cluster**, be sure to configure [a service account for Tiller](https://helm.sh/docs/using_helm/#role-based-access-control). Otherwise, `helm` commands will fail.
 
-1. **Open your browser to the app's website.** Navigate to the `bikesharingweb` service by opening the public URL from the `azds list-uris` command. In the below example, the public URL for the `bikesharingweb` service is http://master.bikesharingweb.fedcab0987.eus.azds.io/. Select **Aurelia Briggs (customer)** as the user, then select a bike to rent.
+1. **Open your browser to the app's website.** Run the `azds list-uris` command to see the public endpoints in the running app. Navigate to the `bikesharingweb` service - in the below example, the public URL for the `bikesharingweb` service is http://master.bikesharingweb.fedcab0987.eus.azds.io/. Select **Aurelia Briggs (customer)** as the user, then select a bike to rent.
     ```bash
     azds list-uris
 
@@ -98,3 +99,5 @@ Now that you have the BikeSharing app deployed in AKS, try these walkthroughs:
 1. **[Use your public endpoint in the cloud to privately debug backend code that’s running on your local dev machine.](https://aka.ms/devspaces/connect)** This minimizes what you need to set up on your dev machine – the only thing you need to run on your machine is the microservice you’re working on and your preferred dev tools, no need to set up mocks or simulators. You don’t even need Kubernetes YAML or Docker configuration to do this, and you won’t affect the currently deployed app or anyone who’s using the AKS cluster.
 
 1. **[Combine GitHub Actions with Dev Spaces in a pull request review.](https://aka.ms/devspaces/pr-flow)** You can use GitHub Actions to automatically deploy to a new sandbox whenever a pull request is opened so that your team can review a live version of the app that includes your pull request changes – all before that code is merged into your main branch! As a bonus, team members such as product managers and designers can become part of the review process during early stages of development.
+
+1. **[Debug and iterate code directly in AKS.](https://docs.microsoft.com/azure/dev-spaces/quickstart-netcore)** This is similar to the first scenario, except this mode enables a *higher fidelity development and testing experience* by helping you build and run a container image directly in AKS. Dev Spaces can help you generate Docker and Kubernetes assets.
