@@ -9,8 +9,8 @@
     "test": "jasmine spec/addReviewUrlTest.js"
   },
   "keywords": [],
-  "author": "s-tuli",
-  "license": "ISC",
+  "author": "Azure Dev Spaces",
+  "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.2.0",
     "@babel/runtime": "^7.6.3",

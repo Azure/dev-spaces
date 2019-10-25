@@ -18,31 +18,22 @@ class AddComment {
     } else {
       throw new Error('not able to obtain GITHUB_REPOSITORY from process.env');
     }
-  }
-
-  getGraphqlWithAuth() {
-    const token = core.getInput('repo-token');
-    return graphql.defaults({
-      headers: {
-        authorization: `token ${token}`,
-      },
-    });
-  }
+  }  
 
   addPullRequestCommentMutation() {
     return `mutation AddPullRequestComment($subjectId: ID!, $body: String!) {
-  addComment(input:{subjectId:$subjectId, body: $body}) {
-    commentEdge {
-        node {
-        createdAt
-        body
+      addComment(input:{subjectId:$subjectId, body: $body}) {
+        commentEdge {
+            node {
+            createdAt
+            body
+          }
+        }
+        subject {
+          id
+        }
       }
-    }
-    subject {
-      id
-    }
-  }
-}`;
+    }`;
   }  
 
   getPullNumber() {
@@ -62,12 +53,12 @@ class AddComment {
 
   findPullRequestQuery() {
     return `query FindPullRequestID ($owner: String!, $repo: String!, $pullNumber: Int!){
-  repository(owner:$owner, name:$repo) {
-    pullRequest(number:$pullNumber) {
-      id
-    }
-  }
-}`;
+      repository(owner:$owner, name:$repo) {
+        pullRequest(number:$pullNumber) {
+          id
+        }
+      }
+    }`;
   }
 
   addCommentUsingSubjectId(pullRequestId, comment) {

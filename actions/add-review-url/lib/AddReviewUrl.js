@@ -50,19 +50,9 @@ function () {
       }
     }
   }, {
-    key: "getGraphqlWithAuth",
-    value: function getGraphqlWithAuth() {
-      var token = core.getInput('repo-token');
-      return graphql.defaults({
-        headers: {
-          authorization: "token ".concat(token)
-        }
-      });
-    }
-  }, {
     key: "addPullRequestCommentMutation",
     value: function addPullRequestCommentMutation() {
-      return "mutation AddPullRequestComment($subjectId: ID!, $body: String!) {\n  addComment(input:{subjectId:$subjectId, body: $body}) {\n    commentEdge {\n        node {\n        createdAt\n        body\n      }\n    }\n    subject {\n      id\n    }\n  }\n}";
+      return "mutation AddPullRequestComment($subjectId: ID!, $body: String!) {\n      addComment(input:{subjectId:$subjectId, body: $body}) {\n        commentEdge {\n            node {\n            createdAt\n            body\n          }\n        }\n        subject {\n          id\n        }\n      }\n    }";
     }
   }, {
     key: "getPullNumber",
@@ -84,7 +74,7 @@ function () {
   }, {
     key: "findPullRequestQuery",
     value: function findPullRequestQuery() {
-      return "query FindPullRequestID ($owner: String!, $repo: String!, $pullNumber: Int!){\n  repository(owner:$owner, name:$repo) {\n    pullRequest(number:$pullNumber) {\n      id\n    }\n  }\n}";
+      return "query FindPullRequestID ($owner: String!, $repo: String!, $pullNumber: Int!){\n      repository(owner:$owner, name:$repo) {\n        pullRequest(number:$pullNumber) {\n          id\n        }\n      }\n    }";
     }
   }, {
     key: "addCommentUsingSubjectId",

@@ -26,8 +26,8 @@
     "type": "git",
     "url": "git+https://github.com/Azure/dev-spaces.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Azure Dev Spaces",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Azure/dev-spaces/issues"
   },
