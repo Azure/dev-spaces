@@ -1,6 +1,6 @@
 # Deploy the Bike Sharing sample application to Azure Kubernetes Service
 
-BikeSharing is a microservices-based sample application that was created to showcase the sandboxing capbilities of [Azure Dev Spaces](https://aka.ms/devspaces). 
+BikeSharing is a microservices-based sample application that helps showcase the sandboxing capbilities of [Azure Dev Spaces](https://aka.ms/devspaces). 
 
 Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS).
 
@@ -19,7 +19,7 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
     LOCATION=eastus
 
     az group create --name $GROUP_NAME --location $LOCATION
-    az aks create --resource-group $GROUP_NAME --name $AKS_NAME --location $LOCATION --disable-rbac --generate-ssh-keys
+    az aks create -g $GROUP_NAME -n $AKS_NAME --location $LOCATION --disable-rbac --generate-ssh-keys
     ```
 
 1. **Enable Azure Dev Spaces on the AKS cluster.**
@@ -27,29 +27,30 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
     az aks use-dev-spaces -g GROUP_NAME -n AKS_NAME --space master --yes
     ```
 
-1. **Create an Azure Container Registry (ACR).** Save the loginServer value from the output because it is used in a later step.
+<!-- 1. **Create an Azure Container Registry.** Save the loginServer value from the output because it is used in a later step.
     ```bash
     ACR_NAME=bikesharing-container-registry
     az acr create -g $GROUP_NAME --name $ACR_NAME --sku Basic
     ```
 
-1. **Set up role access for cluster and container registry.** Note: The user running these commands needs to be an *owner* of the target resources.
+1. **Set up role access for the cluster and container registry.** Note: The user running these commands needs to be an *owner* of the target resources.
     ```bash
-    # Save the output from this command
+    # Save the output from this command, you'll need the `clientId` value for the next commands
     az ad sp create-for-rbac --sdk-auth --skip-assignment 
 
     # Get the AKS resource id
-    az aks show -g $GROUP_NAME -n $AKS_NAME --query id
+    az aks show -g $GROUP_NAME -n $AKS_NAME --query id -o tsv
 
     # Create role assignment for access to AKS cluster
-    az role assignment create --assignee <ClientId of Service Principal> --scope “<aksResourceId>” --role Contributor
+    az role assignment create --assignee <clientId> --scope "<aksResourceId>" --role Contributor
 
     # Get the container registry (ACR) id
-    az acr show -g $GROUP_NAME -n $ACR_NAME --query id
+    az acr show -g $GROUP_NAME -n $ACR_NAME --query id -o tsv
     
     # Create role assignment for 'push access' to container registry
-    az role assignment create --assignee  <ClientId from Step1 above>  --scope “<ACR Registry id>” --role AcrPush
+    az role assignment create --assignee  <clientId>  --scope "<acrResourceId>" --role AcrPush
     ```
+ -->
 
 
 ## Deploy the BikeSharing sample app
@@ -81,9 +82,10 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
     ```
     Note: **If you are using an RBAC-enabled cluster**, be sure to configure [a service account for Tiller](https://helm.sh/docs/using_helm/#role-based-access-control). Otherwise, `helm` commands will fail.
 
-1. **Open your browser to the app's website.** Navigate to the bikesharingweb service by opening the public URL from the azds list-uris command. In the above example, the public URL for the bikesharingweb service is http://master.bikesharingweb.fedcab0987.eus.azds.io/. Select Aurelia Briggs (customer) as the user, then select a bike to rent. Verify you see a placeholder image for the bike.
+1. **Open your browser to the app's website.** Navigate to the `bikesharingweb` service by opening the public URL from the `azds list-uris` command. In the below example, the public URL for the `bikesharingweb` service is http://master.bikesharingweb.fedcab0987.eus.azds.io/. Select **Aurelia Briggs (customer)** as the user, then select a bike to rent.
     ```bash
     azds list-uris
+    
     Uri                                                   Status
     --------------------------------------------------    ---------
     http://master.bikesharingweb.fedcab0987.eus.azds.io/  Available
