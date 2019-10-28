@@ -5,13 +5,8 @@ on:
     branches:
     - master
     paths:
-      - samples/BikeSharingApp/BikeSharingWeb/*
-      - samples/BikeSharingApp/Bikes/*
-      - samples/BikeSharingApp/Billing/*
-      - samples/BikeSharingApp/Gateway/*
-      - samples/BikeSharingApp/Reservation/*
-      - samples/BikeSharingApp/ReservationEngine/*
-      - samples/BikeSharingApp/Users/*
+    - samples/BikeSharingApp/**/*
+    - "!**/*.md"
     
 jobs:
   build:
@@ -22,9 +17,9 @@ jobs:
     
     - uses: azure/container-actions/docker-login@master
       with:
-        login-server: ${{ secrets.CONTAINER_REGISTRY }}
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
+        login-server: '${{ secrets.CONTAINER_REGISTRY }}'
+        username: '${{ secrets.REGISTRY_USERNAME }}'
+        password: '${{ secrets.REGISTRY_PASSWORD }}'
     
     - run: |
         docker build samples/BikeSharingApp/Bikes/ -t ${{ secrets.CONTAINER_REGISTRY }}/bikes:$GITHUB_SHA
@@ -51,12 +46,20 @@ jobs:
     - uses: azure/k8s-actions/aks-set-context@master
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
-        cluster-name: BikeSharingAKS
-        resource-group: bikesharing
+        cluster-name: '${{ secrets.CLUSTER_NAME }}'
+        resource-group: '${{ secrets.RESOURCE_GROUP }}'
          
     - name: Helm Install Master
       run: |
         cd samples/BikeSharingApp/charts
         helm init --client-only
         helm dependency update
-        helm upgrade --install --namespace ${{ secrets.PARENT_SPACE }} bikesharing . --set "bikes.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes, bikesharingweb.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikesharingweb, billing.image.repository=${{ secrets.CONTAINER_REGISTRY }}/billing, gateway.image.repository=${{ secrets.CONTAINER_REGISTRY }}/gateway, reservation.image.repository=${{ secrets.CONTAINER_REGISTRY }}/reservation, reservationengine.image.repository=${{ secrets.CONTAINER_REGISTRY }}/reservationengine, users.image.repository=${{ secrets.CONTAINER_REGISTRY }}/users, image.tag=$GITHUB_SHA"
+        helm upgrade --install --namespace ${{ secrets.MASTER_SPACE }} bikesharing . \
+          --set bikes.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
+          --set bikesharingweb.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikesharingweb\
+          --set billing.image.repository=${{ secrets.CONTAINER_REGISTRY }}/billing \
+          --set gateway.image.repository=${{ secrets.CONTAINER_REGISTRY }}/gateway \
+          --set reservation.image.repository=${{ secrets.CONTAINER_REGISTRY }}/reservation \
+          --set reservationengine.image.repository=${{ secrets.CONTAINER_REGISTRY }}/reservationengine \
+          --set users.image.repository=${{ secrets.CONTAINER_REGISTRY }}/users \
+          --set image.tag=$GITHUB_SHA
