@@ -11,48 +11,18 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
 
 ## Configure Azure resources
 
-1. **Create an Azure Kubernetes Service cluster.** You must create an AKS cluster in a [supported region](https://docs.microsoft.com/azure/dev-spaces/about#supported-regions-and-configurations). The below commands create a resource group called `bikesharing-group` and an AKS cluster called `bikesharing-cluster` in the `eastus` region.
+1. **Create an Azure Kubernetes Service cluster.** You must create an AKS cluster in a [supported region](https://docs.microsoft.com/azure/dev-spaces/about#supported-regions-and-configurations). The below commands create a resource group called `MyResourceGroup` and an AKS cluster called `MyAKS` in the `eastus` region.
 
     ```bash
-    GROUP_NAME=bikesharing-group
-    AKS_NAME=bikesharing-cluster
-    LOCATION=eastus
-
     az login
-    az group create --name $GROUP_NAME --location $LOCATION
-    az aks create -g $GROUP_NAME -n $AKS_NAME --location $LOCATION --disable-rbac --generate-ssh-keys
+    az group create --name MyResourceGroup --location eastus
+    az aks create -g MyResourceGroup -n MyAKS --location eastus --disable-rbac --generate-ssh-keys
     ```
 
 1. **Enable Azure Dev Spaces on the AKS cluster.**
     ```bash
-    az aks use-dev-spaces -g $GROUP_NAME -n $AKS_NAME --space master --yes
+    az aks use-dev-spaces -g MyResourceGroup -n MyAKS --space master --yes
     ```
-
-<!-- 1. **Create an Azure Container Registry.** Save the loginServer value from the output because it is used in a later step.
-    ```bash
-    ACR_NAME=bikesharing-container-registry
-    az acr create -g $GROUP_NAME --name $ACR_NAME --sku Basic
-    ```
-
-1. **Set up role access for the cluster and container registry.** Note: The user running these commands needs to be an *owner* of the target resources.
-    ```bash
-    # Save the output from this command, you'll need the `clientId` value for the next commands
-    az ad sp create-for-rbac --sdk-auth --skip-assignment 
-
-    # Get the AKS resource id
-    az aks show -g $GROUP_NAME -n $AKS_NAME --query id -o tsv
-
-    # Create role assignment for access to AKS cluster
-    az role assignment create --assignee <clientId> --scope "<aksResourceId>" --role Contributor
-
-    # Get the container registry (ACR) id
-    az acr show -g $GROUP_NAME -n $ACR_NAME --query id -o tsv
-    
-    # Create role assignment for 'push access' to container registry
-    az role assignment create --assignee  <clientId>  --scope "<acrResourceId>" --role AcrPush
-    ```
- -->
-
 
 ## Deploy the BikeSharing sample app
 
