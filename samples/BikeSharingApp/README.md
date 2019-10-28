@@ -63,6 +63,12 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
     http://master.gateway.fedcab0987.eus.azds.io/         Available
     ```
 
+1. **Commit and push to your forked repo.** This will ensure that feature branches you create going forward will also have the configuration changes you made earlier.
+    ```bash
+    git commit -am "update HostSuffix"
+    git push origin master
+    ```
+
 ## Next Steps
 Now that you have the BikeSharing app deployed in AKS, try these walkthroughs try these walkthroughs to learn how Dev Spaces can enhance the Kubernetes development experience:
 
