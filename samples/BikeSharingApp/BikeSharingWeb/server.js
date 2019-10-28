@@ -10,6 +10,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
+
 app.prepare()
     .then(() => {
         const server = express()
@@ -26,6 +27,7 @@ app.prepare()
                 apiHost: apiHost
             });
         });
+                
 
         server.get('/preview/:id', (req, res) => {
             return app.render(req, res, '/preview', { id: req.params.id })

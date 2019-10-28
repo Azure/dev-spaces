@@ -30,7 +30,7 @@ ingress:
     kubernetes.io/ingress.class: addon-http-application-routing
   path: /
   hosts:
-    - dev.bikesharingweb.<REPLACE_ME_WITH_HOST_SUFFIX>
+    - dev.bikesharingweb.s4jsj69mjb.eus.azds.io
   tls: []
     # - secretName: chart-example-tls
     #   hosts:
