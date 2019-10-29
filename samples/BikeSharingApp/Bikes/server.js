@@ -322,6 +322,7 @@ function processReservation(res, bikeId, changeTo, requestID) {
                 }                
             });            
             return;
+            
         }
 
         if (result.matchedCount !== 1 && result.modifiedCount !== 1) {
