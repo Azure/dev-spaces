@@ -50,8 +50,8 @@ jobs:
     - uses: azure/k8s-actions/aks-set-context@master
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
-        cluster-name: '${{ secrets.CLUSTER_NAME }}'
-        resource-group: '${{ secrets.RESOURCE_GROUP }}'
+        cluster-name: ${{ secrets.CLUSTER_NAME }}
+        resource-group: ${{ secrets.RESOURCE_GROUP }}
          
     - name: Helm Install Master
       run: |
