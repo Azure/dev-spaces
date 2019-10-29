@@ -252,6 +252,7 @@ app.delete('/api/bikes/:bikeId', function(req, res) {
         return;
     }
     
+    
     mongoDB.collection(mongoDBCollection).deleteOne({ _id: new ObjectId(req.params.bikeId) }, function(err, result) {
         if (err) {
             dbError(res, err, requestID);
