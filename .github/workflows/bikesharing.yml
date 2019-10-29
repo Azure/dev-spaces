@@ -17,9 +17,9 @@ jobs:
     
     - uses: azure/container-actions/docker-login@master
       with:
-        login-server: '${{ secrets.CONTAINER_REGISTRY }}'
-        username: '${{ secrets.REGISTRY_USERNAME }}'
-        password: '${{ secrets.REGISTRY_PASSWORD }}'
+        login-server: ${{ secrets.CONTAINER_REGISTRY }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
     
     - run: |
         docker build samples/BikeSharingApp/Bikes/ -t ${{ secrets.CONTAINER_REGISTRY }}/bikes:$GITHUB_SHA
@@ -46,8 +46,8 @@ jobs:
     - uses: azure/k8s-actions/aks-set-context@master
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
-        cluster-name: '${{ secrets.CLUSTER_NAME }}'
-        resource-group: '${{ secrets.RESOURCE_GROUP }}'
+        cluster-name: ${{ secrets.CLUSTER_NAME }}
+        resource-group: ${{ secrets.RESOURCE_GROUP }}
          
     - name: Helm Install Master
       run: |
