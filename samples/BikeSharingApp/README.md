@@ -7,7 +7,7 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
 ## Prerequisites
 * [Azure subscription](https://azure.microsoft.com/free)
 * [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli?view=azure-cli-latest)
-* [Helm 2.13 (or greater)](https://github.com/helm/helm/blob/master/docs/install.md)
+* [Helm 2.13 (or greater)](https://github.com/helm/helm#install)
 
 ## Configure Azure resources
 
@@ -26,7 +26,7 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
 
 ## Deploy the BikeSharing sample app
 
-1. **Create a fork of this GitHub repo.** It's better to create a *fork* for this exercise so that you can save your own commits and repo configuration.
+1. **[Create a fork](https://guides.github.com/activities/forking/) of this GitHub repo.** It's better to create a *fork* for this exercise so that you can save your own commits and repo configuration.
 
 1. **Clone your fork and navigate into its directory**.
     ```bash
