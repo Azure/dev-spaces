@@ -52,7 +52,14 @@ jobs:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
         cluster-name: ${{ secrets.CLUSTER_NAME }}
         resource-group: ${{ secrets.RESOURCE_GROUP }}
-         
+    - uses: azure/k8s-actions/k8s-create-secret@master
+      with:
+        namespace: ${{ secrets.MASTER_SPACE }}
+        container-registry-url: ${{ secrets.CONTAINER_REGISTRY }}
+        container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        secret-name: ${{ secrets.IMAGE_PULL_SECRET }}
+        
     - name: Helm Install Master
       run: |
         cd samples/BikeSharingApp/charts
@@ -60,10 +67,5 @@ jobs:
         helm dependency update
         helm upgrade --install --namespace ${{ secrets.MASTER_SPACE }} bikesharing . \
           --set bikes.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
-          --set bikesharingweb.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikesharingweb\
-          --set billing.image.repository=${{ secrets.CONTAINER_REGISTRY }}/billing \
-          --set gateway.image.repository=${{ secrets.CONTAINER_REGISTRY }}/gateway \
-          --set reservation.image.repository=${{ secrets.CONTAINER_REGISTRY }}/reservation \
-          --set reservationengine.image.repository=${{ secrets.CONTAINER_REGISTRY }}/reservationengine \
-          --set users.image.repository=${{ secrets.CONTAINER_REGISTRY }}/users \
-          --set image.tag=$GITHUB_SHA
+          --set bikes.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
+          --set bikes.image.tag=$GITHUB_SHA \
