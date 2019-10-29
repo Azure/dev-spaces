@@ -11,8 +11,8 @@
     "type": "git",
     "url": "git+https://github.com/Azure/dev-spaces.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Azure Dev Spaces",
+  "license": "MIT",
   "dependencies": {
     "express": "^4.14.0",
     "morgan": "^1.8.0",

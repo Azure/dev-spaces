@@ -14,6 +14,7 @@ jobs:
     steps:
     
     - uses: actions/checkout@master
+
     - uses: azure/k8s-actions/aks-set-context@master
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
@@ -24,6 +25,14 @@ jobs:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    
+    - uses: azure/container-actions/docker-login@master
+      with:
+        login-server: '${{ secrets.CONTAINER_REGISTRY }}'
+        username: '${{ secrets.REGISTRY_USERNAME }}'
+        password: '${{ secrets.REGISTRY_PASSWORD }}'
+
     
     - run: |
         docker build samples/BikeSharingApp/Bikes/ -t ${{ secrets.CONTAINER_REGISTRY }}/bikes:$GITHUB_SHA
