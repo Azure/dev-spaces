@@ -13,6 +13,9 @@ jobs:
     steps:
     
     - uses: actions/checkout@master
+    - name: Helm Install Steven PR
+      run: |
+        which helm
     - uses: azure/dev-spaces/actions/add-review-url@s-tuli/add-review-url-action      
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
