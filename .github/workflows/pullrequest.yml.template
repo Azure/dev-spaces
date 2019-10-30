@@ -1,0 +1,76 @@
+# Name of the PlaceHolder                 -  Description
+########################################################################################################################
+# <Name of the WorkFlow>                  - Workflow name. example: Bikes
+# <Path to the service>                   - Path to the service where the developer would like to trigger the Flow/ action on pull request - Example: samples/BikeSharingApp/Bikes. 
+# <Path to the Dockerfile>                - Path to the folder which contains the Dockerfile
+# <Name of the Service>                   - Pass this as a parameter for multiple steps below. Lower Cased Name of the Service, for example: bikes
+# <Path to the Charts for that service>   - Pass this in as a parameter for the Helm Install PR step
+#                                           This is the path to the folder where the charts are present for that service. example: samples/BikeSharingApp/Bikes/charts/bikes 
+# <ReleaseName>                           - Pass this in as a parameter for the Helm Install PR step
+# 
+# Note: This template assumes that you use Helm. If not, replace the Helm Install PR step with your own step
+# Note: For the secrets below please refer to the document: http://aka.ms/devspaces/pr-flow
+#
+
+name: PRFlow <Name of the Workflow>
+
+on: 
+  pull_request:
+    branches:
+    - master
+    paths:
+    - <Path to the Service>/**
+
+jobs:
+  build:
+    runs-on: ubuntu-16.04
+    steps:
+    
+    - uses: actions/checkout@master
+    
+    - uses: azure/container-actions/docker-login@master
+      with:
+        login-server: ${{ secrets.CONTAINER_REGISTRY }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    
+    - name: docker build
+      run: |
+        docker build <Path to the Dockerfile>/ -t ${{ secrets.CONTAINER_REGISTRY }}/<Name of the Service>:$GITHUB_SHA
+        docker push ${{ secrets.CONTAINER_REGISTRY }}/<Name of the Service>:$GITHUB_SHA
+      
+    - uses: azure/k8s-actions/aks-set-context@master
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: ${{ secrets.CLUSTER_NAME }}
+        resource-group: ${{ secrets.RESOURCE_GROUP }}
+                
+    - name: Create child namespaces and add Dev Spaces labels
+      run:  |
+        if [ -n "$(kubectl get namespace $GITHUB_HEAD_REF --ignore-not-found -o name)" ]; then exit 0; fi
+        kubectl create namespace $GITHUB_HEAD_REF
+        kubectl label namespace $GITHUB_HEAD_REF azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
+        kubectl label namespace $GITHUB_HEAD_REF azds.io/space=true
+        kubectl label namespace $GITHUB_HEAD_REF azds.io/pull-request-space=true
+        
+    - uses: azure/k8s-actions/k8s-create-secret@master
+      with:
+        namespace: ${{ GITHUB_HEAD_REF }}
+        container-registry-url: ${{ secrets.CONTAINER_REGISTRY }}
+        container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        secret-name: ${{ secrets.IMAGE_PULL_SECRET }}
+        
+    - name: Helm Install PR
+      run: |
+        helm upgrade --install --namespace $GITHUB_HEAD_REF <ReleaseName>-$GITHUB_HEAD_REF <Path to the charts for the Service> \
+          --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/<Name of the Service> \
+          --set image.tag=$GITHUB_SHA \
+          --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
+          --set ingress.hosts[0]=$GITHUB_HEAD_REF.s.${{ secrets.HOST }} \
+          --set ingress.annotations.kubernetes\\.io/ingress\\.class=traefik-azds
+ 
+    - uses: azure/dev-spaces/actions/add-review-url@Releases/v1              
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}  
+        host: ${{ secrets.HOST }}
