@@ -69,7 +69,7 @@ jobs:
           --set bikesharingweb.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikesharingweb\
           --set bikesharingweb.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
           --set bikesharingweb.image.tag=$GITHUB_SHA \
-          --set bikesharingweb.ingress.hosts[0]=$GITHUB_HEAD_REF.s.${{ secrets.HOST }} \
+          --set bikesharingweb.ingress.hosts[0]=${{ secrets.HOST }} \
           --set bikesharingweb.ingress.annotations.kubernetes\\.io/ingress\\.class=traefik-azds
           --set billing.image.repository=${{ secrets.CONTAINER_REGISTRY }}/billing \
           --set billing.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
@@ -77,7 +77,7 @@ jobs:
           --set gateway.image.repository=${{ secrets.CONTAINER_REGISTRY }}/gateway \          
           --set gateway.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
           --set gateway.image.tag=$GITHUB_SHA \
-          --set gateway.ingress.hosts[0]=$GITHUB_HEAD_REF.s.${{ secrets.HOST }} \
+          --set gateway.ingress.hosts[0]=${{ secrets.HOST }} \
           --set gateway.ingress.annotations.kubernetes\\.io/ingress\\.class=traefik-azds
           --set reservation.image.repository=${{ secrets.CONTAINER_REGISTRY }}/reservation \
           --set reservation.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
