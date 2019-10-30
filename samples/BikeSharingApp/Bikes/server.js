@@ -200,7 +200,6 @@ app.put('/api/bikes/:bikeId', function(req, res) {
             res.status(500).send(msg);
             return;
         }
-        
 
         res.sendStatus(200);
     });
@@ -235,7 +234,8 @@ app.get('/api/bikes/:bikeId', function(req, res) {
         delete theBike._id;
 
         res.send(theBike);
-    });    
+    });
+    
 });
 
 // delete bike ------------------------------------------------------------
