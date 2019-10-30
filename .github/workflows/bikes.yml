@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-16.04
     steps:
     
     - uses: actions/checkout@master
@@ -54,8 +54,6 @@ jobs:
         
     - name: Helm Install PR
       run: |
-        which helm
-        helm init --upgrade --wait
         helm upgrade --install --namespace $GITHUB_HEAD_REF bikesharing-$GITHUB_HEAD_REF samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set image.tag=$GITHUB_SHA \
