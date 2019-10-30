@@ -60,7 +60,7 @@ jobs:
       run: |
         cd samples/BikeSharingApp/charts
         helm init --client-only
-        helm dependency update
+        helm init --upgrade --wait
         helm upgrade --install --namespace ${{ secrets.MASTER_SPACE }} bikesharing . \
           --set bikes.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set bikes.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
