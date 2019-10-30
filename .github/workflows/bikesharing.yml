@@ -10,7 +10,7 @@ on:
     
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-16.04
     steps:
     
     - uses: actions/checkout@master
@@ -59,8 +59,7 @@ jobs:
     - name: Helm Install Master
       run: |
         cd samples/BikeSharingApp/charts
-        helm init --client-only
-        helm init --upgrade --wait
+        helm init --client-only        
         helm dependency update
         helm upgrade --install --namespace ${{ secrets.MASTER_SPACE }} bikesharing . \
           --set bikes.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
