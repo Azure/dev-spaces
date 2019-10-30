@@ -18,12 +18,10 @@ console.log("MongoDB connection string: " + mongoDBConnStr);
 // Init to prototype to enable Intellisense
 var mongoDB = require('mongodb').Db.prototype;
 
-
 validate.validators.illegal = function(value, options, key, attributes) {
     if (value !== undefined && options) {
         return "cannot be provided";
     }
-    
 }
 
 var incomingBikeSchema = {
@@ -217,7 +215,7 @@ app.get('/api/bikes/:bikeId', function(req, res) {
     if (!ObjectId.isValid(req.params.bikeId))
     {
         res.status(400).send(req.params.bikeId + ' is not a valid bikeId!');
-        return;                
+        return;
     }
 
     mongoDB.collection(mongoDBCollection).findOne({ _id: new ObjectId(req.params.bikeId) }, function(err, result) {
@@ -228,13 +226,14 @@ app.get('/api/bikes/:bikeId', function(req, res) {
         if (!result) {
             bikeDoesNotExist(res, req.params.bikeId);
             return;
-        }        
+        }
 
         var theBike = result;
+        // Hard code image url *FIX ME*
+        theBike.imageUrl = "/static/logo.svg";
         theBike.id = theBike._id;
         delete theBike._id;
 
-        
         res.send(theBike);
     });
 });
@@ -252,7 +251,6 @@ app.delete('/api/bikes/:bikeId', function(req, res) {
         return;
     }
     
-    
     mongoDB.collection(mongoDBCollection).deleteOne({ _id: new ObjectId(req.params.bikeId) }, function(err, result) {
         if (err) {
             dbError(res, err, requestID);
@@ -263,7 +261,7 @@ app.delete('/api/bikes/:bikeId', function(req, res) {
             return;
         }
         if (result.deletedCount !== 1) {
-            var msg = 'Unexpected number of bikes deleted! Deleted: "' + result.deletedCount + '';
+            var msg = 'Unexpected number of bikes deleted! Deleted: "' + result.deletedCount + '"';
             console.log(requestID + " - " + msg);
             res.status(500).send(msg);
             return;
@@ -314,24 +312,25 @@ function processReservation(res, bikeId, changeTo, requestID) {
                     dbError(res, err, requestID);
                     return;
                 }
+
                 if (!result) {
                     bikeDoesNotExist(res, bikeId);
                 }
                 else {
                     // Invalid reservation request
                     res.status(400).send('Invalid reservation request was made for BikeId ' + bikeId);
-                }                
-            });            
-            return;
+                }
+            });
             
+            return;
         }
-
         if (result.matchedCount !== 1 && result.modifiedCount !== 1) {
             var msg = 'Unexpected number of bikes changed availability! Matched: "' + result.matchedCount + '" Modified: "' + result.modifiedCount + '"';
             console.log(requestID + " - " + msg);
             res.status(500).send(msg);
             return;
         }
+
         res.sendStatus(200);
     });
 }
@@ -345,7 +344,6 @@ function dbError(res, err, requestID) {
     res.status(500).send(err);
 }
 
-
 app.get('/hello', function(req, res) {
     res.status(200).send('hello!\n');
 });
@@ -353,7 +351,6 @@ app.get('/hello', function(req, res) {
 // start server ------------------------------------------------------------
 var port = 80;
 var server = null;
-
 
 process.on("SIGINT", () => {
     console.log("Interrupted. Terminating...");
@@ -370,7 +367,6 @@ process.on("SIGTERM", () => {
     if (server) {
         server.close();
     }
-
     var tmp = mongoDB;
     mongoDB = null;
     tmp.close();
