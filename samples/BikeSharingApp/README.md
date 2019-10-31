@@ -21,7 +21,7 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
 
 1. **Enable Azure Dev Spaces on the AKS cluster.**
     ```bash
-    az aks use-dev-spaces -g MyResourceGroup -n MyAKS --space master --yes
+    az aks use-dev-spaces -g MyResourceGroup -n MyAKS --space dev --yes
     ```
 
 ## Deploy the BikeSharing sample app
@@ -34,33 +34,33 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
     cd dev-spaces/samples/BikeSharingApp/
     ```
 
-1. **Retrieve the HostSuffix for the `master` dev space.**
+1. **Retrieve the HostSuffix for the `dev` dev space.**
     ```bash
     azds show-context
 
     Name                ResourceGroup     DevSpace  HostSuffix
     ------------------  ----------------  --------  -----------------------
-    MyAKS               MyResourceGroup   master    fedcab0987.eus.azds.io
+    MyAKS               MyResourceGroup   dev       fedcab0987.eus.azds.io
     ```
 
 1. **Update the Helm chart with your HostSuffix.** Open [`charts/values.yaml`](https://github.com/Azure/dev-spaces/blob/master/samples/BikeSharingApp/charts/values.yaml) and replace all instances of `<REPLACE_ME_WITH_HOST_SUFFIX>` with the HostSuffix value you retrieved earlier. Save your changes and close the file.
 
-1. **Deploy the sample application to Kubernetes.** We'll use Helm to run this sample application, but other tooling could be used to run your entire application in a namespace within a cluster. The Helm commands are targeting the namespace named `master` you created earlier, and can take several minutes to complete.
+1. **Deploy the sample application to Kubernetes.** We'll use Helm to run this sample application, but other tooling could be used to run your entire application in a namespace within a cluster. The Helm commands are targeting the namespace named `dev` you created earlier, and can take several minutes to complete.
     ```bash
     cd charts/
     helm init --wait
-    helm install -n bikesharing . --dep-up --namespace master --atomic
+    helm install -n bikesharing . --dep-up --namespace dev --atomic
     ```
     Note: **If you are using an RBAC-enabled cluster**, be sure to configure [a service account for Tiller](https://helm.sh/docs/using_helm/#role-based-access-control). Otherwise, `helm` commands will fail.
 
-1. **Open your browser to the app's website.** Run the `azds list-uris` command to see the public endpoints in the running app. Navigate to the `bikesharingweb` service - in the below example, the public URL for the `bikesharingweb` service is http://master.bikesharingweb.fedcab0987.eus.azds.io/. Select **Aurelia Briggs (customer)** as the user, then select a bike to rent.
+1. **Open your browser to the app's website.** Run the `azds list-uris` command to see the public endpoints in the running app. Navigate to the `bikesharingweb` service - in the below example, the public URL for the `bikesharingweb` service is http://dev.bikesharingweb.fedcab0987.eus.azds.io/. Select **Aurelia Briggs (customer)** as the user, then select a bike to rent.
     ```bash
     azds list-uris
 
-    Uri                                                   Status
-    --------------------------------------------------    ---------
-    http://master.bikesharingweb.fedcab0987.eus.azds.io/  Available
-    http://master.gateway.fedcab0987.eus.azds.io/         Available
+    Uri                                                Status
+    -----------------------------------------------    ---------
+    http://dev.bikesharingweb.fedcab0987.eus.azds.io/  Available
+    http://dev.gateway.fedcab0987.eus.azds.io/         Available
     ```
 
 1. **Commit and push to your forked repo.** This will ensure that feature branches you create going forward will also have the configuration changes you made earlier.
