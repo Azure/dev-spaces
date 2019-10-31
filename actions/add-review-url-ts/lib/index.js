@@ -19,14 +19,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const AddReviewUrlnp_1 = __importDefault(require("./AddReviewUrlnp"));
+const AddReviewUrl_1 = __importDefault(require("./AddReviewUrl"));
 const core = __importStar(require("@actions/core"));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        const addComment = new AddReviewUrlnp_1.default();
+        const addComment = new AddReviewUrl_1.default();
         try {
             const host = core.getInput('host');
-            const headref = process.env.GITHUB_HEAD_REF.toString();
+            let headref = '';
+            if (process.env.GITHUB_HEAD_REF) {
+                headref = process.env.GITHUB_HEAD_REF.toString();
+            }
             const comment = `You can see a private version of the changes made in this pull request here:\nhttp://${headref}.s.${host}/`;
             yield addComment.addComment(comment);
         }
