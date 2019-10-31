@@ -77,3 +77,9 @@ Now that you have the BikeSharing app deployed in AKS, try these walkthroughs to
 1. **[Debug and iterate code directly in AKS.](https://docs.microsoft.com/azure/dev-spaces/quickstart-netcore)** This is similar to the first scenario, except this mode enables a *higher fidelity development and testing experience* by running your code as a container directly in AKS. Dev Spaces can help you generate Docker and Kubernetes assets.
 
 1. **[Combine GitHub Actions with Dev Spaces in a pull request review.](https://aka.ms/devspaces/pr-flow)** You can use GitHub Actions to automatically deploy to a new sandbox whenever a pull request is opened so that your team can review a live version of the app that includes your pull request changes – all before that code is merged into your main branch! As a bonus, team members such as product managers and designers can become part of the review process during early stages of development.
+
+## Clean up
+This command deletes all Azure resources created for this sample:
+```bash
+az group delete --name MyResourceGroup --yes --no-wait
+```
