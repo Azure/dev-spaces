@@ -10,7 +10,7 @@ on:
     
 jobs:
   build:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-latest
     steps:
     
     - uses: actions/checkout@master
@@ -42,12 +42,6 @@ jobs:
         
         docker build samples/BikeSharingApp/Users/ -t ${{ secrets.CONTAINER_REGISTRY }}/users:$GITHUB_SHA
         docker push ${{ secrets.CONTAINER_REGISTRY }}/users:$GITHUB_SHA
-        
-        docker build samples/BikeSharingApp/Databases/ -t ${{ secrets.CONTAINER_REGISTRY }}/databases:$GITHUB_SHA
-        docker push ${{ secrets.CONTAINER_REGISTRY }}/databases:$GITHUB_SHA
-        
-        docker build samples/BikeSharingApp/PopulateDatabase/ -t ${{ secrets.CONTAINER_REGISTRY }}/populatedatabase:$GITHUB_SHA
-        docker push ${{ secrets.CONTAINER_REGISTRY }}/populatedatabase:$GITHUB_SHA
       
     - uses: azure/k8s-actions/aks-set-context@master
       with:
@@ -65,8 +59,9 @@ jobs:
     - name: Helm Install Master
       run: |
         cd samples/BikeSharingApp/charts
-        helm init --client-only        
+        helm init --client-only
         helm dependency update
+        helm init --upgrade --wait
         helm upgrade --install --namespace ${{ secrets.MASTER_SPACE }} bikesharing . \
           --set bikes.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set bikes.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
@@ -82,7 +77,7 @@ jobs:
           --set gateway.image.repository=${{ secrets.CONTAINER_REGISTRY }}/gateway \
           --set gateway.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
           --set gateway.image.tag=$GITHUB_SHA \
-          --set gateway.ingress.hosts[0]=${{ secrets.HOST }} \
+          --set gateway.ingress.hosts[0]=${{ secrets.MASTER_SPACE }}.gateway.${{ secrets.HOST_SUFFIX }} \
           --set gateway.ingress.annotations.kubernetes\\.io/ingress\\.class=traefik-azds \
           --set reservation.image.repository=${{ secrets.CONTAINER_REGISTRY }}/reservation \
           --set reservation.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
@@ -93,9 +88,3 @@ jobs:
           --set users.image.repository=${{ secrets.CONTAINER_REGISTRY }}/users \
           --set users.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
           --set users.image.tag=$GITHUB_SHA
-          --set populatedatabase.image.repository=${{ secrets.CONTAINER_REGISTRY }}/populatedatabase \
-          --set populatedatabase.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
-          --set populatedatabase.image.tag=$GITHUB_SHA
-          --set databases.image.repository=${{ secrets.CONTAINER_REGISTRY }}/databases \
-          --set databases.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
-          --set databases.image.tag=$GITHUB_SHA
