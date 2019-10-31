@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "target": "es6",
+      "module": "commonjs",
+      "declaration": true,
+      "outDir": "./lib",                        /* Redirect output structure to the directory. */
+      "rootDir": "./src",     
+      "strict": true,
+      "esModuleInterop": true,
+      "noImplicitAny": false,
+    },
+    "include": ["src"],
+    "exclude": ["node_modules", "**/__tests__/*"]
+  }
