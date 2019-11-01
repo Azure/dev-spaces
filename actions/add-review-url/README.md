@@ -21,11 +21,10 @@ Navigate to the directory: .\actions\add-review-url\src and run
     npm run build
 ```
 ## How to build and test the unit tests for this GitHub Action
-Using Jasmine Test Framework. Please refer: https://medium.com/backticks-tildes/how-to-test-javascript-with-jasmine-framework-2e2b8dfa7a9e
-Refer to tests in \actions\add-review-url\test
+Using Jest Test Framework. 
+Refer to tests in \actions\add-review-url\__test__
 ```     
         npm install
         npm run build
-        npm run buildtest
-        npm test
+        npm run test        
 ```
