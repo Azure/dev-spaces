@@ -349,7 +349,7 @@ app.get('/hello', function(req, res) {
 });
 
 // start server ------------------------------------------------------------
-var port = 80;
+var port = process.env.PORT || 3000;
 var server = null;
 
 process.on("SIGINT", () => {
