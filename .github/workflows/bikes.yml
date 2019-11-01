@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - uses: azure/dev-spaces/actions/add-review-url-ts@s-tuli/TypescriptAction
+    - uses: azure/dev-spaces/actions/add-review-url@s-tuli/ConvertGitHubActionToTypeScript
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
         host: ${{ secrets.HOST }}   
