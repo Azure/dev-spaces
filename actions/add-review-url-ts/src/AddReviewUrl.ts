@@ -4,7 +4,6 @@ import * as core from "@actions/core";
 import {graphql} from "@octokit/graphql";
 import {GraphQlQueryResponseData} from "@octokit/graphql/dist-types/types";
 
-
 class AddComment {
     public getOwnerAndRepo(): string[] {
         console.log(`process.env.GITHUB_REPOSITORY ${process.env.GITHUB_REPOSITORY}`)
@@ -39,7 +38,6 @@ class AddComment {
         } else {
             throw new Error('GITHUB_REF is missing in process.env');
         }
-
     }
 
     private findPullRequestQuery(): string {
@@ -68,7 +66,6 @@ class AddComment {
         );
         console.log(`Adding the comment ...`);
         return await graphQlResponse;
-
     }
 
     private async getSubjectId(findPullRequestIdQuery: string, nameAndRepo: string[]) {
@@ -85,7 +82,6 @@ class AddComment {
         );
         console.log(`Exiting getSubject Id`);
         return newVar;
-
     }
 
     async addComment(comment: string) {
