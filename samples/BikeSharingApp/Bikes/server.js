@@ -202,7 +202,6 @@ app.put('/api/bikes/:bikeId', function(req, res) {
         }      
         res.sendStatus(200);
     });
-    
 });
 
 // get bike ------------------------------------------------------------
