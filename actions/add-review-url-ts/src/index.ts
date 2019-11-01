@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 import AddComment from './AddReviewUrl';
 import * as core from "@actions/core";
 

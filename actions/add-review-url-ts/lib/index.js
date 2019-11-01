@@ -19,6 +19,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 const AddReviewUrl_1 = __importDefault(require("./AddReviewUrl"));
 const core = __importStar(require("@actions/core"));
 function run() {

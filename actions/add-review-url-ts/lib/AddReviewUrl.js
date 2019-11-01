@@ -16,6 +16,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 const core = __importStar(require("@actions/core"));
 const graphql_1 = require("@octokit/graphql");
 class AddComment {

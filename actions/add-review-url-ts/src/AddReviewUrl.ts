@@ -1,11 +1,11 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 import * as core from "@actions/core";
 import {graphql} from "@octokit/graphql";
 import {GraphQlQueryResponseData} from "@octokit/graphql/dist-types/types";
 
 
 class AddComment {
-
-
     private getOwnerAndRepo(): string[] {
         console.log(`process.env.GITHUB_REPOSITORY ${process.env.GITHUB_REPOSITORY}`)
         if (process.env.GITHUB_REPOSITORY) {
@@ -15,9 +15,7 @@ class AddComment {
             console.log('Error in getOwnerAndRepo');
             throw new Error('not able to obtain GITHUB_REPOSITORY from process.env');
         }
-
     }
-
 
     private addPullRequestCommentMutation(): string {
         return `mutation AddPullRequestComment($subjectId: ID!, $body: String!) {
@@ -35,17 +33,14 @@ class AddComment {
             }`;
     }
 
-
     private getPullNumber(): number {
         if (process.env.GITHUB_REF) {
-
             return parseInt(process.env.GITHUB_REF.split('/')[2]);
         } else {
             throw new Error('GITHUB_REF is missing in process.env');
         }
 
     }
-
 
     private findPullRequestQuery(): string {
         return `query FindPullRequestID ($owner: String!, $repo: String!, $pullNumber: Int!){
@@ -75,7 +70,6 @@ class AddComment {
         return await graphQlResponse;
 
     }
-
 
     private async getSubjectId(findPullRequestIdQuery: string, nameAndRepo: string[]) {
         console.log('Inside getSubjectId');
