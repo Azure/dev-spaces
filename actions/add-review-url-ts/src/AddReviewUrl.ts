@@ -6,7 +6,7 @@ import {GraphQlQueryResponseData} from "@octokit/graphql/dist-types/types";
 
 
 class AddComment {
-    private getOwnerAndRepo(): string[] {
+    public getOwnerAndRepo(): string[] {
         console.log(`process.env.GITHUB_REPOSITORY ${process.env.GITHUB_REPOSITORY}`)
         if (process.env.GITHUB_REPOSITORY) {
             return process.env.GITHUB_REPOSITORY.split('/');

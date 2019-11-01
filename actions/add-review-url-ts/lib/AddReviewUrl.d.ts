@@ -1,5 +1,5 @@
 declare class AddComment {
-    private getOwnerAndRepo;
+    getOwnerAndRepo(): string[];
     private addPullRequestCommentMutation;
     private getPullNumber;
     private findPullRequestQuery;
