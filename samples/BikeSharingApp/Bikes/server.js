@@ -180,6 +180,7 @@ app.put('/api/bikes/:bikeId', function(req, res) {
     }
 
     var updatedBike = req.body;
+    
 
     mongoDB.collection(mongoDBCollection).updateOne({ _id: new ObjectId(req.params.bikeId) }, { $set: updatedBike }, function(err, result) {
         if (err) {
