@@ -26,6 +26,5 @@ Refer to tests in \actions\add-review-url\test
 ```     
         npm install
         npm run build
-        npm run buildtest
-        npm test
+        npm run test        
 ```
