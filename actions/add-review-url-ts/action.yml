@@ -3,10 +3,10 @@ description: 'Add Review Url as a comment on PR'
 author: 'Azure Dev Spaces'
 inputs:  
   repo-token:  # GitHub Authorization Token
-    description: 'This is GitHub Authorization Token that is available by default as a GitHub secret. Set it's value to GITHUB_TOKEN secret in your workflow yml'
+    description: "This is GitHub Authorization Token that is available by default as a GitHub secret. Set it's value to GITHUB_TOKEN secret in your workflow yml"
     required: true
   host:  # Complete host. 
-    description: 'Complete host. This expands to: [rootSpace.]webfrontend.<random suffix>.<region>.azds.io. For more information see https://aka.ms/devspaces/routing'
+    description: "Complete host. This expands to: [rootSpace.]webfrontend.<random suffix>.<region>.azds.io. For more information see https://aka.ms/devspaces/routing"
     required: true    
 runs:
   using: 'node12'
