@@ -28,10 +28,12 @@ function run() {
         const addComment = new AddReviewUrl_1.default();
         try {
             const host = core.getInput('host');
-            let headref = '';
-            if (process.env.GITHUB_HEAD_REF) {
-                headref = process.env.GITHUB_HEAD_REF.toString();
-            }
+            /* let headref = '';
+            if (process.env.GITHUB_HEAD_REF)
+            {
+              headref = process.env.GITHUB_HEAD_REF.toString();
+            } */
+            let headref = process.env.GITHUB_HEAD_REF || '';
             const comment = `You can see a private version of the changes made in this pull request here:\nhttp://${headref}.s.${host}/`;
             yield addComment.addComment(comment);
         }
