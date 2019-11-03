@@ -1,25 +1,27 @@
-# Name of the PlaceHolder                 -  Description
-########################################################################################################################
-# <Name of the WorkFlow>                  - Workflow name. example: Bikes
-# <Path to the service>                   - Path to the service where the developer would like to trigger the Flow/ action on pull request - Example: samples/BikeSharingApp/Bikes. 
-# <Path to the Dockerfile>                - Path to the folder which contains the Dockerfile
-# <Name of the Service>                   - Pass this as a parameter for multiple steps below. Lower Cased Name of the Service, for example: bikes
-# <Path to the Charts for that service>   - Pass this in as a parameter for the Helm Install PR step
-#                                           This is the path to the folder where the charts are present for that service. example: samples/BikeSharingApp/Bikes/charts/bikes 
-# <ReleaseName>                           - Pass this in as a parameter for the Helm Install PR step
-# 
 # Note: This template assumes that you use Helm. If not, replace the Helm Install PR step with your own step
 # Note: For the secrets below please refer to the document: http://aka.ms/devspaces/pr-flow
 #
+# Name of the PlaceHolder                 -  Description
+########################################################################################################################
+# <NAME_OF_THE_WORKFLOW>                  - Workflow name. example: Bikes
+# <PATH_TO_THE_SERVICE>                   - The path to the service that must be modified in order for the workflow to trigger. - Example: samples/BikeSharingApp/Bikes. 
+# <PATH_TO_THE_DOCKERFILE>                - Path to the directory which contains the DockerFile for the modified service.
+# <NAME_OF_THE_SERVICE>                   - Pass this as a parameter for multiple steps below. Lower Cased Name of the Service, for example: bikes
+# <PATH_TO_THE_CHARTS_FOR_THAT_SERVICE>   - Pass this in as a parameter for the Helm Install PR step
+#                                           Path to the service's helm charts. example: samples/BikeSharingApp/Bikes/charts/bikes 
+# <RELEASE_NAME>                          - Pass this in as a parameter for the Helm Install PR step
+#                                           More details at Helm documentation at https://helm.sh/docs/helm/#helm-upgrade
+#                                           This is [RELEASE] in the helm upgrade [RELEASE] [CHART] [flags] command
+#                                           helm upgrade --install command is used for: If a release by this name doesn't already exist, run an install
 
-name: PRFlow <Name of the Workflow>
+name: PRFlow <NAME_OF_THE_WORKFLOW>
 
 on: 
   pull_request:
     branches:
     - master
     paths:
-    - <Path to the Service>/**
+    - <PATH_TO_THE_SERVICE>/**
 
 jobs:
   build:
@@ -36,8 +38,8 @@ jobs:
     
     - name: docker build
       run: |
-        docker build <Path to the Dockerfile>/ -t ${{ secrets.CONTAINER_REGISTRY }}/<Name of the Service>:$GITHUB_SHA
-        docker push ${{ secrets.CONTAINER_REGISTRY }}/<Name of the Service>:$GITHUB_SHA
+        docker build <PATH_TO_THE_DOCKERFILE>/ -t ${{ secrets.CONTAINER_REGISTRY }}/<NAME_OF_THE_SERVICE>:$GITHUB_SHA
+        docker push ${{ secrets.CONTAINER_REGISTRY }}/<NAME_OF_THE_SERVICE>:$GITHUB_SHA
       
     - uses: azure/k8s-actions/aks-set-context@master
       with:
@@ -55,7 +57,7 @@ jobs:
         
     - uses: azure/k8s-actions/k8s-create-secret@master
       with:
-        namespace: ${{ GITHUB_HEAD_REF }}
+        namespace: ${{ github.head_ref }}
         container-registry-url: ${{ secrets.CONTAINER_REGISTRY }}
         container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
@@ -63,12 +65,10 @@ jobs:
         
     - name: Helm Install PR
       run: |
-        helm upgrade --install --namespace $GITHUB_HEAD_REF <ReleaseName>-$GITHUB_HEAD_REF <Path to the charts for the Service> \
-          --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/<Name of the Service> \
+        helm upgrade --install --namespace $GITHUB_HEAD_REF <RELEASE_NAME>-$GITHUB_HEAD_REF <PATH_TO_THE_CHARTS_FOR_THAT_SERVICE> \
+          --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/<NAME_OF_THE_SERVICE> \
           --set image.tag=$GITHUB_SHA \
-          --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
-          --set ingress.hosts[0]=$GITHUB_HEAD_REF.s.${{ secrets.HOST }} \
-          --set ingress.annotations.kubernetes\\.io/ingress\\.class=traefik-azds
+          --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
  
     - uses: azure/dev-spaces/actions/add-review-url@Releases/v1              
       with:
