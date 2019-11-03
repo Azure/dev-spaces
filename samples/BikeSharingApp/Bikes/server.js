@@ -178,9 +178,7 @@ app.put('/api/bikes/:bikeId', function(req, res) {
         res.status(400).send(req.params.bikeId + ' is not a valid bikeId!');
         return;
     }
-
     var updatedBike = req.body;
-    
 
     mongoDB.collection(mongoDBCollection).updateOne({ _id: new ObjectId(req.params.bikeId) }, { $set: updatedBike }, function(err, result) {
         if (err) {
