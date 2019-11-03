@@ -1,148 +1,116 @@
 "use strict";
-
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
-
-var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
-
-var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
-
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
-var _require = require('@octokit/graphql'),
-    graphql = _require.graphql;
-
-var core = require('@actions/core');
-
-var AddComment =
-/*#__PURE__*/
-function () {
-  function AddComment(comment) {
-    (0, _classCallCheck2["default"])(this, AddComment);
-    this.addComment(comment);
-  }
-
-  (0, _createClass2["default"])(AddComment, [{
-    key: "getOwnerAndRepo",
-    value: function getOwnerAndRepo() {
-      if (process.env.GITHUB_REPOSITORY) {
-        var _process$env$GITHUB_R = process.env.GITHUB_REPOSITORY.split('/'),
-            _process$env$GITHUB_R2 = (0, _slicedToArray2["default"])(_process$env$GITHUB_R, 2),
-            owner = _process$env$GITHUB_R2[0],
-            repo = _process$env$GITHUB_R2[1];
-
-        return {
-          'owner': owner,
-          'repo': repo
-        };
-      } else {
-        throw new Error('not able to obtain GITHUB_REPOSITORY from process.env');
-      }
-    }
-  }, {
-    key: "addPullRequestCommentMutation",
-    value: function addPullRequestCommentMutation() {
-      return "mutation AddPullRequestComment($subjectId: ID!, $body: String!) {\n      addComment(input:{subjectId:$subjectId, body: $body}) {\n        commentEdge {\n            node {\n            createdAt\n            body\n          }\n        }\n        subject {\n          id\n        }\n      }\n    }";
-    }
-  }, {
-    key: "getPullNumber",
-    value: function getPullNumber() {
-      if (process.env.GITHUB_REF) {
-        return parseInt(process.env.GITHUB_REF.split('/')[2]);
-      }
-    }
-  }, {
-    key: "getGraphqlWithAuth",
-    value: function getGraphqlWithAuth() {
-      var token = core.getInput('repo-token');
-      return graphql.defaults({
-        headers: {
-          authorization: "token ".concat(token)
+const core = __importStar(require("@actions/core"));
+const graphql_1 = require("@octokit/graphql");
+class AddComment {
+    getOwnerAndRepo() {
+        core.debug(`process.env.GITHUB_REPOSITORY ${process.env.GITHUB_REPOSITORY}`);
+        if (process.env.GITHUB_REPOSITORY) {
+            return process.env.GITHUB_REPOSITORY.split('/');
         }
-      });
+        else {
+            core.debug('Error in getOwnerAndRepo');
+            throw new Error('not able to obtain GITHUB_REPOSITORY from process.env');
+        }
     }
-  }, {
-    key: "findPullRequestQuery",
-    value: function findPullRequestQuery() {
-      return "query FindPullRequestID ($owner: String!, $repo: String!, $pullNumber: Int!){\n      repository(owner:$owner, name:$repo) {\n        pullRequest(number:$pullNumber) {\n          id\n        }\n      }\n    }";
+    addPullRequestCommentMutation() {
+        return `mutation AddPullRequestComment($subjectId: ID!, $body: String!) {
+                addComment(input:{subjectId:$subjectId, body: $body}) {
+                    commentEdge {
+                        node {
+                            createdAt
+                            body
+                        }
+                    }
+                    subject {
+                        id
+                    }
+                }
+            }`;
     }
-  }, {
-    key: "addCommentUsingSubjectId",
-    value: function addCommentUsingSubjectId(pullRequestId, comment) {
-      var obj = JSON.parse(JSON.stringify(pullRequestId));
-      var graphqlWithAuth = this.getGraphqlWithAuth();
-      graphqlWithAuth(this.addPullRequestCommentMutation(), {
-        subjectId: obj.repository.pullRequest.id,
-        body: comment
-      });
+    getPullNumber() {
+        if (process.env.GITHUB_REF) {
+            return parseInt(process.env.GITHUB_REF.split('/')[2]);
+        }
+        else {
+            throw new Error('GITHUB_REF is missing in process.env');
+        }
     }
-  }, {
-    key: "addComment",
-    value: function () {
-      var _addComment = (0, _asyncToGenerator2["default"])(
-      /*#__PURE__*/
-      _regenerator["default"].mark(function _callee(comment) {
-        var nameAndRepo, graphqlWithAuth, findPullRequestIdQuery, subjectId;
-        return _regenerator["default"].wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                nameAndRepo = this.getOwnerAndRepo();
-                graphqlWithAuth = this.getGraphqlWithAuth();
-                findPullRequestIdQuery = this.findPullRequestQuery();
-                _context.prev = 3;
-                _context.next = 6;
-                return this.getSubjectId(graphqlWithAuth, findPullRequestIdQuery, nameAndRepo);
-
-              case 6:
-                subjectId = _context.sent;
-                _context.next = 9;
-                return this.addCommentUsingSubjectId(subjectId, comment);
-
-              case 9:
-                _context.next = 13;
-                break;
-
-              case 11:
-                _context.prev = 11;
-                _context.t0 = _context["catch"](3);
-
-              case 13:
-              case "end":
-                return _context.stop();
+    findPullRequestQuery() {
+        return `query FindPullRequestID ($owner: String!, $repo: String!, $pullNumber: Int!){
+                repository(owner:$owner, name:$repo) {
+                    pullRequest(number:$pullNumber) {
+                        id
+                    }
+                }
+            }`;
+    }
+    addCommentUsingSubjectId(pullRequestId, comment) {
+        return __awaiter(this, void 0, void 0, function* () {
+            core.debug(`pullRequestId  ===>>>> ${pullRequestId}`);
+            let data = JSON.parse(JSON.stringify(pullRequestId));
+            core.debug(`Parsed pull request id ${data}`);
+            const token = core.getInput('repo-token');
+            let graphQlResponse = graphql_1.graphql(this.addPullRequestCommentMutation(), {
+                headers: {
+                    authorization: `token ${token}`,
+                },
+                subjectId: data.repository.pullRequest.id,
+                body: comment,
+            });
+            core.debug(`Adding the comment ...`);
+            return yield graphQlResponse;
+        });
+    }
+    getSubjectId(findPullRequestIdQuery, nameAndRepo) {
+        return __awaiter(this, void 0, void 0, function* () {
+            core.debug('Inside getSubjectId');
+            const token = core.getInput('repo-token');
+            let newVar = yield graphql_1.graphql(findPullRequestIdQuery, {
+                headers: {
+                    authorization: `token ${token}`,
+                },
+                owner: nameAndRepo[0],
+                repo: nameAndRepo[1],
+                pullNumber: this.getPullNumber(),
+            });
+            core.debug(`Exiting getSubject Id`);
+            return newVar;
+        });
+    }
+    addComment(comment) {
+        return __awaiter(this, void 0, void 0, function* () {
+            core.debug('Inside addComment');
+            const nameAndRepo = this.getOwnerAndRepo();
+            const [name, repo] = nameAndRepo;
+            core.debug(`Name is ${name}  and repo is ${repo}`);
+            const findPullRequestIdQuery = this.findPullRequestQuery();
+            try {
+                const subjectId = yield this.getSubjectId(findPullRequestIdQuery, nameAndRepo);
+                return yield this.addCommentUsingSubjectId(subjectId, comment);
             }
-          }
-        }, _callee, this, [[3, 11]]);
-      }));
-
-      function addComment(_x) {
-        return _addComment.apply(this, arguments);
-      }
-
-      return addComment;
-    }()
-  }, {
-    key: "getSubjectId",
-    value: function getSubjectId(graphqlWithAuth, findPullRequestIdQuery, nameAndRepo) {
-      return graphqlWithAuth(findPullRequestIdQuery, {
-        owner: nameAndRepo.owner,
-        repo: nameAndRepo.repo,
-        pullNumber: this.getPullNumber()
-      });
+            catch (error) {
+                core.setFailed(error.message);
+            }
+        });
     }
-  }]);
-  return AddComment;
-}();
-
-var _default = AddComment;
-exports["default"] = _default;
+}
+exports.default = AddComment;

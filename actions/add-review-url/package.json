@@ -1,29 +1,29 @@
 {
-  "name": "AddReviewUrl",
+  "name": "addreviewurl",
   "version": "1.0.0",
-  "description": "",
-  "main": "AddReviewUrl.js",
+  "description": "Add Review Url as a comment on the pull request",
+  "main": "lib/index.js",
   "scripts": {
-    "build": "babel src -d lib",
-    "buildtest": "babel test -d spec",
-    "test": "jasmine spec/addReviewUrlTest.js"
+    "test": "jest",
+    "build": "tsc"
   },
-  "keywords": [],
+  "keywords": [
+    "comment",
+    "graphql"
+  ],
   "author": "Azure Dev Spaces",
   "license": "MIT",
+  "homepage": "https://github.com/azure/dev-spaces/actions/add-review-url-ts#readme",
   "dependencies": {
     "@actions/core": "^1.2.0",
-    "@babel/runtime": "^7.6.3",
-    "@octokit/graphql": "^4.2.0"
+    "@octokit/graphql": "^4.3.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.6.4",
-    "@babel/plugin-transform-runtime": "^7.6.2",
-    "@babel/preset-env": "^7.6.3",
-    "babel-preset-env": "^1.7.0",
-    "grunt": "^1.0.4",
-    "grunt-contrib-jshint": "^2.1.0",
-    "jasmine": "^3.5.0"
+    "@types/jest": "^24.0.21",
+    "@types/node": "^12.12.3",
+    "jest": "^24.9.0",
+    "jest-circus": "^24.7.1",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.6.4"
   }
 }
