@@ -1,5 +1,5 @@
 {
-  "name": "addcomment",
+  "name": "addreviewurl",
   "version": "1.0.0",
   "description": "Add Review Url as a comment on the pull request",
   "main": "lib/index.js",
