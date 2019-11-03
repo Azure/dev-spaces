@@ -234,8 +234,7 @@ app.get('/api/bikes/:bikeId', function(req, res) {
         delete theBike._id;
 
         res.send(theBike);
-    });
-    
+    });    
 });
 
 // delete bike ------------------------------------------------------------
