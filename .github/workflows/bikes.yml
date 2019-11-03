@@ -48,12 +48,11 @@ jobs:
         
     - name: Helm Install PR
       run: |
+        helm init --upgrade --wait
         helm upgrade --install --namespace $GITHUB_HEAD_REF bikesharing-$GITHUB_HEAD_REF samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set image.tag=$GITHUB_SHA \
-          --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
-          --set ingress.hosts[0]=$GITHUB_HEAD_REF.s.${{ secrets.MASTER_SPACE }}.bikesharing.${{ secrets.HOST_SUFFIX }} \
-          --set ingress.annotations.kubernetes\\.io/ingress\\.class=traefik-azds
+          --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
  
     - uses: azure/dev-spaces/actions/add-review-url@Releases/v1              
       with:
