@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      branch:`${$GITHUB_HEAD_REF//\//-} | tr '[:upper:]' '[:lower:]'`
     steps:
     - uses: actions/checkout@master
     - uses: azure/dev-spaces/actions/add-review-url@s-tuli/ConvertGitHubActionToTypeScript
@@ -26,6 +28,7 @@ jobs:
     - run: |
         docker build samples/BikeSharingApp/Bikes/ -t ${{ secrets.CONTAINER_REGISTRY }}/bikes:$GITHUB_SHA
         docker push ${{ secrets.CONTAINER_REGISTRY }}/bikes:$GITHUB_SHA
+        echo `${branch}`
       
     - uses: azure/k8s-actions/aks-set-context@master
       with:
