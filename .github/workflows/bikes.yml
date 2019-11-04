@@ -22,7 +22,7 @@ jobs:
     - name: test output
       run: |
         echo "hi"
-        echo ${{steps.replace.outputs.myoutput}}
+        echo ${{steps.replace.outputs.pr_title}}
         
         echo "after output"  
     - uses: actions/checkout@master
