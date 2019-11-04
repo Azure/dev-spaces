@@ -21,7 +21,7 @@ jobs:
     - name: test output
       run: |
         echo "hi"
-        echo ${{steps.replace.outputs.myoutput}}
+        echo $steps.replace.outputs.myoutput
         echo "after output"  
     - uses: actions/checkout@master
     - uses: azure/dev-spaces/actions/add-review-url@s-tuli/ConvertGitHubActionToTypeScript
