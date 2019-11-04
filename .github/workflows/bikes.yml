@@ -17,7 +17,7 @@ jobs:
         branch="This/iS/MyBranch"
         branch=`echo ${branch//\//-} | tr '[:upper:]' '[:lower:]'`
         echo $mybranch
-        output.replace.myoutput=$myBranch
+        steps.replace.outputs.myoutput=$myBranch
     - name: test output
       run: |
         echo "hi"
