@@ -15,7 +15,7 @@ jobs:
       id: replace
       run: |
         branch=$GITHUB_HEAD_REF
-        branch=`echo ${branch//\//-} | tr '[:upper:]' '[:lower:]'`
+        branch=`echo ${branch//[^a-zA-Z 0-9\-]//-} | tr '[:upper:]' '[:lower:]'`
         echo $branch
         echo ::set-output name=branch_name::$branch
         #echo `##[set-output name=myoutput;]${branch}`
