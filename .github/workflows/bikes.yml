@@ -12,7 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-
+    - name: test 
+      run:  |
+        branch = "this/IS/Test"
+        branch=`echo ${branch//\//-} | tr '[:upper:]' '[:lower:]'`
+        echo $branch
     - uses: actions/checkout@master
     - uses: azure/dev-spaces/actions/add-review-url@s-tuli/ConvertGitHubActionToTypeScript
       with:
