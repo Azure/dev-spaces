@@ -248,6 +248,7 @@ app.delete('/api/bikes/:bikeId', function(req, res) {
     {
         res.status(400).send(req.params.bikeId + ' is not a valid bikeId!');
         return;
+        
     }
     
     mongoDB.collection(mongoDBCollection).deleteOne({ _id: new ObjectId(req.params.bikeId) }, function(err, result) {
