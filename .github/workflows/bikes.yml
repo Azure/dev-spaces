@@ -9,8 +9,22 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest    
     steps:
+    - name: Test replaced string
+      id: replace
+      run: |
+        branch=$GITHUB_HEAD_REF
+        branch=`echo ${branch//\//-} | tr '[:upper:]' '[:lower:]'`
+        echo $branch
+        echo ::set-output name=branch_name::$branch
+        #echo `##[set-output name=myoutput;]${branch}`
+    - name: test output
+      run: |
+        echo "hi"
+        echo ${{steps.replace.outputs.branch_name}}
+        
+        echo "after output"  
     - uses: actions/checkout@master
     - uses: azure/dev-spaces/actions/add-review-url@s-tuli/ConvertGitHubActionToTypeScript
       with:
@@ -34,16 +48,17 @@ jobs:
         resource-group: ${{ secrets.RESOURCE_GROUP }}
                 
     - name: Create child namespaces and add Dev Spaces labels
-      run:  |
-        if [ -n "$(kubectl get namespace $GITHUB_HEAD_REF --ignore-not-found -o name)" ]; then exit 0; fi
-        kubectl create namespace $GITHUB_HEAD_REF
-        kubectl label namespace $GITHUB_HEAD_REF azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
-        kubectl label namespace $GITHUB_HEAD_REF azds.io/space=true
-        kubectl label namespace $GITHUB_HEAD_REF azds.io/pull-request-space=true
+      run: |
+        #branch = ${{steps.replace.outputs.branch_name}}
+        if [ -n "$(kubectl get namespace ${{steps.replace.outputs.branch_name}} --ignore-not-found -o name)" ]; then exit 0; fi
+        kubectl create namespace ${{steps.replace.outputs.branch_name}}
+        kubectl label namespace ${{steps.replace.outputs.branch_name}} azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
+        kubectl label namespace ${{steps.replace.outputs.branch_name}} azds.io/space=true
+        kubectl label namespace ${{steps.replace.outputs.branch_name}} azds.io/pull-request-space=true
         
     - uses: azure/k8s-actions/k8s-create-secret@master
       with:
-        namespace: ${{ github.head_ref }}
+        namespace: ${{ steps.replace.outputs.branch_name }}
         container-registry-url: ${{ secrets.CONTAINER_REGISTRY }}
         container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
@@ -51,8 +66,9 @@ jobs:
         
     - name: Helm Install PR
       run: |
+        #branch = ${{steps.replace.outputs.branch_name}}
         helm init --upgrade --wait
-        helm upgrade --install --namespace $GITHUB_HEAD_REF bikesharing-$GITHUB_HEAD_REF samples/BikeSharingApp/Bikes/charts/bikes \
+        helm upgrade --install --namespace ${{steps.replace.outputs.branch_name}} bikesharing-${{steps.replace.outputs.branch_name}} samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set image.tag=$GITHUB_SHA \
           --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
