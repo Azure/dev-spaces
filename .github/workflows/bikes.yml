@@ -16,8 +16,8 @@ jobs:
       run: |
         branch="This/iS/MyBranch"
         branch=`echo ${branch//\//-} | tr '[:upper:]' '[:lower:]'`
-        echo $mybranch
-        echo `##[set-output name=myoutput;]${myBranch}`
+        echo $branch
+        echo `##[set-output name=myoutput;]${branch}`
     - name: test output
       run: |
         echo "hi"
