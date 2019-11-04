@@ -1,0 +1,76 @@
+# Note: This template assumes that you use Helm. If not, replace the Helm Install PR step with your own step
+# Note: For the secrets below please refer to the document: http://aka.ms/devspaces/pr-flow
+#
+# Name of the PlaceHolder                 -  Description
+########################################################################################################################
+# <NAME_OF_THE_WORKFLOW>                  - Workflow name. example: Bikes
+# <PATH_TO_THE_SERVICE>                   - The path to the service that must be modified in order for the workflow to trigger. - Example: samples/BikeSharingApp/Bikes. 
+# <PATH_TO_THE_DOCKERFILE>                - Path to the directory which contains the DockerFile for the modified service.
+# <NAME_OF_THE_SERVICE>                   - Pass this as a parameter for multiple steps below. Lower Cased Name of the Service, for example: bikes
+# <PATH_TO_THE_CHARTS_FOR_THAT_SERVICE>   - Pass this in as a parameter for the Helm Install PR step
+#                                           Path to the service's helm charts. example: samples/BikeSharingApp/Bikes/charts/bikes 
+# <RELEASE_NAME>                          - Pass this in as a parameter for the Helm Install PR step
+#                                           More details at Helm documentation at https://helm.sh/docs/helm/#helm-upgrade
+#                                           This is [RELEASE] in the helm upgrade [RELEASE] [CHART] [flags] command
+#                                           helm upgrade --install command is used for: If a release by this name doesn't already exist, run an install
+
+name: PRFlow <NAME_OF_THE_WORKFLOW>
+
+on: 
+  pull_request:
+    branches:
+    - master
+    paths:
+    - <PATH_TO_THE_SERVICE>/**
+
+jobs:
+  build:
+    runs-on: ubuntu-16.04
+    steps:
+    
+    - uses: actions/checkout@master
+    
+    - uses: azure/container-actions/docker-login@master
+      with:
+        login-server: ${{ secrets.CONTAINER_REGISTRY }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    
+    - name: docker build
+      run: |
+        docker build <PATH_TO_THE_DOCKERFILE>/ -t ${{ secrets.CONTAINER_REGISTRY }}/<NAME_OF_THE_SERVICE>:$GITHUB_SHA
+        docker push ${{ secrets.CONTAINER_REGISTRY }}/<NAME_OF_THE_SERVICE>:$GITHUB_SHA
+      
+    - uses: azure/k8s-actions/aks-set-context@master
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: ${{ secrets.CLUSTER_NAME }}
+        resource-group: ${{ secrets.RESOURCE_GROUP }}
+                
+    - name: Create child namespaces and add Dev Spaces labels
+      run:  |
+        if [ -n "$(kubectl get namespace $GITHUB_HEAD_REF --ignore-not-found -o name)" ]; then exit 0; fi
+        kubectl create namespace $GITHUB_HEAD_REF
+        kubectl label namespace $GITHUB_HEAD_REF azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
+        kubectl label namespace $GITHUB_HEAD_REF azds.io/space=true
+        kubectl label namespace $GITHUB_HEAD_REF azds.io/pull-request-space=true
+        
+    - uses: azure/k8s-actions/k8s-create-secret@master
+      with:
+        namespace: ${{ github.head_ref }}
+        container-registry-url: ${{ secrets.CONTAINER_REGISTRY }}
+        container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        secret-name: ${{ secrets.IMAGE_PULL_SECRET }}
+        
+    - name: Helm Install PR
+      run: |
+        helm upgrade --install --namespace $GITHUB_HEAD_REF <RELEASE_NAME>-$GITHUB_HEAD_REF <PATH_TO_THE_CHARTS_FOR_THAT_SERVICE> \
+          --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/<NAME_OF_THE_SERVICE> \
+          --set image.tag=$GITHUB_SHA \
+          --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
+ 
+    - uses: azure/dev-spaces/actions/add-review-url@Releases/v1              
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}  
+        host: ${{ secrets.HOST }}
