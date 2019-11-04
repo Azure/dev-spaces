@@ -49,7 +49,7 @@ jobs:
                 
     - name: Create child namespaces and add Dev Spaces labels
       run: |
-        branch = $steps.replace.outputs.branch_name
+        branch = ${{steps.replace.outputs.branch_name}}
         if [ -n "$(kubectl get namespace $branch --ignore-not-found -o name)" ]; then exit 0; fi
         kubectl create namespace $branch
         kubectl label namespace $branch azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
@@ -66,7 +66,7 @@ jobs:
         
     - name: Helm Install PR
       run: |
-        branch = $steps.replace.outputs.branch_name
+        branch = ${{steps.replace.outputs.branch_name}}
         helm init --upgrade --wait
         helm upgrade --install --namespace $branch bikesharing-$branch samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
