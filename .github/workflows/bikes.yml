@@ -13,7 +13,7 @@ jobs:
     
     steps:
     - name: test 
-      run:  |
+      run: |
         branch = "this/IS/Test"
         branch=`echo ${branch//\//-} | tr '[:upper:]' '[:lower:]'`
         echo $branch
@@ -40,7 +40,7 @@ jobs:
         resource-group: ${{ secrets.RESOURCE_GROUP }}
                 
     - name: Create child namespaces and add Dev Spaces labels
-      run:  |
+      run: |
         branch = "this/IS/Test"
         branch=`${branch//\//-} | tr '[:upper:]' '[:lower:]'`
         echo $branch
