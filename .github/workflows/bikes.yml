@@ -10,9 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      branch:`${$GITHUB_HEAD_REF//\//-} | tr '[:upper:]' '[:lower:]'`
+    
     steps:
+
     - uses: actions/checkout@master
     - uses: azure/dev-spaces/actions/add-review-url@s-tuli/ConvertGitHubActionToTypeScript
       with:
@@ -38,6 +38,8 @@ jobs:
                 
     - name: Create child namespaces and add Dev Spaces labels
       run:  |
+        branch=`echo  ${GITHUB_HEAD_REF//\//-} | tr '[:upper:]' '[:lower:]'`
+        echo $branch
         if [ -n "$(kubectl get namespace $GITHUB_HEAD_REF --ignore-not-found -o name)" ]; then exit 0; fi
         kubectl create namespace $GITHUB_HEAD_REF
         kubectl label namespace $GITHUB_HEAD_REF azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
