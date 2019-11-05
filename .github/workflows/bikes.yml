@@ -33,8 +33,8 @@ jobs:
     - name: Create valid child namespace name
       id: generate-child-space-name
       run: |
-        branch=$GITHUB_HEAD_REF::63
-        branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e '/^[-]/ s/./n/' -e '/[-]$/ s/-$/n/')
+        branch=${GITHUB_HEAD_REF::63}
+        branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/n/' -e 's/-$/n/')
         echo ::set-output name=valid_child_namespace::$branch            
     
     - name: Create child namespaces and add Dev Spaces labels
