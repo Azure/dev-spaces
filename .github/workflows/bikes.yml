@@ -15,7 +15,7 @@ jobs:
       id: replace
       run: |
         branch=$GITHUB_HEAD_REF
-        branch=`echo ${branch/'[a-z0-9]([-a-z0-9]*[a-z0-9])?')/-} | tr '[:upper:]' '[:lower:]'`
+        branch=`echo ${branch//\//-} | tr '[:upper:]' '[:lower:]'`
         echo $branch
         echo ::set-output name=branch_name::$branch
         #echo `##[set-output name=myoutput;]${branch}`
@@ -49,7 +49,7 @@ jobs:
                 
     - name: Create child namespaces and add Dev Spaces labels
       run: |
-        #branch = ${{steps.replace.outputs.branch_name}}
+        branch = echo ${{steps.replace.outputs.branch_name}}
         if [ -n "$(kubectl get namespace ${{steps.replace.outputs.branch_name}} --ignore-not-found -o name)" ]; then exit 0; fi
         kubectl create namespace ${{steps.replace.outputs.branch_name}}
         kubectl label namespace ${{steps.replace.outputs.branch_name}} azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
