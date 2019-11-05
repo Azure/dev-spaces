@@ -15,7 +15,7 @@ jobs:
       id: replace
       run: |
         branch=$GITHUB_HEAD_REF
-        branch=`echo ${branch//\//-} | tr '[:upper:]' '[:lower:]'`
+        branch=$(echo  ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]')
         echo $branch
         echo ::set-output name=branch_name::$branch
         #echo `##[set-output name=myoutput;]${branch}`
@@ -23,6 +23,9 @@ jobs:
       run: |
         echo "hi"
         echo ${{steps.replace.outputs.branch_name}}
+        branch = `echo ${steps.replace.outputs.branch_name}`
+        if [ -n "$(kubectl get namespace ${{branch}} --ignore-not-found -o name)" ]; then exit 0; fi
+        kubectl create namespace ${{branch}}
         
         echo "after output"  
     - uses: actions/checkout@master
