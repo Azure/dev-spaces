@@ -16,11 +16,11 @@ jobs:
       run: |
         branch="#433225f$%%%"
         #branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]') | 
-        branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]') 
+        branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]')
         echo $branch
-        echo $branch | sed s/-/a/1
+        echo $branch | sed s/-/a/1 | sed s/-/a/.$
         branch=$(echo ${branch/[^[-]]/aa)})
-        echo $branch
+        echo $branch | sed s/-/a/.$
         branch=$(echo ${branch/([-]+)$/aa)})
         echo $branch
         echo $branch
