@@ -14,12 +14,12 @@ jobs:
     - name: Test replaced string
       id: replace
       run: |
-        branch=$GITHUB_HEAD_REF
-        branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]') 
+        branch="#433225f$%%%"
+        branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]')
         echo $branch
-        branch = $(echo ${branch/[^([!0-9a-z])]//n)}
+        branch = $(echo ${branch/[^([!0-9a-z])]//n)})
         echo $branch
-        branch = $(echo ${branch/([!0-9a-z]+)$//n)}
+        branch = $(echo ${branch/([!0-9a-z]+)$//n)})
         echo $branch
         echo $branch
         echo ::set-output name=branch_name::$branch  
