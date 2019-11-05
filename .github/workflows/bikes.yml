@@ -13,7 +13,14 @@ jobs:
     steps:
     
     - uses: actions/checkout@master
-    
+
+    - name: Create valid child namespace name
+      id: replace
+      run: |
+        branch=$GITHUB_HEAD_REF        
+        branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed '/^[-]/ s/./n/' | sed '/[-]$/ s/-$/n/')
+        echo ::set-output name=valid_child_namespace::$branch
+
     - uses: azure/container-actions/docker-login@master
       with:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
@@ -32,11 +39,11 @@ jobs:
                 
     - name: Create child namespaces and add Dev Spaces labels
       run:  |
-        if [ -n "$(kubectl get namespace $GITHUB_HEAD_REF --ignore-not-found -o name)" ]; then exit 0; fi
-        kubectl create namespace $GITHUB_HEAD_REF
-        kubectl label namespace $GITHUB_HEAD_REF azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
-        kubectl label namespace $GITHUB_HEAD_REF azds.io/space=true
-        kubectl label namespace $GITHUB_HEAD_REF azds.io/pull-request-space=true
+        if [ -n "$(kubectl get namespace ${{steps.replace.outputs.valid_child_namespace}} --ignore-not-found -o name)" ]; then exit 0; fi
+        kubectl create namespace ${{steps.replace.outputs.valid_child_namespace}}
+        kubectl label namespace ${{steps.replace.outputs.valid_child_namespace}} azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
+        kubectl label namespace ${{steps.replace.outputs.valid_child_namespace}} azds.io/space=true
+        kubectl label namespace ${{steps.replace.outputs.valid_child_namespace}} azds.io/pull-request-space=true
         
     - uses: azure/k8s-actions/k8s-create-secret@master
       with:
@@ -49,12 +56,13 @@ jobs:
     - name: Helm Install PR
       run: |
         helm init --upgrade --wait
-        helm upgrade --install --namespace $GITHUB_HEAD_REF bikesharing-$GITHUB_HEAD_REF samples/BikeSharingApp/Bikes/charts/bikes \
+        helm upgrade --install --namespace ${{steps.replace.outputs.valid_child_namespace}} bikesharing-${{steps.replace.outputs.valid_child_namespace}} samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set image.tag=$GITHUB_SHA \
           --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
  
-    - uses: azure/dev-spaces/actions/add-review-url@Releases/v1              
+    - uses: azure/dev-spaces/actions/add-review-url@Releases/v2
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
         host: ${{ secrets.HOST }}
+        child-namespace: ${{steps.replace.outputs.valid_child_namespace}}

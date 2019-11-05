@@ -7,7 +7,10 @@ inputs:
     required: true
   host:  # Complete host. 
     description: "Complete host. This expands to: [rootSpace.]webfrontend.<random suffix>.<region>.azds.io. For more information see https://aka.ms/devspaces/routing"
-    required: true    
+    required: true
+  child-namespace:  # Child Namespace. 
+    description: "This is the child namespace name passed in from the workflow to construct the uri."
+    required: true
 runs:
   using: 'node12'
   main: 'lib/index.js'
