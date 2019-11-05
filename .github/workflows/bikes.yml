@@ -72,3 +72,4 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
         host: ${{ secrets.HOST }}
+        branch: ${{steps.replace.outputs.branch_name}}
