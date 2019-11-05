@@ -20,7 +20,7 @@ jobs:
         #branch=${GITHUB_HEAD_REF::63}
         
         branch="A###@###232ff//////\\\////////ffffffffffffffffff%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%fffffffffffffffffffffffffffffffffff%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff424234dfssfgsffsfsfsffsfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff___________________________------------------------------------------------------------------------------------------------------------"
-        branch=${branch::52}
+        branch=${branch::41}
         echo $branch
         branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
         echo ::set-output name=valid_child_namespace::$branch
