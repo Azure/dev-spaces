@@ -1,0 +1,16 @@
+{
+  "name": "contoso.bikerental.bikes",
+  "version": "0.1.0",
+  "description": "Microservice for managing bikes",
+  "dependencies": {
+    "express": "^4.13.4",
+    "morgan": "^1.7.0",
+    "mongodb": "^2.2.24",
+    "body-parser": "^1.16.1",
+    "validate.js": "^0.11.1",
+    "async": "^2.1.5"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  }
+}
