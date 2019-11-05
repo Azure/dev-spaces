@@ -12,19 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     
-    - uses: actions/checkout@master
+    - uses: actions/checkout@master    
 
-    - name: Create valid child namespace name
-      id: replace
-      run: |
-        branch=$GITHUB_HEAD_REF        
-        branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed '/^[-]/ s/./n/' | sed '/[-]$/ s/-$/n/')
-        echo ::set-output name=valid_child_namespace::$branch
-
-    - uses: azure/container-actions/docker-login@master
-    
     - uses: azure/docker-login@releases/v1
-
       with:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
         username: ${{ secrets.REGISTRY_USERNAME }}
@@ -39,18 +29,25 @@ jobs:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
         cluster-name: ${{ secrets.CLUSTER_NAME }}
         resource-group: ${{ secrets.RESOURCE_GROUP }}
-                
+
+    - name: Create valid child namespace name
+      id: generate-child-space-name
+      run: |
+        branch=${GITHUB_HEAD_REF::41}        
+        branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
+        echo ::set-output name=valid_child_space_name::$branch         
+    
     - name: Create child namespaces and add Dev Spaces labels
       run:  |
-        if [ -n "$(kubectl get namespace ${{steps.replace.outputs.valid_child_namespace}} --ignore-not-found -o name)" ]; then exit 0; fi
-        kubectl create namespace ${{steps.replace.outputs.valid_child_namespace}}
-        kubectl label namespace ${{steps.replace.outputs.valid_child_namespace}} azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
-        kubectl label namespace ${{steps.replace.outputs.valid_child_namespace}} azds.io/space=true
-        kubectl label namespace ${{steps.replace.outputs.valid_child_namespace}} azds.io/pull-request-space=true
+        if [ -n "$(kubectl get namespace ${{steps.generate-child-space-name.outputs.valid_child_space_name}} --ignore-not-found -o name)" ]; then exit 0; fi
+        kubectl create namespace ${{steps.generate-child-space-name.outputs.valid_child_space_name}}
+        kubectl label namespace ${{steps.generate-child-space-name.outputs.valid_child_space_name}} azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
+        kubectl label namespace ${{steps.generate-child-space-name.outputs.valid_child_space_name}} azds.io/space=true
+        kubectl label namespace ${{steps.generate-child-space-name.outputs.valid_child_space_name}} azds.io/pull-request-space=true
         
     - uses: azure/k8s-actions/k8s-create-secret@master
       with:
-        namespace: ${{ github.head_ref }}
+        namespace: ${{ steps.generate-child-space-name.outputs.valid_child_space_name }}
         container-registry-url: ${{ secrets.CONTAINER_REGISTRY }}
         container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
@@ -59,7 +56,7 @@ jobs:
     - name: Helm Install PR
       run: |
         helm init --upgrade --wait
-        helm upgrade --install --namespace ${{steps.replace.outputs.valid_child_namespace}} bikesharing-${{steps.replace.outputs.valid_child_namespace}} samples/BikeSharingApp/Bikes/charts/bikes \
+        helm upgrade --install --namespace ${{steps.generate-child-space-name.outputs.valid_child_space_name}} bikesharing-${{steps.generate-child-space-name.outputs.valid_child_space_name}} samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set image.tag=$GITHUB_SHA \
           --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
@@ -68,4 +65,4 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
         host: ${{ secrets.HOST }}
-        child-namespace: ${{steps.replace.outputs.valid_child_namespace}}
+        child-space: ${{steps.generate-child-space-name.outputs.valid_child_space_name}}
