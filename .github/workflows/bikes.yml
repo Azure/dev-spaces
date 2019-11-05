@@ -15,11 +15,12 @@ jobs:
       id: replace
       run: |
         branch="#433225f$%%%"
-        branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]')
+        #branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]') | 
+        branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]') 
         echo $branch
-        branch=$(echo ${branch/[^([!0-9a-z])]//n)})
+        branch=$(echo ${branch/[^[-]]/aa)})
         echo $branch
-        branch=$(echo ${branch/([!0-9a-z]+)$//n)})
+        branch=$(echo ${branch/([-]+)$/aa)})
         echo $branch
         echo $branch
         echo ::set-output name=branch_name::$branch  
