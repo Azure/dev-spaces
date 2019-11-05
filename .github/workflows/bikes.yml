@@ -24,7 +24,7 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
         host: ${{ secrets.HOST }}   
     
-    - uses: azure/container-actions/docker-login@master
+    - uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
         username: ${{ secrets.REGISTRY_USERNAME }}
