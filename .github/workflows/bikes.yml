@@ -16,8 +16,6 @@ jobs:
       run: |
         branch=$GITHUB_HEAD_REF        
         branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed '/^[-]/ s/./n/' | sed '/[-]$/ s/-$/n/')
-        echo $branch
-        #branch=$(echo $branch | sed '/^[-]/ s/./n/' | sed '/[-]$/ s/-$/n/')
         echo ::set-output name=branch_name::$branch  
      
     - uses: actions/checkout@master
