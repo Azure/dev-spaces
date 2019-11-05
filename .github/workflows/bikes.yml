@@ -18,11 +18,7 @@ jobs:
         #branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]') | 
         branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]')
         echo $branch
-        echo $branch | sed -e 's/-/a/1' | sed -e 's/\(.\)$/yes/'
-        branch=$(echo ${branch/[^[-]]/aa)})
-        echo $branch | sed s/-/a/.$
-        branch=$(echo ${branch/([-]+)$/aa)})
-        echo $branch
+        echo $branch | sed -e 's/-/n/1' | sed -e 's/\(.\)$/n/'        
         echo $branch
         echo ::set-output name=branch_name::$branch  
      
