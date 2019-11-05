@@ -9,22 +9,12 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest    
+    runs-on: ubuntu-latest
     steps:
-    - name: Test replaced string
-      id: replace
-      run: |
-        branch=$GITHUB_HEAD_REF        
-        branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed '/^[-]/ s/./n/' | sed '/[-]$/ s/-$/n/')
-        echo ::set-output name=branch_name::$branch  
-     
-    - uses: actions/checkout@master
-    - uses: azure/dev-spaces/actions/add-review-url@s-tuli/ConvertGitHubActionToTypeScript
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}  
-        host: ${{ secrets.HOST }}   
     
-    - uses: azure/docker-login@releases/v1
+    - uses: actions/checkout@master    
+
+    - uses: azure/container-actions/docker-login@master
       with:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
         username: ${{ secrets.REGISTRY_USERNAME }}
@@ -39,27 +29,34 @@ jobs:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
         cluster-name: ${{ secrets.CLUSTER_NAME }}
         resource-group: ${{ secrets.RESOURCE_GROUP }}
-                
-    - name: Create child namespaces and add Dev Spaces labels
+
+    - name: Create valid child namespace name
+      id: generate-child-space-name
       run: |
-        if [ -n "$(kubectl get namespace ${{steps.replace.outputs.branch_name}} --ignore-not-found -o name)" ]; then exit 0; fi
-        kubectl create namespace ${{steps.replace.outputs.branch_name}}
-        kubectl label namespace ${{steps.replace.outputs.branch_name}} azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
-        kubectl label namespace ${{steps.replace.outputs.branch_name}} azds.io/space=true
-        kubectl label namespace ${{steps.replace.outputs.branch_name}} azds.io/pull-request-space=true
+        branch=$GITHUB_HEAD_REF::63
+        branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e '/^[-]/ s/./n/' -e '/[-]$/ s/-$/n/')
+        echo ::set-output name=valid_child_namespace::$branch            
+    
+    - name: Create child namespaces and add Dev Spaces labels
+      run:  |
+        if [ -n "$(kubectl get namespace ${{steps.generate-child-space-name.outputs.valid_child_namespace}} --ignore-not-found -o name)" ]; then exit 0; fi
+        kubectl create namespace ${{steps.generate-child-space-name.outputs.valid_child_namespace}}
+        kubectl label namespace ${{steps.generate-child-space-name.outputs.valid_child_namespace}} azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
+        kubectl label namespace ${{steps.generate-child-space-name.outputs.valid_child_namespace}} azds.io/space=true
+        kubectl label namespace ${{steps.generate-child-space-name.outputs.valid_child_namespace}} azds.io/pull-request-space=true
         
     - uses: azure/k8s-actions/k8s-create-secret@master
       with:
-        namespace: ${{ steps.replace.outputs.branch_name }}
+        namespace: ${{ github.head_ref }}
         container-registry-url: ${{ secrets.CONTAINER_REGISTRY }}
         container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         secret-name: ${{ secrets.IMAGE_PULL_SECRET }}
         
     - name: Helm Install PR
-      run: |        
+      run: |
         helm init --upgrade --wait
-        helm upgrade --install --namespace ${{steps.replace.outputs.branch_name}} bikesharing-${{steps.replace.outputs.branch_name}} samples/BikeSharingApp/Bikes/charts/bikes \
+        helm upgrade --install --namespace ${{steps.generate-child-space-name.outputs.valid_child_namespace}} bikesharing-${{steps.generate-child-space-name.outputs.valid_child_namespace}} samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set image.tag=$GITHUB_SHA \
           --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
@@ -68,4 +65,4 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
         host: ${{ secrets.HOST }}
-        branch: ${{steps.replace.outputs.branch_name}}
+        child-space: ${{steps.generate-child-space-name.outputs.branch_name}}
