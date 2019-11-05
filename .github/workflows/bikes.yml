@@ -19,7 +19,7 @@ jobs:
       run: |
         #branch=${GITHUB_HEAD_REF::63}
         
-        branch="A##!#@###232fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff424234dfssfgsffsfsfsffsfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff___________________________------------------------------------------------------------------------------------------------------------"
+        branch="A##!#@###232ffffffffffffffffffff$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$fffffffffffffffffffffffffffffffffff$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff424234dfssfgsffsfsfsffsfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff___________________________------------------------------------------------------------------------------------------------------------"
         branch=${branch::53}
         branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
         echo ::set-output name=valid_child_namespace::$branch
