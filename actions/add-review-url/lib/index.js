@@ -33,7 +33,7 @@ function run() {
             {
               headref = process.env.GITHUB_HEAD_REF.toString();
             } */
-            let headref = process.env.GITHUB_HEAD_REF || '';
+            let headref = core.getInput('branch') || '';
             const comment = `You can see a private version of the changes made in this pull request here:\nhttp://${headref}.s.${host}/`;
             yield addComment.addComment(comment);
         }
