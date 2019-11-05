@@ -14,11 +14,11 @@ jobs:
     - name: Test replaced string
       id: replace
       run: |
-        branch="#433225f$%%%"
+        branch="433225f$%%r"
         #branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]') | 
         branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]')
         echo $branch
-        echo $branch | sed -e 's/-/n/1' | sed -e 's/\(.\)$/n/'        
+        branch=echo $branch | sed -e 's/-/n/1' | sed -e 's/\(.\)$/n/'        
         echo $branch
         echo ::set-output name=branch_name::$branch  
      
