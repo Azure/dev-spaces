@@ -12,7 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     
-    - uses: actions/checkout@master    
+    - uses: actions/checkout@master
+
+    - name: Create valid child namespace name
+      id: generate-child-space-name
+      run: |
+        #branch=${GITHUB_HEAD_REF::63}
+        branch="@##!#@###232424234dfssfgsffsfsfsffsfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff___________________________------------------------------------------------------------------------------------------------------------"
+        branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/n/' -e 's/-$/n/')
+        echo ::set-output name=valid_child_namespace::$branch
 
     - uses: azure/docker-login@releases/v1
       with:
@@ -47,7 +55,7 @@ jobs:
         
     - uses: azure/k8s-actions/k8s-create-secret@master
       with:
-        namespace: ${{ github.head_ref }}
+        namespace: ${{ steps.generate-child-space-name.outputs.valid_child_namespace }}
         container-registry-url: ${{ secrets.CONTAINER_REGISTRY }}
         container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
