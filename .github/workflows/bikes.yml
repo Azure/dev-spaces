@@ -17,17 +17,8 @@ jobs:
         branch=$GITHUB_HEAD_REF
         branch=$(echo  ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]')
         echo $branch
-        echo ::set-output name=branch_name::$branch
-        #echo `##[set-output name=myoutput;]${branch}`
-    - name: test output
-      run: |
-        echo "hi"
-        echo ${{steps.replace.outputs.branch_name}}
-        branch = `echo ${steps.replace.outputs.branch_name}`
-        if [ -n "$(kubectl get namespace ${{branch}} --ignore-not-found -o name)" ]; then exit 0; fi
-        kubectl create namespace ${{branch}}
-        
-        echo "after output"  
+        echo ::set-output name=branch_name::$branch  
+     
     - uses: actions/checkout@master
     - uses: azure/dev-spaces/actions/add-review-url@s-tuli/ConvertGitHubActionToTypeScript
       with:
@@ -68,8 +59,7 @@ jobs:
         secret-name: ${{ secrets.IMAGE_PULL_SECRET }}
         
     - name: Helm Install PR
-      run: |
-        #branch = ${{steps.replace.outputs.branch_name}}
+      run: |        
         helm init --upgrade --wait
         helm upgrade --install --namespace ${{steps.replace.outputs.branch_name}} bikesharing-${{steps.replace.outputs.branch_name}} samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
