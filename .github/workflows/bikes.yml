@@ -18,7 +18,7 @@ jobs:
       id: generate-child-space-name
       run: |
         #branch=${GITHUB_HEAD_REF::63}
-        branch="@##!#@###232fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff424234dfssfgsffsfsfsffsfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff___________________________------------------------------------------------------------------------------------------------------------"
+        branch="A##!#@###232fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff424234dfssfgsffsfsfsffsfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff___________________________------------------------------------------------------------------------------------------------------------"
         branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/n/' -e 's/-$/n/')
         echo ::set-output name=valid_child_namespace::$branch
 
