@@ -1,4 +1,4 @@
-# Note: This template assumes that you use Helm. If not, replace the Helm Install PR step with your own step
+# Test Note: This template assumes that you use Helm. If not, replace the Helm Install PR step with your own step
 # Note: For the secrets below please refer to the document: http://aka.ms/devspaces/pr-flow
 #
 # Name of the PlaceHolder                 -  Description
