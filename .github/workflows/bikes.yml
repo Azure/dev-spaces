@@ -65,4 +65,4 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
         host: ${{ secrets.HOST }}
-        child-space: ${{steps.generate-child-space-name.outputs.valid_child_space_name}}
+        child-space: ${{steps.generate-child-space-name.outputs.result}}
