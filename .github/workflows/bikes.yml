@@ -35,19 +35,19 @@ jobs:
       run: |
         branch=${GITHUB_HEAD_REF::41}        
         branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
-        echo ::set-output name=valid_child_space_name::$branch         
+        echo ::set-output name=result::$branch         
     
     - name: Create child namespaces and add Dev Spaces labels
       run:  |
-        if [ -n "$(kubectl get namespace ${{steps.generate-child-space-name.outputs.valid_child_space_name}} --ignore-not-found -o name)" ]; then exit 0; fi
-        kubectl create namespace ${{steps.generate-child-space-name.outputs.valid_child_space_name}}
-        kubectl label namespace ${{steps.generate-child-space-name.outputs.valid_child_space_name}} azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
-        kubectl label namespace ${{steps.generate-child-space-name.outputs.valid_child_space_name}} azds.io/space=true
-        kubectl label namespace ${{steps.generate-child-space-name.outputs.valid_child_space_name}} azds.io/pull-request-space=true
+        if [ -n "$(kubectl get namespace ${{steps.generate-child-space-name.outputs.result}} --ignore-not-found -o name)" ]; then exit 0; fi
+        kubectl create namespace ${{steps.generate-child-space-name.outputs.result}}
+        kubectl label namespace ${{steps.generate-child-space-name.outputs.result}} azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
+        kubectl label namespace ${{steps.generate-child-space-name.outputs.result}} azds.io/space=true
+        kubectl label namespace ${{steps.generate-child-space-name.outputs.result}} azds.io/pull-request-space=true
         
     - uses: azure/k8s-actions/k8s-create-secret@master
       with:
-        namespace: ${{ steps.generate-child-space-name.outputs.valid_child_space_name }}
+        namespace: ${{ steps.generate-child-space-name.outputs.result }}
         container-registry-url: ${{ secrets.CONTAINER_REGISTRY }}
         container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
@@ -56,7 +56,7 @@ jobs:
     - name: Helm Install PR
       run: |
         helm init --upgrade --wait
-        helm upgrade --install --namespace ${{steps.generate-child-space-name.outputs.valid_child_space_name}} bikesharing-${{steps.generate-child-space-name.outputs.valid_child_space_name}} samples/BikeSharingApp/Bikes/charts/bikes \
+        helm upgrade --install --namespace ${{steps.generate-child-space-name.outputs.result}} bikesharing-${{steps.generate-child-space-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set image.tag=$GITHUB_SHA \
           --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
@@ -65,4 +65,4 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
         host: ${{ secrets.HOST }}
-        child-space: ${{steps.generate-child-space-name.outputs.valid_child_space_name}}
+        child-space: ${{steps.generate-child-space-name.outputs.result}}
