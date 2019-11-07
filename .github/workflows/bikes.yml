@@ -33,7 +33,7 @@ jobs:
     - name: Create valid child namespace name
       id: generate-child-space-name
       run: |
-        branch=${GITHUB_HEAD_REF::41}        
+        branch=${GITHUB_HEAD_REF::63}        
         branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
         echo ::set-output name=result::$branch         
     
@@ -52,11 +52,18 @@ jobs:
         container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         secret-name: ${{ secrets.IMAGE_PULL_SECRET }}
-        
+
+    - name: Create valid release-name
+      id: generate-release-name
+      run: |
+        branch=${(bikesharing-$GITHUB_HEAD_REF)::53}        
+        branch=$(echo ${branch//[!0-9a-zA-Z_.]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^[-_.]/z/' -e 's/[-_.]$/z/')
+        echo ::set-output name=result::$branch  
+
     - name: Helm Install PR
       run: |
         helm init --upgrade --wait
-        helm upgrade --install --namespace ${{steps.generate-child-space-name.outputs.result}} bikesharing-${{steps.generate-child-space-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
+        helm upgrade --install --namespace ${{steps.generate-child-space-name.outputs.result}} ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set image.tag=$GITHUB_SHA \
           --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
@@ -66,3 +73,4 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
         host: ${{ secrets.HOST }}
         child-space: ${{steps.generate-child-space-name.outputs.result}}
+        protocol: 'http'
