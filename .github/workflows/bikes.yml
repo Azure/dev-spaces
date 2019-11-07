@@ -78,7 +78,7 @@ jobs:
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
           chmod 700 get_helm.sh
           ./get_helm.sh
-          echo ::set-output name=result::$tmp_dir
+          echo ::set-output name=result::$tmp_dir/
         fi
 
     - name: Helm Upgrade PR
