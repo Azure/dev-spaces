@@ -18,7 +18,6 @@ jobs:
         branch=${branch::53}
         branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^[-]/z/' -e 's/[-]$/z/')
         echo ::set-output name=result::$branch
-        helm version
         
     - uses: actions/checkout@master    
 
@@ -72,7 +71,9 @@ jobs:
 
     - name: Helm Install PR
       run: |
-        helm init --upgrade --wait
+        #helm init --upgrade --wait
+        HELM_VERSION=$(helm version )
+        echo $HELM_VERSION
         helm upgrade --install --namespace ${{steps.generate-child-space-name.outputs.result}} ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set image.tag=$GITHUB_SHA \
