@@ -18,7 +18,7 @@ jobs:
         branch=${branch::53}
         branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^[-]/z/' -e 's/[-]$/z/')
         echo ::set-output name=result::$branch
-        HELM_VERSION=helm version
+        HELM_VERSION:helm version
         echo $HELM_VERSION
     - uses: actions/checkout@master    
 
