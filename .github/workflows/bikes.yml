@@ -72,8 +72,11 @@ jobs:
       run: |
         clientversion=$(echo $(helm version --client --short) | sed -n 's/.*Client: \(.*\)+.*/\1/p')
         serverversion=$(echo $(helm version --server --short) | sed -n 's/.*Server: \(.*\)+.*/\1/p')
-        [ -z "$serverversion" ] && echo "Error!" 1>&2
-        exit 64        
+        if [ ! -n "$serverversion" ]
+        then
+          echo "Error!" 1>&2
+          exit 64
+        fi                
         if [[ "$clientversion" != "$serverversion" ]]; then   
           echo "Versions are equal"
           helm-path=
