@@ -19,7 +19,7 @@ jobs:
         branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^[-]/z/' -e 's/[-]$/z/')
         echo ::set-output name=result::$branch
         helm version
-        echo $HELM_VERSION
+        
     - uses: actions/checkout@master    
 
     - uses: azure/docker-login@releases/v1
