@@ -75,8 +75,8 @@ jobs:
         HELM_VERSION_CLIENT=$(helm version --client --short)
         HELM_VERSION_SERVER=$(helm version --server --short)
 
-        echo $HELM_VERSION_CLIENT | sed -n 's/.*v\(.*\)+.*/\1/p'
-        echo $HELM_VERSION_SERVER | sed -n 's/.*v\(.*\)+.*/\1/p'
+        cl=${echo $(helm version --client --short) | sed -n 's/.*Client: \(.*\)+.*/\1/p'}
+        sr=${echo $HELM_VERSION_SERVER | sed -n 's/.*Server: \(.*\)+.*/\1/p'}
         helm upgrade --install --namespace ${{steps.generate-child-space-name.outputs.result}} ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set image.tag=$GITHUB_SHA \
