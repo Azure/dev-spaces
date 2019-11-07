@@ -73,12 +73,12 @@ jobs:
           echo The client and server Helm Versions are equal
           echo ::set-output name=result::
         else
-          mktemp -d      
-          export DESIRED_VERSION=$serverversion HELM_INSTALL_DIR=$mktemp          
+          tmp_dir=$(mktemp -d)      
+          export DESIRED_VERSION=$serverversion HELM_INSTALL_DIR=$tmp_dir          
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
           chmod 700 get_helm.sh
           ./get_helm.sh
-          echo ::set-output name=result::$mktemp
+          echo ::set-output name=result::$tmp_dir
         fi
 
     - name: Helm Upgrade PR
