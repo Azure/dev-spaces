@@ -70,11 +70,11 @@ jobs:
 
     - name: Helm Install PR
       run: |
-        client-version=$(echo $(helm version --client --short) | sed -n 's/.*Client: \(.*\)+.*/\1/p')
-        server-version=$(echo $(helm version --server --short) | sed -n 's/.*Server: \(.*\)+.*/\1/p')
-        [ -z "$server-version" ] && echo echo "Error!" 1>&2
+        clientversion=$(echo $(helm version --client --short) | sed -n 's/.*Client: \(.*\)+.*/\1/p')
+        serverversion=$(echo $(helm version --server --short) | sed -n 's/.*Server: \(.*\)+.*/\1/p')
+        [ -z "$serverversion" ] && echo echo "Error!" 1>&2
         exit 64        
-        if [[ "$client-version" != "$server-version" ]]; then   
+        if [[ "$clientversion" != "$serverversion" ]]; then   
           echo "Versions are equal"
           helm-path=
         else
