@@ -75,8 +75,8 @@ jobs:
         HELM_VERSION_CLIENT=$(helm version --client --short)
         HELM_VERSION_SERVER=$(helm version --server --short)
 
-        client=${echo $HELM_VERSION_CLIENT | sed -n 's/.*Client: \(.*\)+.*/\1/p'}
-        server=${echo $HELM_VERSION_SERVER | sed -n 's/.*Server: \(.*\)+.*/\1/p'}
+        client=$(echo $HELM_VERSION_CLIENT | sed -n 's/.*Client: \(.*\)+.*/\1/p')
+        server=$(echo $HELM_VERSION_SERVER | sed -n 's/.*Server: \(.*\)+.*/\1/p')
         #set environment var DESIRED_VERSION=sr
         
         if [[ "$client" != "$server" ]]; then   
