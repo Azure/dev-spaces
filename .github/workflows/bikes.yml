@@ -75,9 +75,24 @@ jobs:
         HELM_VERSION_CLIENT=$(helm version --client --short)
         HELM_VERSION_SERVER=$(helm version --server --short)
 
-        cl=${echo $(helm version --client --short) | sed -n 's/.*Client: \(.*\)+.*/\1/p'}
-        sr=${echo $HELM_VERSION_SERVER | sed -n 's/.*Server: \(.*\)+.*/\1/p'}
-        helm upgrade --install --namespace ${{steps.generate-child-space-name.outputs.result}} ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
+        client=${echo $HELM_VERSION_CLIENT | sed -n 's/.*Client: \(.*\)+.*/\1/p'}
+        server=${echo $HELM_VERSION_SERVER | sed -n 's/.*Server: \(.*\)+.*/\1/p'}
+        #set environment var DESIRED_VERSION=sr
+        
+        if [[ "$client" != "$server" ]]; then   
+          echo "Strings are equal." 
+        else
+          mkdir prflow        
+          export DESIRED_VERSION=$server
+          echo $DESIRED_VERSION
+          export HELM_INSTALL_DIR='./prflow'
+          echo $HELM_INSTALL_DIR
+          (cd prflow && curl -sSL https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash)
+          #`curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | sh`
+          chmod +x https://raw.githubusercontent.com/helm/helm/master/scripts/get
+        fi
+        #if cl!=sr then  https://raw.githubusercontent.com/helm/helm/master/scripts/get --DE
+        ./prflow/helm upgrade --install --namespace ${{steps.generate-child-space-name.outputs.result}} ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set image.tag=$GITHUB_SHA \
           --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
