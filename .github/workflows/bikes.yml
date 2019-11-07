@@ -67,20 +67,16 @@ jobs:
         release=${release::53}
         release=$(echo ${release//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^[-]/z/' -e 's/[-]$/z/')
         echo ::set-output name=result::$release  
-        
-    - name: Helm Install PR
-      run: |       
-        HELM_VERSION_CLIENT=$(helm version --client --short)
-        HELM_VERSION_SERVER=$(helm version --server --short)
 
+    - name: Helm Install PR
+      run: |
         client=$(echo $(helm version --client --short) | sed -n 's/.*Client: \(.*\)+.*/\1/p')
-        server=$(echo $HELM_VERSION_SERVER | sed -n 's/.*Server: \(.*\)+.*/\1/p')        
+        server=$(echo $(helm version --server --short) | sed -n 's/.*Server: \(.*\)+.*/\1/p')        
         if [[ "$client" != "$server" ]]; then   
           echo "Versions are equal" 
         else
           mkdir prflow        
-          export DESIRED_VERSION=$server          
-          export HELM_INSTALL_DIR=./prflow
+          export DESIRED_VERSION=$server export HELM_INSTALL_DIR=./prflow
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
           chmod 700 get_helm.sh
           ./get_helm.sh          
