@@ -11,6 +11,9 @@ inputs:
   child-space: # the branch name as modified such that a valid kubernetes namespace can be created
     description: "the child space name"
     required: true
+  protocol: # This is an optional parameter that the user can specify (http vs https)
+    description: "This is an optional parameter that the user can specify: example values - http or https"
+    required: false
 runs:
   using: 'node12'
   main: 'lib/index.js'
