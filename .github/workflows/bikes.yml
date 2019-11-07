@@ -17,8 +17,8 @@ jobs:
         branch='.bikesharing-$$$$%$%$#%%#^3999........................................................____________________________________99999999999aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         branch=${branch::53}
         branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^[-]/z/' -e 's/[-]$/z/')
-        echo ::set-output name=result::$branch 
-        ver=${echo ${helm version}}
+        echo ::set-output name=result::$branch
+        HELM_VERSION=`helm version 2>&1`
         echo $ver
     - uses: actions/checkout@master    
 
