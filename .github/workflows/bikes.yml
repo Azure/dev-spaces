@@ -55,7 +55,7 @@ jobs:
     - name: Create valid release-name
       id: generate-release-name
       run: |
-        release=${bikesharing-$GITHUB_HEAD_REF}
+        release=bikesharing-$GITHUB_HEAD_REF
         release=${release::53}
         release=$(echo ${release//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
         echo ::set-output name=result::$release
@@ -63,28 +63,29 @@ jobs:
     - name: Install Helm for client
       id: install-helm-client
       run: |
-        clientversion=$(echo $(helm version --client --short) | sed -n 's/.*Client: \(.*\)+.*/\1/p')
-        serverversion=$(echo $(helm version --server --short) | sed -n 's/.*Server: \(.*\)+.*/\1/p')
-        if [[ ! -n "$serverversion" ]];
-        then
+        set -e        
+        clientversion=$(helm version --client --short | cut -d' ' -f2 | cut -d'+' -f1)
+        serverversion=$(helm version --server --short | cut -d' ' -f2 | cut -d'+' -f1)
+        if [ ! -n "$serverversion" ]; then
           echo "Please install Helm on the server!" 1>&2
-          exit 64
-        elif [[ "$clientversion" == "$serverversion" ]]; 
-        then   
-          echo "Versions are equal"
+          exit 1
+        elif [ "$clientversion" == "$serverversion" ]; then   
+          echo The client and server Helm Versions are equal
           echo ::set-output name=result::
         else
-          mkdir prflow        
-          export DESIRED_VERSION=$serverversion export HELM_INSTALL_DIR=./prflow
+          tmp_dir=$(mktemp -d)      
+          export DESIRED_VERSION=$serverversion HELM_INSTALL_DIR=$tmp_dir          
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
           chmod 700 get_helm.sh
           ./get_helm.sh
-          echo ::set-output name=result::./prflow/
+          echo ::set-output name=result::$tmp_dir/
         fi
 
     - name: Helm Upgrade PR
       run: |        
-        ${{steps.install-helm-client.outputs.result}}helm upgrade --install --namespace ${{steps.generate-child-space-name.outputs.result}} ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
+        ${{steps.install-helm-client.outputs.result}}helm upgrade \
+          --install  ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
+          --namespace ${{steps.generate-child-space-name.outputs.result}} \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set image.tag=$GITHUB_SHA \
           --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
