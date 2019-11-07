@@ -87,6 +87,8 @@ jobs:
           echo $DESIRED_VERSION
           export HELM_INSTALL_DIR=./prflow
           echo $HELM_INSTALL_DIR
+          ls
+          `curl https://glide.sh/get | sh`
           #(cd prflow && curl -O https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash)
           `curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | sh`
           #`cd prflow && curl https://glide.sh/get | sh`
