@@ -9,7 +9,7 @@ async function run() {
         const host = core.getInput('host');        
         let headref = core.getInput('child-space') || '';
         let protocol = core.getInput('protocol') || 'http';
-        const comment = `You can see a private version of the changes made in this pull request here:\n:${protocol}//${headref}.s.${host}/`;   
+        const comment = `You can see a private version of the changes made in this pull request here:\n${protocol}://${headref}.s.${host}/`;   
         await addComment.addComment(comment);
     }catch (error) {
         core.setFailed(error.message);
