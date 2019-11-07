@@ -16,7 +16,7 @@ jobs:
       run: |
         branch='.bikesharing-$$$$%$%$#%%#^3999........................................................____________________________________99999999999aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         branch=${branch::53}
-        branch=$(echo ${branch//[!0-9a-zA-Z.]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^[-.]/z/' -e 's/[-.]$/z/')
+        branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^[-]/z/' -e 's/[-]$/z/')
         echo ::set-output name=result::$branch 
     - uses: actions/checkout@master    
 
