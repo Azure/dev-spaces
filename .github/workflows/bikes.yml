@@ -64,11 +64,11 @@ jobs:
       id: install-helm-client
       run: |
         set -e
-        #clientversion=$(echo $(helm version --client --short) | sed -n 's/.*Client: \(.*\)+.*/\1/p')   
-        clientversion=$(helm version --client --short | cut -d' ' -f2)
+        clientversion=$(echo $(helm version --client --short) | sed -n 's/.*Client: \(.*\)+.*/\1/p')   
+        #clientversion=$(helm version --client --short | cut -d' ' -f2)
         echo $clientversion
-        serverversion=$(helm version --client --short | cut -d' ' -f2)
-        #serverversion=$(echo $(helm version --server --short) | sed -n 's/.*Server: \(.*\)+.*/\1/p')
+        #serverversion=$(helm version --client --short | cut -d' ' -f2)
+        serverversion=$(echo $(helm version --server --short) | sed -n 's/.*Server: \(.*\)+.*/\1/p')
         echo $serverversion
         if [ ! -n "$serverversion" ]; then
           echo "Please install Helm on the server!" 1>&2
