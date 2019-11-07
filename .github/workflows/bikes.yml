@@ -85,10 +85,10 @@ jobs:
           mkdir prflow        
           export DESIRED_VERSION=$server
           echo $DESIRED_VERSION
-          #export HELM_INSTALL_DIR=./prflow
+          export HELM_INSTALL_DIR=./prflow
           echo $HELM_INSTALL_DIR
           #(cd prflow && curl -O https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash)
-          `cd prflow && curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | sh`
+          `curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | sh`
           #`cd prflow && curl https://glide.sh/get | sh`
           #sudo prflow/https://raw.githubusercontent.com/helm/helm/master/scripts/get
           ls
