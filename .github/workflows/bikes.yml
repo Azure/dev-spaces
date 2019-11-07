@@ -79,16 +79,16 @@ jobs:
         fi                
         if [[ "$clientversion" != "$serverversion" ]]; then   
           echo "Versions are equal"
-          helm-path=
+          helm_path=
         else
           mkdir prflow        
           export DESIRED_VERSION=$serverversion export HELM_INSTALL_DIR=./prflow
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
           chmod 700 get_helm.sh
           ./get_helm.sh 
-          helm-path=./prflow         
+          helm_path=./prflow         
         fi
-        $helm-path/helm upgrade --install --namespace ${{steps.generate-child-space-name.outputs.result}} ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
+        $helm_path/helm upgrade --install --namespace ${{steps.generate-child-space-name.outputs.result}} ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set image.tag=$GITHUB_SHA \
           --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
