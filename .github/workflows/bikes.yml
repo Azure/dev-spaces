@@ -87,9 +87,9 @@ jobs:
           echo $DESIRED_VERSION
           export HELM_INSTALL_DIR='./prflow'
           echo $HELM_INSTALL_DIR
-          (cd prflow && curl -sSL https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash)
+          (cd prflow && curl -o myfile https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash)
           #`curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | sh`
-          chmod +x https://raw.githubusercontent.com/helm/helm/master/scripts/get
+          sudo myfile
         fi
         #if cl!=sr then  https://raw.githubusercontent.com/helm/helm/master/scripts/get --DE
         ./prflow/helm upgrade --install --namespace ${{steps.generate-child-space-name.outputs.result}} ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
