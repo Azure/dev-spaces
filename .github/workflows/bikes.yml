@@ -71,13 +71,15 @@ jobs:
     - name: Helm Install PR
       run: |
         client-version=$(echo $(helm version --client --short) | sed -n 's/.*Client: \(.*\)+.*/\1/p')
-        server-version=$(echo $(helm version --server --short) | sed -n 's/.*Server: \(.*\)+.*/\1/p')        
+        server-version=$(echo $(helm version --server --short) | sed -n 's/.*Server: \(.*\)+.*/\1/p')
+        [ -z "$server-version" ] && echo echo "Error!" 1>&2
+        exit 64        
         if [[ "$client-version" != "$server-version" ]]; then   
           echo "Versions are equal"
           helm-path=
         else
           mkdir prflow        
-          export DESIRED_VERSION=$server export HELM_INSTALL_DIR=./prflow
+          export DESIRED_VERSION=$server-version export HELM_INSTALL_DIR=./prflow
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
           chmod 700 get_helm.sh
           ./get_helm.sh 
