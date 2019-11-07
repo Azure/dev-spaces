@@ -63,12 +63,10 @@ jobs:
     - name: Install Helm for client
       id: install-helm-client
       run: |
-        set -e
-        #clientversion=$(helm version --client --short | sed -n 's/.*Client: \(.*\)+.*/\1/p')   
+        set -e        
         clientversion=$(helm version --client --short | cut -d' ' -f2 | cut -d'+' -f1)
-        echo $clientversion
-        #serverversion=$(helm version --client --short | cut -d' ' -f2)
-        serverversion=$(helm version --server --short | sed -n 's/.*Server: \(.*\)+.*/\1/p')
+        echo $clientversion        
+        serverversion=$(helm version --server --short | cut -d' ' -f2 | cut -d'+' -f1)
         echo $serverversion
         if [ ! -n "$serverversion" ]; then
           echo "Please install Helm on the server!" 1>&2
