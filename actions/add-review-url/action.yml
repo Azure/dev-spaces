@@ -11,6 +11,9 @@ inputs:
   child-space:  # Child space. 
     description: "This is the child namespace name passed in from the workflow to construct the uri."
     required: true
+  protocol: # This is an optional parameter that the user can specify (http vs https)
+    description: "This is an optional parameter that the user can specify: example values - http or https"
+    required: false
 runs:
   using: 'node12'
   main: 'lib/index.js'
