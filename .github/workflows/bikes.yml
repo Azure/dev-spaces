@@ -69,18 +69,16 @@ jobs:
         then
           echo "Please install Helm on the server!" 1>&2
           exit 64
-        elif [[ "$clientversion" == "$serverversion" ]]; 
+        elif [[ "$clientversion" != "$serverversion" ]]; 
         then   
           echo "Versions are equal"
-          #helm_path=
           echo ::set-output name=result::
         else
           mkdir prflow        
           export DESIRED_VERSION=$serverversion export HELM_INSTALL_DIR=./prflow
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
           chmod 700 get_helm.sh
-          ./get_helm.sh 
-          #helm_path=./prflow/
+          ./get_helm.sh
           echo ::set-output name=result::./prflow/
         fi
 
@@ -96,3 +94,4 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
         host: ${{ secrets.HOST }}
         child-space: ${{steps.generate-child-space-name.outputs.result}}
+        protocol: 'http'
