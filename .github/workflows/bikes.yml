@@ -82,7 +82,7 @@ jobs:
           helm-path=
         else
           mkdir prflow        
-          export DESIRED_VERSION=$server-version export HELM_INSTALL_DIR=./prflow
+          export DESIRED_VERSION=$serverversion export HELM_INSTALL_DIR=./prflow
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
           chmod 700 get_helm.sh
           ./get_helm.sh 
