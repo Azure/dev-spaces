@@ -64,7 +64,7 @@ jobs:
       run: |
         release=${bikesharing-$GITHUB_HEAD_REF}
         release=${release::53}
-        release=$(echo ${release//[!0-9a-zA-Z.]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^[-.]/z/' -e 's/[-.]$/z/')
+        release=$(echo ${release//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^[-]/z/' -e 's/[-]$/z/')
         echo ::set-output name=result::$release  
 
     - name: Helm Install PR
@@ -79,5 +79,4 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
         host: ${{ secrets.HOST }}
-        child-space: ${{steps.generate-child-space-name.outputs.result}}
-        protocol: 'http'
+        child-space: ${{steps.generate-child-space-name.outputs.result}}        
