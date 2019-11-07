@@ -55,7 +55,7 @@ jobs:
     - name: Create valid release-name
       id: generate-release-name
       run: |
-        release=bikesharing-$GITHUB_HEAD_REF
+        release=${bikesharing-$GITHUB_HEAD_REF}
         release=${release::53}
         release=$(echo ${release//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
         echo ::set-output name=result::$release
