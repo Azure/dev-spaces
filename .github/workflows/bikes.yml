@@ -66,11 +66,10 @@ jobs:
         set -e        
         clientversion=$(helm version --client --short | cut -d' ' -f2 | cut -d'+' -f1)
         serverversion=$(helm version --server --short | cut -d' ' -f2 | cut -d'+' -f1)
-        serverversion=
         if [ ! -n "$serverversion" ]; then
           echo "Please install Helm on the server!" 1>&2
           exit 1
-        elif [ "$clientversion" != "$serverversion" ]; then   
+        elif [ "$clientversion" == "$serverversion" ]; then   
           echo The client and server Helm Versions are equal
           echo ::set-output name=result::
         else
@@ -85,7 +84,7 @@ jobs:
     - name: Helm Upgrade PR
       run: |        
         ${{steps.install-helm-client.outputs.result}}helm upgrade \
-        --install --namespace ${{steps.generate-child-space-name.outputs.result}} ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
+          --install --namespace ${{steps.generate-child-space-name.outputs.result}} ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set image.tag=$GITHUB_SHA \
           --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
