@@ -76,8 +76,7 @@ jobs:
         then
           echo "Error!" 1>&2
           exit 64
-        fi                
-        if [[ "$clientversion" != "$serverversion" ]]; then   
+        else if [[ "$clientversion" == "$serverversion" ]]; then   
           echo "Versions are equal"
           helm_path=
         else
@@ -88,7 +87,6 @@ jobs:
           ./get_helm.sh 
           helm_path=./prflow        
         fi
-        echo $helm_path
         $helm_path/helm upgrade --install --namespace ${{steps.generate-child-space-name.outputs.result}} ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set image.tag=$GITHUB_SHA \
