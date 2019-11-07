@@ -83,8 +83,8 @@ jobs:
 
     - name: Helm Upgrade PR
       run: |        
-        ${{steps.install-helm-client.outputs.result}}helm upgrade \
-          --install --namespace ${{steps.generate-child-space-name.outputs.result}} ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
+        ${{steps.install-helm-client.outputs.result}}helm upgrade --install
+          --namespace ${{steps.generate-child-space-name.outputs.result}} ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set image.tag=$GITHUB_SHA \
           --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
