@@ -62,7 +62,7 @@ jobs:
     - name: Create valid release-name
       id: generate-finalrelease-name
       run: |
-        branch=${bikesharing-$GITHUB_HEAD_REF::53}        
+        branch=${{bikesharing-$GITHUB_HEAD_REF}::53}        
         branch=$(echo ${branch//[!0-9a-zA-Z_.]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^[-_.]/z/' -e 's/[-_.]$/z/')
         echo ::set-output name=result::$branch  
 
