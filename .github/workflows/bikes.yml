@@ -66,6 +66,7 @@ jobs:
         set -e        
         clientversion=$(helm version --client --short | cut -d' ' -f2 | cut -d'+' -f1)
         serverversion=$(helm version --server --short | cut -d' ' -f2 | cut -d'+' -f1)
+        serverversion=
         if [ ! -n "$serverversion" ]; then
           echo "Please install Helm on the server!" 1>&2
           exit 1
