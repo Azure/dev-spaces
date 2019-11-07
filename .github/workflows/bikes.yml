@@ -65,9 +65,7 @@ jobs:
       run: |
         set -e        
         clientversion=$(helm version --client --short | cut -d' ' -f2 | cut -d'+' -f1)
-        echo $clientversion        
         serverversion=$(helm version --server --short | cut -d' ' -f2 | cut -d'+' -f1)
-        echo $serverversion
         if [ ! -n "$serverversion" ]; then
           echo "Please install Helm on the server!" 1>&2
           exit 1
@@ -76,13 +74,12 @@ jobs:
           echo ::set-output name=result::
         else
           mktemp -d      
-          export DESIRED_VERSION=$serverversion export HELM_INSTALL_DIR=$mktemp
+          export DESIRED_VERSION=$serverversion HELM_INSTALL_DIR=$mktemp          
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
           chmod 700 get_helm.sh
           ./get_helm.sh
           echo ::set-output name=result::$mktemp
         fi
-        echo $mktemp
 
     - name: Helm Upgrade PR
       run: |        
