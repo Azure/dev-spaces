@@ -69,7 +69,7 @@ jobs:
         then
           echo "Please install Helm on the server!" 1>&2
           exit 64
-        elif [[ "$clientversion" != "$serverversion" ]]; 
+        elif [[ "$clientversion" == "$serverversion" ]]; 
         then   
           echo "Versions are equal"
           echo ::set-output name=result::
