@@ -69,11 +69,11 @@ jobs:
         echo $clientversion
         serverversion=$(helm version --client --short | cut -d' ' -f2)
         #serverversion=$(echo $(helm version --server --short) | sed -n 's/.*Server: \(.*\)+.*/\1/p')
-        echo serverversion
+        echo $serverversion
         if [ ! -n "$serverversion" ]; then
           echo "Please install Helm on the server!" 1>&2
           exit 64
-        elif [ "$clientversion" == "$serverversion" ]; then   
+        elif [ "$clientversion" != "$serverversion" ]; then   
           echo The client and server Helm Versions are equal
           echo ::set-output name=result::
         else
