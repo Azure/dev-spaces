@@ -39,10 +39,11 @@ jobs:
     - name: Create child namespaces and add Dev Spaces labels
       run:  |
         if [ -n "$(kubectl get namespace ${{steps.generate-child-space-name.outputs.result}} --ignore-not-found -o name)" ]; then exit 0; fi
-        kubectl create namespace ${{steps.generate-child-space-name.outputs.result}}
-        kubectl label namespace ${{steps.generate-child-space-name.outputs.result}} azds.io/parent-space=${{ secrets.MASTER_SPACE }} 
-        kubectl label namespace ${{steps.generate-child-space-name.outputs.result}} azds.io/space=true
-        kubectl label namespace ${{steps.generate-child-space-name.outputs.result}} azds.io/pull-request-space=true
+        kubectl create namespace ${{steps.generate-child-space-name.outputs.result}} \
+        kubectl label namespace ${{steps.generate-child-space-name.outputs.result}} \
+        azds.io/parent-space=${{ secrets.MASTER_SPACE }} \
+        azds.io/space=true \
+        azds.io/pull-request-space=true
         
     - uses: azure/k8s-actions/k8s-create-secret@master
       with:
@@ -78,12 +79,12 @@ jobs:
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
           chmod 700 get_helm.sh
           ./get_helm.sh
-          echo ::set-output name=result::$tmp_dir/
+          echo ::set-output name=install_location::$tmp_dir/
         fi
 
     - name: Helm Upgrade PR
       run: |        
-        ${{steps.install-helm-client.outputs.result}}helm upgrade \
+        ${{steps.install-helm-client.outputs.install_location}}helm upgrade \
           --install  ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
           --namespace ${{steps.generate-child-space-name.outputs.result}} \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
