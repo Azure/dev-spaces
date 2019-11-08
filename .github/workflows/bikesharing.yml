@@ -15,7 +15,7 @@ jobs:
     
     - uses: actions/checkout@master
     
-    - uses: azure/docker-login@releases/v1
+    - uses: azure/container-actions/docker-login@master
       with:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
         username: ${{ secrets.REGISTRY_USERNAME }}
