@@ -70,7 +70,7 @@ jobs:
         if [ ! -n "$serverversion" ]; then
           echo "Please install Helm on the server!" 1>&2
           exit 1
-        elif [ "$clientversion" != "$serverversion" ]; then   
+        elif [ "$clientversion" == "$serverversion" ]; then   
           echo The client and server Helm Versions are equal
           echo ::set-output name=helm::helm
         else
