@@ -41,9 +41,9 @@ jobs:
         if [ -n "$(kubectl get namespace ${{steps.generate-child-space-name.outputs.result}} --ignore-not-found -o name)" ]; then exit 0; fi
         kubectl create namespace ${{steps.generate-child-space-name.outputs.result}} \
         kubectl label namespace ${{steps.generate-child-space-name.outputs.result}} \
-        azds.io/parent-space=${{ secrets.MASTER_SPACE }} \
-        azds.io/space=true \
-        azds.io/pull-request-space=true
+          azds.io/parent-space=${{ secrets.MASTER_SPACE }} \
+          azds.io/space=true \
+          azds.io/pull-request-space=true
         
     - uses: azure/k8s-actions/k8s-create-secret@master
       with:
