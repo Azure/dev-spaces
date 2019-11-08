@@ -72,19 +72,19 @@ jobs:
           exit 1
         elif [ "$clientversion" == "$serverversion" ]; then   
           echo The client and server Helm Versions are equal
-          echo ::set-output name=result::
+          echo ::set-output name=helm::helm
         else
           tmp_dir=$(mktemp -d)      
           export DESIRED_VERSION=$serverversion HELM_INSTALL_DIR=$tmp_dir          
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
           chmod 700 get_helm.sh
           ./get_helm.sh
-          echo ::set-output name=install_location::$tmp_dir/
+          echo ::set-output name=helm::$tmp_dir/helm
         fi
 
     - name: Helm Upgrade PR
       run: |        
-        ${{steps.install-helm-client.outputs.install_location}}helm upgrade \
+        ${{steps.install-helm-client.outputs.helm}} upgrade \
           --install  ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
           --namespace ${{steps.generate-child-space-name.outputs.result}} \
           --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
