@@ -39,7 +39,7 @@ jobs:
     - name: Create child namespaces and add Dev Spaces labels
       run:  |
         if [ -n "$(kubectl get namespace ${{steps.generate-child-space-name.outputs.result}} --ignore-not-found -o name)" ]; then exit 0; fi
-        kubectl create namespace ${{steps.generate-child-space-name.outputs.result}} \
+        kubectl create namespace ${{steps.generate-child-space-name.outputs.result}}
         kubectl label namespace ${{steps.generate-child-space-name.outputs.result}} \
           azds.io/parent-space=${{ secrets.MASTER_SPACE }} \
           azds.io/space=true \
