@@ -6,11 +6,11 @@ bikesharingweb:
     annotations:
       kubernetes.io/ingress.class: traefik-azds  # Dev Spaces-specific
     hosts:
-      - dev.bikesharingweb.<REPLACE_ME_WITH_HOST_SUFFIX>  # Assumes deployment to the 'dev' space
+      - dev.bikesharingweb.l6fhx4wrxq.eus.azds.io  # Assumes deployment to the 'dev' space
 
 gateway:
   ingress:
     annotations:
       kubernetes.io/ingress.class: traefik-azds  # Dev Spaces-specific
     hosts:
-      - dev.gateway.<REPLACE_ME_WITH_HOST_SUFFIX>  # Assumes deployment to the 'dev' space
+      - dev.gateway.l6fhx4wrxq.eus.azds.io  # Assumes deployment to the 'dev' space
