@@ -16,7 +16,7 @@ app.get('/api', function (req, res) {
        uri: 'http://mywebapi',
        headers: {
           /* propagate the dev space routing header */
-          'azds-route-as': req.headers['azds-route-as']
+          'azds-route-as': req.headers['azds-route-as'] 
        }
     }, function (error, response, body) {
         res.send('Hello from webfrontend and ' + body);
