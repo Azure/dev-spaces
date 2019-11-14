@@ -15,7 +15,7 @@ app.get('/api', function (req, res) {
     request({
        uri: 'http://mywebapi',
        headers: {
-          /* propagate the dev space routing header */
+          /* propagate the dev space routing header */ 
           'azds-route-as': req.headers['azds-route-as']
        }
     }, function (error, response, body) {
