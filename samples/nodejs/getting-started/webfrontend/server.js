@@ -20,6 +20,7 @@ app.get('/api', function (req, res) {
        }
     }, function (error, response, body) {
         res.send('Hello from webfrontend again and  ' + body);
+
     });
  });
 
