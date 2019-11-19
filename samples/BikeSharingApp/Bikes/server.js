@@ -12,7 +12,7 @@ var async = require('async');
 var mongoDBCollection = process.env.mongo_collection;
 var mongoDBConnStr = process.env.mongo_connectionstring;
 console.log("Collection: " + mongoDBCollection);
-console.log("MongoDB connection string: " + mongoDBConnStr);
+console.log("MongoDB connection string added for testing " + mongoDBConnStr);
 
 // Will be initialized on server startup at the bottom
 // Init to prototype to enable Intellisense
