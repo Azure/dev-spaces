@@ -228,9 +228,9 @@ app.get('/api/bikes/:bikeId', function(req, res) {
             return;
         }
 
-        // Hard code image url *FIX ME*
-        theBike.imageUrl = "/static/logo.svg";
-        
+        var theBike = result;
+        theBike.id = theBike._id;
+        delete theBike._id;  
         res.send(theBike);
     });
 });
