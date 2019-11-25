@@ -41,7 +41,7 @@ jobs:
         docker build <PATH_TO_THE_DOCKERFILE>/ -t ${{ secrets.CONTAINER_REGISTRY }}/<NAME_OF_THE_SERVICE>:$GITHUB_SHA
         docker push ${{ secrets.CONTAINER_REGISTRY }}/<NAME_OF_THE_SERVICE>:$GITHUB_SHA
       
-    - uses: azure/k8s-actions/aks-set-context@master
+    - uses: azure/aks-set-context@v1
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
         cluster-name: ${{ secrets.CLUSTER_NAME }}
@@ -63,7 +63,7 @@ jobs:
           azds.io/space=true \
           azds.io/pull-request-space=true
         
-    - uses: azure/k8s-actions/k8s-create-secret@master
+    - uses: azure/k8s-create-secret@v1
       with:
         namespace: ${{ steps.generate-child-space-name.outputs.result }}
         container-registry-url: ${{ secrets.CONTAINER_REGISTRY }}

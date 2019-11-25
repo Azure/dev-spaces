@@ -15,7 +15,7 @@ jobs:
     
     - uses: actions/checkout@master
     
-    - uses: azure/container-actions/docker-login@master
+    - uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
         username: ${{ secrets.REGISTRY_USERNAME }}
@@ -43,12 +43,13 @@ jobs:
         docker build samples/BikeSharingApp/Users/ -t ${{ secrets.CONTAINER_REGISTRY }}/users:$GITHUB_SHA
         docker push ${{ secrets.CONTAINER_REGISTRY }}/users:$GITHUB_SHA
       
-    - uses: azure/k8s-actions/aks-set-context@master
+    - uses: azure/aks-set-context@v1
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
         cluster-name: ${{ secrets.CLUSTER_NAME }}
         resource-group: ${{ secrets.RESOURCE_GROUP }}
-    - uses: azure/k8s-actions/k8s-create-secret@master
+
+    - uses: azure/k8s-create-secret@v1
       with:
         namespace: ${{ secrets.MASTER_SPACE }}
         container-registry-url: ${{ secrets.CONTAINER_REGISTRY }}
