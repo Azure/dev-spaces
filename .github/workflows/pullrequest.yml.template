@@ -82,7 +82,7 @@ jobs:
     - name: Install Helm for client
       id: install-helm-client
       run: |
-     set -e        
+        set -e        
         clientversion=$(helm version --client --short | cut -d' ' -f2 | cut -d'+' -f1 | head -c 2 | tail -c 1)
         if [ "$clientversion" == 3]; then   
           echo The client is already using Helm 3
