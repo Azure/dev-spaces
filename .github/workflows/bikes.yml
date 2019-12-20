@@ -70,12 +70,10 @@ jobs:
           echo The client is already using Helm 3
           echo ::set-output name=helm::helm
         else
-          tmp_dir=$(mktemp -d)      
-          export DESIRED_VERSION=v3.0.1 HELM_INSTALL_DIR=$tmp_dir          
-          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
           chmod 700 get_helm.sh
-          ./get_helm.sh
-          echo ::set-output name=helm::$tmp_dir/helm
+          ./get_helm.sh --version v3.0.1
+          echo ::set-output name=helm::helm
         fi
 
     - name: Helm Upgrade PR
