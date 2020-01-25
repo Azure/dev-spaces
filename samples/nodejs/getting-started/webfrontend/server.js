@@ -19,7 +19,7 @@ app.get('/api', function (req, res) {
           'azds-route-as': req.headers['azds-route-as']
        }
     }, function (error, response, body) {
-        res.send('Hello from webfrontend in Helsinki and  ' + body);
+        res.send('Hello from webfrontend ' + body);
 
     });
  });
