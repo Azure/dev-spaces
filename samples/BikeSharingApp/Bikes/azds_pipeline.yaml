@@ -17,25 +17,25 @@ resources:
 variables:
 
   # Create container registry service connection and provide the connection name or it's GUID here. Learn more https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml
-  dockerRegistryServiceConnection: 'CONTAINER-REGISTRY-CONNECTION-NAME'
+  dockerRegistryServiceConnection: 'eviaorcregistry'
   
   # Provide the container registry url for example builddemo.azurecr.io
-  containerRegistry: 'CONTAINER-REGISTRY-URL'
+  containerRegistry: 'eviaorcregistry.azurecr.io'
   
   # Create Kubernetes service connection and provide the connection name or it's GUID here. Learn more https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml
-  k8sServiceConnection: 'KUBERNETES-CONNECTION-NAME'
+  k8sServiceConnection: 'MyAKS'
   
   # Provide the name of Kubernetes cluster
-  AZDSControllerName: 'KUBERNETES-CLUSTER-NAME'
+  AZDSControllerName: 'MyAKS'
   
   # Provide the resource group name of Kubernetes cluster
-  AZDSControllerRG: 'KUBERNETES-CLUSTER-RESOURCE-GROUP'
+  AZDSControllerRG: 'MyResourceGroup'
   
   # Create Azure Service connection and provide the connection name or it's GUID here. Learn more https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#sep-azure-rm
-  azureServiceConnection: 'AZURE-CONNECTION-NAME'
+  azureServiceConnection: 'resourcemanager'
   
   # Create GitHub Service connection and provide the connection name or it's GUID here. Learn more https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml#sep-github
-  githubServiceConnection: 'GITHUB-CONNECTION-NAME'
+  githubServiceConnection: 'github'
     
   imageRepository: 'bikesharing-bikes'
   dockerfilePath: 'samples/BikeSharingApp/Bikes/Dockerfile'
