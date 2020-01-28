@@ -5,7 +5,8 @@ var express = require('express');
 var app = express();
 
 app.get('/', function (req, res) {
-    res.send('Hello from mywebapi');
+    var msg = "hey!"
+    res.send(msg);
 });
 
 var port = process.env.PORT || 80;
