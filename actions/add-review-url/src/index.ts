@@ -6,7 +6,7 @@ import * as core from "@actions/core";
 async function run() {
     const addComment = new AddComment();
     try {
-        const host = core.getInput('host');        
+        const host = core.getInput('host');
         let headref = core.getInput('child-space') || '';
         let protocol = core.getInput('protocol') || 'http';
         const comment = `You can see a private version of the changes made in this pull request here:\n${protocol}://${headref}.s.${host}/`;   

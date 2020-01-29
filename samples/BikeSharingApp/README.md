@@ -7,7 +7,7 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
 ## Prerequisites
 * [Azure subscription](https://azure.microsoft.com/free)
 * [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli?view=azure-cli-latest)
-* [Helm 2.13 (or greater)](https://github.com/helm/helm#install)
+* [Helm 3 (or greater)](https://helm.sh/docs/intro/install)
 
 ## Configure Azure resources
 
@@ -48,8 +48,7 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
 1. **Deploy the sample application to Kubernetes.** We'll use Helm to run this sample application, but other tooling could be used to run your entire application in a namespace within a cluster. The Helm commands are targeting the namespace named `dev` you created earlier, and can take several minutes to complete.
     ```bash
     cd charts/
-    helm init --wait
-    helm install -n bikesharing . --dep-up --namespace dev --atomic
+    helm install bikesharing . --dependency-update --namespace dev --atomic
     ```
     Note: **If you are using an RBAC-enabled cluster**, be sure to configure [a service account for Tiller](https://helm.sh/docs/using_helm/#role-based-access-control). Otherwise, `helm` commands will fail.
 

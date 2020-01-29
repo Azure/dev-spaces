@@ -7,13 +7,16 @@ Refer to the documentation for [Azure Dev-spaces sample app](https://github.com/
 ## Example workflow syntax 
 The following Action snippet is used in the [Bikesharing sample PR workflow ](https://github.com/Azure/dev-spaces/blob/master/.github/workflows/bikes.yml)
 ```
-    - uses: azure/dev-spaces/actions/add-review-url@Releases/v1              
-        with:
-            repo-token: ${{ secrets.GITHUB_TOKEN }}  
-            host: ${{ secrets.HOST }}
+    - uses: azure/dev-spaces/actions/add-review-url@Releases/v2              
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}  
+        host: ${{ secrets.HOST }}
+        child-space: ${{steps.generate-child-space-name.outputs.result}}
+        protocol: 'http'
  ```       
-where secrets.HOST is the host URL for the app deployed in AKS. See [Pull Request Flow Documentation for Azure Dev Spaces](https://aka.ms/devspaces/pr-flow#configure-your-github-action)
-
+where:
+    secrets.HOST is the host URL for the app deployed in AKS. See [Pull Request Flow Documentation for Azure Dev Spaces](https://aka.ms/devspaces/pr-flow#configure-your-github-action)
+    protocol is an optional parameter that user can so choose to specify as https vs http as the case maybe. By default, its value is http. This is used to construct the URL of the preview app
 ## How to build this GitHub Action for development
 Navigate to the directory: .\actions\add-review-url\src and run
 ```
@@ -21,8 +24,8 @@ Navigate to the directory: .\actions\add-review-url\src and run
     npm run build
 ```
 ## How to build and test the unit tests for this GitHub Action
-Using Jasmine Test Framework. Please refer: https://medium.com/backticks-tildes/how-to-test-javascript-with-jasmine-framework-2e2b8dfa7a9e
-Refer to tests in \actions\add-review-url\test
+Using Jest Test Framework. 
+Refer to tests in \actions\add-review-url\__test__
 ```     
         npm install
         npm run build

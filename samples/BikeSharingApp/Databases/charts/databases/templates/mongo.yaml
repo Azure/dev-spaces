@@ -1,5 +1,5 @@
 {{ if .Values.hostedMongo.enabled }}
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "databases.fullname" . }}-mongo
@@ -7,6 +7,9 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
   replicas: 1
+  selector:
+    matchLabels:      
+      app: {{ template "databases.fullname" . }}-mongo
   template:
     metadata:
       labels:
