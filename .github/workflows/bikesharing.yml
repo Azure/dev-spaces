@@ -15,7 +15,7 @@ jobs:
     
     - uses: actions/checkout@master
     
-    - uses: azure/docker-login@releases/v1
+    - uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
         username: ${{ secrets.REGISTRY_USERNAME }}
@@ -43,12 +43,13 @@ jobs:
         docker build samples/BikeSharingApp/Users/ -t ${{ secrets.CONTAINER_REGISTRY }}/users:$GITHUB_SHA
         docker push ${{ secrets.CONTAINER_REGISTRY }}/users:$GITHUB_SHA
       
-    - uses: azure/k8s-actions/aks-set-context@master
+    - uses: azure/aks-set-context@v1
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
         cluster-name: ${{ secrets.CLUSTER_NAME }}
         resource-group: ${{ secrets.RESOURCE_GROUP }}
-    - uses: azure/k8s-actions/k8s-create-secret@master
+
+    - uses: azure/k8s-create-secret@v1
       with:
         namespace: ${{ secrets.MASTER_SPACE }}
         container-registry-url: ${{ secrets.CONTAINER_REGISTRY }}
@@ -56,20 +57,33 @@ jobs:
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         secret-name: ${{ secrets.IMAGE_PULL_SECRET }}
         
+    - name: Install Helm for client
+      id: install-helm-client
+      run: |
+        set -e        
+        clientversion=$(helm version --client --short | cut -d' ' -f2 | cut -d'+' -f1 | head -c 2 | tail -c 1)
+        if [ "$clientversion" == 3]; then   
+          echo The client is already using Helm 3
+          echo ::set-output name=helm::helm
+        else
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
+          chmod 700 get_helm.sh
+          ./get_helm.sh --version v3.0.1
+          echo ::set-output name=helm::helm
+        fi
+        
     - name: Helm Install Master
       run: |
         cd samples/BikeSharingApp/charts
-        helm init --client-only
-        helm dependency update
-        helm init --upgrade --wait
-        helm upgrade --install --namespace ${{ secrets.MASTER_SPACE }} bikesharing . \
+        ${{steps.install-helm-client.outputs.helm}} dependency update
+        ${{steps.install-helm-client.outputs.helm}} upgrade --install --namespace ${{ secrets.MASTER_SPACE }} bikesharing . \
           --set bikes.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
           --set bikes.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
           --set bikes.image.tag=$GITHUB_SHA \
           --set bikesharingweb.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikesharingweb \
           --set bikesharingweb.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
           --set bikesharingweb.image.tag=$GITHUB_SHA \
-          --set bikesharingweb.ingress.hosts[0]=${{ secrets.HOST }} \
+          --set bikesharingweb.ingress.hosts[0]=${{ secrets.MASTER_SPACE }}.${{ secrets.APP_NAME }}.${{ secrets.HOST_SUFFIX }} \
           --set bikesharingweb.ingress.annotations.kubernetes\\.io/ingress\\.class=traefik-azds \
           --set billing.image.repository=${{ secrets.CONTAINER_REGISTRY }}/billing \
           --set billing.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
