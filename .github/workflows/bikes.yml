@@ -23,7 +23,7 @@ jobs:
         docker build samples/BikeSharingApp/Bikes/ -t ${{ secrets.CONTAINER_REGISTRY }}/bikes:$GITHUB_SHA
         docker push ${{ secrets.CONTAINER_REGISTRY }}/bikes:$GITHUB_SHA
       
-    - uses: azure/k8s-actions/aks-set-context@master
+    - uses: azure/aks-set-context@v1
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
         cluster-name: ${{ secrets.CLUSTER_NAME }}
@@ -45,7 +45,7 @@ jobs:
           azds.io/space=true \
           azds.io/pull-request-space=true
         
-    - uses: azure/k8s-actions/k8s-create-secret@master
+    - uses: azure/k8s-create-secret@v1
       with:
         namespace: ${{ steps.generate-child-space-name.outputs.result }}
         container-registry-url: ${{ secrets.CONTAINER_REGISTRY }}
@@ -65,21 +65,15 @@ jobs:
       id: install-helm-client
       run: |
         set -e        
-        clientversion=$(helm version --client --short | cut -d' ' -f2 | cut -d'+' -f1)
-        serverversion=$(helm version --server --short | cut -d' ' -f2 | cut -d'+' -f1)
-        if [ ! -n "$serverversion" ]; then
-          echo "Please install Helm on the server!" 1>&2
-          exit 1
-        elif [ "$clientversion" == "$serverversion" ]; then   
-          echo The client and server Helm Versions are equal
+        clientversion=$(helm version --client --short | cut -d' ' -f2 | cut -d'+' -f1 | head -c 2 | tail -c 1)
+        if [ "$clientversion" == 3]; then   
+          echo The client is already using Helm 3
           echo ::set-output name=helm::helm
         else
-          tmp_dir=$(mktemp -d)      
-          export DESIRED_VERSION=$serverversion HELM_INSTALL_DIR=$tmp_dir          
-          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
           chmod 700 get_helm.sh
-          ./get_helm.sh
-          echo ::set-output name=helm::$tmp_dir/helm
+          ./get_helm.sh --version v3.0.1
+          echo ::set-output name=helm::helm
         fi
 
     - name: Helm Upgrade PR
@@ -91,9 +85,9 @@ jobs:
           --set image.tag=$GITHUB_SHA \
           --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
  
-    - uses: azure/dev-spaces/actions/add-review-url@Releases/v2              
+    - uses: azure/dev-spaces/actions/add-review-url@Releases/v2
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
-        host: ${{ secrets.HOST }}
+        host: ${{ secrets.MASTER_SPACE }}.${{ secrets.APP_NAME }}.${{ secrets.HOST_SUFFIX }}
         child-space: ${{steps.generate-child-space-name.outputs.result}}
         protocol: 'http'
