@@ -18,7 +18,7 @@ jobs:
         if [ -z "${{ secrets.APP_NAME }}" ] then 
           hostname='${{ secrets.APP_NAME }}.';
         else 
-          hostname='' 
+          hostname=''; 
         fi
         echo appname $appname
         echo ::set-output name=appname::$hostname 
