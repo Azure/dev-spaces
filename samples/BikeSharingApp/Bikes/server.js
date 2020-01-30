@@ -130,6 +130,7 @@ app.get('/api/allbikes', function(req, res) {
             dbError(res, err, requestID);
             return;
         }
+        
         data.forEach(function(bike) {
             bike.id = bike._id;
             delete bike._id;
