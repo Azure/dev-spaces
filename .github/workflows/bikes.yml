@@ -18,9 +18,7 @@ jobs:
         hostname=if[${{ secrets.APP_NAME }}] then '${{ secrets.APP_NAME }}.' else '' fi
         echo appname $appname
         echo ::set-output name=appname::$hostname 
-    - uses: azure/dev-spaces/actions/add-review-url@Releases/v2
-      run: |
-        appname= if[${{ secrets.APP_NAME }}] then '${{ secrets.APP_NAME }}.' else '' fi
+    - uses: azure/dev-spaces/actions/add-review-url@Releases/v2      
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
         host: ${{ secrets.MASTER_SPACE }}.$appname${{ secrets.HOST_SUFFIX }}
