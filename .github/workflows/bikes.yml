@@ -15,7 +15,11 @@ jobs:
     - name: Create host
       id: generate-host-name
       run: |
-        hostname=if[-z "${{ secrets.APP_NAME }}"] then '${{ secrets.APP_NAME }}.' else '' fi
+        if [-z "${{ secrets.APP_NAME }}"]; then 
+          hostname='${{ secrets.APP_NAME }}.' 
+        else 
+          hostname='' 
+        fi
         echo appname $appname
         echo ::set-output name=appname::$hostname 
     - uses: azure/dev-spaces/actions/add-review-url@Releases/v2      
