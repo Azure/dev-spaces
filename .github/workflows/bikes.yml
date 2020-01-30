@@ -20,7 +20,7 @@ jobs:
         else 
           hostname=''; 
         fi
-        echo appname $appname
+        echo appname $hostname
         echo ::set-output name=appname::$hostname 
     - uses: azure/dev-spaces/actions/add-review-url@Releases/v2      
       with:
