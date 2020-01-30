@@ -16,7 +16,7 @@ jobs:
       id: generate-host-name
       run: |
         if [ -z "${{ secrets.APP_NAME }}" ] then 
-          hostname='${{ secrets.APP_NAME }}.'
+          hostname='${{ secrets.APP_NAME }}.';
         else 
           hostname='' 
         fi
