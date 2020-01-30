@@ -12,6 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:        
     - uses: actions/checkout@master    
+    - uses: azure/dev-spaces/actions/add-review-url@Releases/v2
+      run: |
+        appname= if[${{ secrets.APP_NAME }}] then '${{ secrets.APP_NAME }}.' else '' fi
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}  
+        host: ${{ secrets.MASTER_SPACE }}.$appname${{ secrets.HOST_SUFFIX }}
+        child-space: ${{steps.generate-child-space-name.outputs.result}}
+        protocol: 'http'
 
     - uses: azure/docker-login@v1
       with:
@@ -86,8 +94,10 @@ jobs:
           --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
  
     - uses: azure/dev-spaces/actions/add-review-url@Releases/v2
+      run: |
+        appname= if[${{ secrets.APP_NAME }}] then '${{ secrets.APP_NAME }}.' else '' fi
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
-        host: ${{ secrets.MASTER_SPACE }}.${{ secrets.APP_NAME }}.${{ secrets.HOST_SUFFIX }}
+        host: ${{ secrets.MASTER_SPACE }}.$appname${{ secrets.HOST_SUFFIX }}
         child-space: ${{steps.generate-child-space-name.outputs.result}}
         protocol: 'http'
