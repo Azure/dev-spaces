@@ -15,7 +15,7 @@ jobs:
     - name: Create host
       id: generate-host-name
       run: |
-        [[ -z "${{ secrets.APP_NAME }} ]] && hostname="${{ secrets.APP_NAME }}." || hostname=""        
+        [[ -z "${{ secrets.APP_NAME }}" ]] && hostname="${{ secrets.APP_NAME }}." || hostname=""        
         [[ -z "${{ secrets.APP_NAME }}" ]] && echo true || echo false  
         echo hostname "$hostname"
         echo ::set-output name=appname::$hostname 
