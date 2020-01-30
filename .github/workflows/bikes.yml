@@ -13,7 +13,7 @@ jobs:
     steps:        
     - uses: actions/checkout@master
       
-    - name: Create host
+    - name: Generate App Name
       id: generate-app-name
       run: |
         [[ -z "${{ secrets.APP_NAME }}" ]] && hostname="" ||  hostname="${{ secrets.APP_NAME }}."        
@@ -94,6 +94,6 @@ jobs:
     - uses: azure/dev-spaces/actions/add-review-url@Releases/v2      
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
-        host: ${{ secrets.MASTER_SPACE }}.$steps.generate-app-name.outputs.appname${{ secrets.HOST_SUFFIX }}
+        host: ${{ secrets.MASTER_SPACE }}.${{steps.generate-app-name.outputs.appname}}${{ secrets.HOST_SUFFIX }}
         child-space: ${{steps.generate-child-space-name.outputs.result}}
         protocol: 'http'
