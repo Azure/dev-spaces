@@ -135,7 +135,6 @@ app.get('/api/allbikes', function(req, res) {
             bike.id = bike._id;
             delete bike._id;
         });
-
         res.send(data);
     });
 });
