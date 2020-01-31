@@ -14,7 +14,13 @@ jobs:
     steps:
     
     - uses: actions/checkout@master
-    
+      
+    - name: Generate App Name
+      id: generate-app-name
+      run: |
+        [[ -z "${{ secrets.APP_NAME }}" ]] && hostname="" ||  hostname="${{ secrets.APP_NAME }}."        
+        echo ::set-output name=appname::$hostname
+        
     - uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.CONTAINER_REGISTRY }}
@@ -83,7 +89,7 @@ jobs:
           --set bikesharingweb.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikesharingweb \
           --set bikesharingweb.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
           --set bikesharingweb.image.tag=$GITHUB_SHA \
-          --set bikesharingweb.ingress.hosts[0]=${{ secrets.MASTER_SPACE }}.${{ secrets.APP_NAME }}.${{ secrets.HOST_SUFFIX }} \
+          --set bikesharingweb.ingress.hosts[0]=${{ secrets.MASTER_SPACE }}.${{steps.generate-app-name.outputs.appname}}${{ secrets.HOST_SUFFIX }} \
           --set bikesharingweb.ingress.annotations.kubernetes\\.io/ingress\\.class=traefik-azds \
           --set billing.image.repository=${{ secrets.CONTAINER_REGISTRY }}/billing \
           --set billing.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
