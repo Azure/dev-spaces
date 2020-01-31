@@ -50,7 +50,6 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
     cd charts/
     helm install bikesharing . --dependency-update --namespace dev --atomic
     ```
-    Note: **If you are using an RBAC-enabled cluster**, be sure to configure [a service account for Tiller](https://helm.sh/docs/using_helm/#role-based-access-control). Otherwise, `helm` commands will fail.
 
 1. **Open your browser to the app's website.** Run the `azds list-uris` command to see the public endpoints in the running app. Navigate to the `bikesharingweb` service - in the below example, the public URL for the `bikesharingweb` service is http://dev.bikesharingweb.fedcab0987.eus.azds.io/. Select **Aurelia Briggs (customer)** as the user, then select a bike to rent.
     ```bash
