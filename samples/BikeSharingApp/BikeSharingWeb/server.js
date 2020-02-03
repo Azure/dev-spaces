@@ -26,7 +26,8 @@ app.prepare()
             res.status(200).send({
                 apiHost: apiHost
             });
-        });                
+        });
+                        
 
         server.get('/preview/:id', (req, res) => {
             return app.render(req, res, '/preview', { id: req.params.id })
