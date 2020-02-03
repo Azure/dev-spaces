@@ -88,6 +88,6 @@ jobs:
     - uses: azure/dev-spaces/actions/add-review-url@Releases/v2
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
-        host: ${{ secrets.MASTER_SPACE }}.${{ secrets.APP_NAME }}.${{ secrets.HOST_SUFFIX }}
+        host: ${{ secrets.HOST }}
         child-space: ${{steps.generate-child-space-name.outputs.result}}
         protocol: 'http'
