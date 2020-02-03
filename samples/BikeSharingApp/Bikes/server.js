@@ -64,6 +64,7 @@ var incomingBikeSchema = {
     }
 };
 
+
 var app = express();
 app.use(requestIDParser);
 app.use(morgan("dev"));
@@ -137,6 +138,7 @@ app.get('/api/allbikes', function(req, res) {
         res.send(data);
     });
 });
+
 
 // new bike ------------------------------------------------------------
 app.post('/api/bikes', function (req, res) {
@@ -227,7 +229,8 @@ app.get('/api/bikes/:bikeId', function(req, res) {
         }
 
         var theBike = result;
-        
+        // Hard code image url *FIX ME*
+        theBike.imageUrl = "/static/logo.svg";
         theBike.id = theBike._id;
         delete theBike._id;
 
