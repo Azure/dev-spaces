@@ -91,7 +91,7 @@ jobs:
           --set gateway.image.repository=${{ secrets.CONTAINER_REGISTRY }}/gateway \
           --set gateway.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
           --set gateway.image.tag=$GITHUB_SHA \
-          --set gateway.ingress.hosts[0]=${{ secrets.MASTER_SPACE }}.gateway.${{ secrets.HOST_SUFFIX }} \
+          --set gateway.ingress.hosts[0]=${{ secrets.GATEWAY_HOST }} \
           --set gateway.ingress.annotations.kubernetes\\.io/ingress\\.class=traefik-azds \
           --set reservation.image.repository=${{ secrets.CONTAINER_REGISTRY }}/reservation \
           --set reservation.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
