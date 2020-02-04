@@ -63,7 +63,7 @@ jobs:
   
     - uses: azure/setup-helm@v1
       with:
-        version: 'v3.2.0' # default is latest stable
+        version: 'v3.0.1' # default is latest stable
       id: install-helm
       
     - uses: azure/k8s-bake@v1
@@ -72,7 +72,7 @@ jobs:
           helmChart: './samples/BikeSharingApp/Bikes/charts/bikes/' 
           overrideFiles: './samples/BikeSharingApp/Bikes/charts/bikes/values.yaml'
           overrides: |
-            helm-version:'v3.2.0' 
+            helm-version:'v3.0.1' 
             image.repository:${{ secrets.CONTAINER_REGISTRY }}/bikes
             image.tag:$GITHUB_SHA
             imagePullSecrets[0].name:${{ secrets.IMAGE_PULL_SECRET }}
