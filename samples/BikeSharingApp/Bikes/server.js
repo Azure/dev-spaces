@@ -197,8 +197,7 @@ app.put('/api/bikes/:bikeId', function(req, res) {
             var msg = 'Unexpected number of bikes modified! Matched: "' + result.matchedCount + '" Modified: "' + result.modifiedCount + '"';
             console.log(requestID + " - " + msg);
             res.status(500).send(msg);
-            return;
-            
+            return;            
         }     
 
         res.sendStatus(200);
