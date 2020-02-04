@@ -9,7 +9,7 @@ import Link from 'next/link'
 import BikeCard from "../components/BikeCard"
 import fetch from 'isomorphic-fetch'
 import Router from 'next/router'
-import helpers from './helpers.js'
+import helpers from '../lib/helpers';
 import ErrorPanel from '../components/ErrorPanel'
 
 export default class Index extends Component {

@@ -11,7 +11,7 @@ import FormButton from "../components/FormButton"
 import Map from "../components/Map"
 import Footer from '../components/Footer'
 import MediaQuery from 'react-responsive'
-import helpers from './helpers';
+import helpers from '../lib/helpers';
 import Router from 'next/router'
 import ErrorPanel from '../components/ErrorPanel'
 

@@ -14,7 +14,7 @@ import { withRouter } from 'next/router'
 import MediaQuery from 'react-responsive'
 import fetch from 'isomorphic-fetch'
 import Router from 'next/router'
-import helpers from './helpers.js'
+import helpers from '../lib/helpers';
 import ErrorPanel from '../components/ErrorPanel'
 
 class PreviewBase extends Component {

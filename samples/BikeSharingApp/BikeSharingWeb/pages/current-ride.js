@@ -14,7 +14,7 @@ import { withRouter } from 'next/router'
 import fetch from 'isomorphic-fetch'
 import MediaQuery from 'react-responsive'
 import Router from 'next/router'
-import helpers from './helpers.js'
+import helpers from '../lib/helpers';
 import ErrorPanel from '../components/ErrorPanel'
 
 class CurrentRideBase extends Component {

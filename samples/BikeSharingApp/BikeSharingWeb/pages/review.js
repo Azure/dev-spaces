@@ -8,7 +8,7 @@ import Content from "../components/Content"
 import FormButton from "../components/FormButton"
 import Footer from '../components/Footer'
 import MediaQuery from 'react-responsive'
-import helpers from './helpers';
+import helpers from '../lib/helpers';
 import Router from 'next/router'
 import ReviewControl from "../components/ReviewControl"
 import ErrorPanel from '../components/ErrorPanel'

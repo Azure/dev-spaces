@@ -8,7 +8,7 @@ import SigninFormLayout from '../components/SigninFormLayout'
 import Logo from '../components/Logo'
 import FormButton from '../components/FormButton'
 import Router from 'next/router'
-import helpers from './helpers';
+import helpers from '../lib/helpers';
 import ErrorPanel from '../components/ErrorPanel'
 
 export default class DevSignin extends Component {
