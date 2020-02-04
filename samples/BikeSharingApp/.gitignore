@@ -197,7 +197,6 @@ ClientBin/
 node_modules/
 orleans.codegen.cs
 .vscode
-package-lock.json
 
 # Since there are multiple workflows, uncomment next line to ignore bower_components
 # (https://github.com/github/gitignore/pull/1529#issuecomment-104372622)

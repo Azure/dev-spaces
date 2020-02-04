@@ -9,8 +9,10 @@ var ObjectId = require('mongodb').ObjectID;
 var express = require('express');
 var async = require('async');
 
+var mongoDBDatabase = process.env.mongo_database;
 var mongoDBCollection = process.env.mongo_collection;
 var mongoDBConnStr = process.env.mongo_connectionstring;
+console.log("Database: " + mongoDBDatabase);
 console.log("Collection: " + mongoDBCollection);
 console.log("MongoDB connection string: " + mongoDBConnStr);
 
@@ -373,13 +375,13 @@ process.on("SIGTERM", () => {
 });
 
 function tryMongoConnect(callback, results) {
-    MongoClient.connect(mongoDBConnStr, function(err, db) {
+    MongoClient.connect(mongoDBConnStr, { useUnifiedTopology: true }, function(err, db) {
         if (err) {
             console.error("Mongo connection error!");
             console.error(err);
         }
 
-        callback(err, db);
+        callback(err, db.db(mongoDBDatabase));
     });
 }
 

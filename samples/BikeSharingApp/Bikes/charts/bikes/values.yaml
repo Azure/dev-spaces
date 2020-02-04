@@ -34,7 +34,8 @@ ingress:
     #     - chart-example.local
 secrets:
   mongo:
-    collection: bikes 
+    database: admin
+    collection: bikes
     connectionstring: mongodb://databases-mongo
   # Optionally specify a set of secret objects whose values
   # will be injected as environment variables by default.
