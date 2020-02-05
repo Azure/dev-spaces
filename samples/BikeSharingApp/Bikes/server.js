@@ -105,6 +105,7 @@ app.get('/api/availableBikes', function (req, res) {
             query[queryParam] = parseFloat(req.query[queryParam]);
         }
     }
+    
 
     var cursor = mongoDB.collection(mongoDBCollection).find(query).sort({ hourlyCost: 1 }).limit(30);
     cursor.toArray(function(err, data) {
@@ -199,7 +200,7 @@ app.put('/api/bikes/:bikeId', function(req, res) {
             res.status(500).send(msg);
             return;            
         }
-        
+
 
         res.sendStatus(200);
     });
