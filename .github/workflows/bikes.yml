@@ -60,24 +60,29 @@ jobs:
         release=${release::53}
         release=$(echo ${release//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
         echo ::set-output name=result::$release
-   
+  
+    - uses: azure/setup-helm@v1
+      with:
+        version: 'v3.0.1' # default is latest stable
+      id: install-helm
+      
     - uses: azure/k8s-bake@v1
       with:
           renderEngine: 'helm2'
           helmChart: './samples/BikeSharingApp/Bikes/charts/bikes/' 
           overrideFiles: './samples/BikeSharingApp/Bikes/charts/bikes/values.yaml'
-          overrides: |
-            helm-version:'v3.2.0' 
+          helm-version: 'v3.0.1'
+          overrides: |             
             image.repository:${{ secrets.CONTAINER_REGISTRY }}/bikes
             image.tag:$GITHUB_SHA
             imagePullSecrets[0].name:${{ secrets.IMAGE_PULL_SECRET }}
       id: bake
-
-    - name: Helm Upgrade PR
-      run: |        
-        helm upgrade \
-          --install  ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
-          --namespace ${{steps.generate-child-space-name.outputs.result}}          
+      
+    # Deploy app to AKS
+    - uses: azure/k8s-deploy@v1
+      with:
+        manifests: ${{ steps.bake.outputs.manifestsBundle }}
+        namespace: ${{steps.generate-child-space-name.outputs.result}}        
  
     - uses: azure/dev-spaces/actions/add-review-url@Releases/v2      
       with:
