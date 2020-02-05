@@ -79,6 +79,7 @@ jobs:
       
     - name: Helm Upgrade PR
       run: |        
+        cat ${{steps.bake.outputs.manifestsBundle}}
         ${{steps.install-helm.outputs.helm-path}} upgrade \
           --install  ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
           --namespace ${{steps.generate-child-space-name.outputs.result}} \
