@@ -199,6 +199,7 @@ app.put('/api/bikes/:bikeId', function(req, res) {
             res.status(500).send(msg);
             return;            
         }
+        
 
         res.sendStatus(200);
     });
