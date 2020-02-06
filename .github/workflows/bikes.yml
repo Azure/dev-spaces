@@ -61,9 +61,8 @@ jobs:
       
     - uses: azure/k8s-bake@v1
       with:
-          renderEngine: 'helm'
-          helmChart: './samples/BikeSharingApp/Bikes/charts/bikes/' 
-          overrideFiles: './samples/BikeSharingApp/Bikes/charts/bikes/values.yaml'
+          renderEngine: 'helm2'
+          helmChart: './samples/BikeSharingApp/Bikes/charts/bikes/'
           releaseName: ${{steps.generate-release-name.outputs.result}}       
           overrides: |             
             image.repository:${{ secrets.CONTAINER_REGISTRY }}/bikes
@@ -74,11 +73,7 @@ jobs:
     # Deploy app to AKS
     - uses: azure/k8s-deploy@v1
       with:
-        manifests: ${{ steps.bake.outputs.manifestsBundle }}        
-        images: |
-          ${{ secrets.CONTAINER_REGISTRY }}/bikes:${{ github.sha }} 
-        imagepullsecrets: |
-          ${{ secrets.IMAGE_PULL_SECRET }}
+        manifests: ${{ steps.bake.outputs.manifestsBundle }}
         namespace: ${{steps.generate-child-space-name.outputs.result}}
       
     - uses: azure/dev-spaces/actions/add-review-url@Releases/v2      
