@@ -56,49 +56,45 @@ jobs:
         container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         secret-name: ${{ secrets.IMAGE_PULL_SECRET }}
-        
-    - name: Install Helm for client
-      id: install-helm-client
-      run: |
-        set -e        
-        clientversion=$(helm version --client --short | cut -d' ' -f2 | cut -d'+' -f1 | head -c 2 | tail -c 1)
-        if [ "$clientversion" == 3]; then   
-          echo The client is already using Helm 3
-          echo ::set-output name=helm::helm
-        else
-          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
-          chmod 700 get_helm.sh
-          ./get_helm.sh --version v3.0.1
-          echo ::set-output name=helm::helm
-        fi
-        
-    - name: Helm Install Master
-      run: |
-        cd samples/BikeSharingApp/charts
-        ${{steps.install-helm-client.outputs.helm}} dependency update
-        ${{steps.install-helm-client.outputs.helm}} upgrade --install --namespace ${{ secrets.MASTER_SPACE }} bikesharing . \
-          --set bikes.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikes \
-          --set bikes.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
-          --set bikes.image.tag=$GITHUB_SHA \
-          --set bikesharingweb.image.repository=${{ secrets.CONTAINER_REGISTRY }}/bikesharingweb \
-          --set bikesharingweb.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
-          --set bikesharingweb.image.tag=$GITHUB_SHA \
-          --set bikesharingweb.ingress.hosts[0]=${{ secrets.HOST }} \
-          --set bikesharingweb.ingress.annotations.kubernetes\\.io/ingress\\.class=traefik-azds \
-          --set billing.image.repository=${{ secrets.CONTAINER_REGISTRY }}/billing \
-          --set billing.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
-          --set billing.image.tag=$GITHUB_SHA \
-          --set gateway.image.repository=${{ secrets.CONTAINER_REGISTRY }}/gateway \
-          --set gateway.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
-          --set gateway.image.tag=$GITHUB_SHA \
-          --set gateway.ingress.hosts[0]=${{ secrets.GATEWAY_HOST }} \
-          --set gateway.ingress.annotations.kubernetes\\.io/ingress\\.class=traefik-azds \
-          --set reservation.image.repository=${{ secrets.CONTAINER_REGISTRY }}/reservation \
-          --set reservation.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
-          --set reservation.image.tag=$GITHUB_SHA \
-          --set reservationengine.image.repository=${{ secrets.CONTAINER_REGISTRY }}/reservationengine \
-          --set reservationengine.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
-          --set reservationengine.image.tag=$GITHUB_SHA \
-          --set users.image.repository=${{ secrets.CONTAINER_REGISTRY }}/users \
-          --set users.imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }} \
-          --set users.image.tag=$GITHUB_SHA
+      
+    - uses: azure/k8s-bake@v1
+      with:
+          renderEngine: 'helm2'
+          helmChart: './samples/BikeSharingApp/charts/'             
+          overrides: |             
+            bikes.image.repository:${{ secrets.CONTAINER_REGISTRY }}/bikes
+            bikes.image.tag:${{ github.sha }}
+            bikes.imagePullSecrets[0].name:${{ secrets.IMAGE_PULL_SECRET }}
+            bikesharingweb.image.repository:${{ secrets.CONTAINER_REGISTRY }}/bikesharingweb
+            bikesharingweb.image.tag:${{ github.sha }}
+            bikesharingweb.ingress.hosts[0]=${{ secrets.HOST }} \
+            bikesharingweb.ingress.annotations.kubernetes\\.io/ingress\\.class=traefik-azds \
+            bikesharingweb.imagePullSecrets[0].name:${{ secrets.IMAGE_PULL_SECRET }}
+            billing.image.repository:${{ secrets.CONTAINER_REGISTRY }}/billing
+            billing.image.tag:${{ github.sha }}
+            billing.imagePullSecrets[0].name:${{ secrets.IMAGE_PULL_SECRET }}
+            gateway.image.repository:${{ secrets.CONTAINER_REGISTRY }}/gateway
+            gateway.image.tag:${{ github.sha }}
+            gateway.imagePullSecrets[0].name:${{ secrets.IMAGE_PULL_SECRET }}
+            gateway.ingress.hosts[0]=${{ secrets.GATEWAY_HOST }} \
+            gateway.ingress.annotations.kubernetes\\.io/ingress\\.class=traefik-azds \
+            reservation.image.repository:${{ secrets.CONTAINER_REGISTRY }}/reservation
+            reservation.image.tag:${{ github.sha }}
+            reservation.imagePullSecrets[0].name:${{ secrets.IMAGE_PULL_SECRET }}
+            reservationengine.image.repository:${{ secrets.CONTAINER_REGISTRY }}/reservationengine
+            reservationengine.image.tag:${{ github.sha }}
+            reservationengine.imagePullSecrets[0].name:${{ secrets.IMAGE_PULL_SECRET }}
+            users.image.repository:${{ secrets.CONTAINER_REGISTRY }}/users
+            users.image.tag:${{ github.sha }}
+            users.imagePullSecrets[0].name:${{ secrets.IMAGE_PULL_SECRET }}
+      id: bake
+      
+    # Deploy app to AKS
+    - uses: azure/k8s-deploy@v1
+      with:
+        manifests: ${{ steps.bake.outputs.manifestsBundle }}        
+        images: |
+          ${{ secrets.CONTAINER_REGISTRY }}/bikes:${{ github.sha }} 
+        imagepullsecrets: |
+          ${{ secrets.IMAGE_PULL_SECRET }}
+        namespace: ${{ secrets.MASTER_SPACE }}
