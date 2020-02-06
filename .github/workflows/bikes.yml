@@ -61,7 +61,7 @@ jobs:
       
     - uses: azure/k8s-bake@v1
       with:
-          renderEngine: 'helm'
+          renderEngine: 'helm2'
           helmChart: './samples/BikeSharingApp/Bikes/charts/bikes/' 
           overrideFiles: './samples/BikeSharingApp/Bikes/charts/bikes/values.yaml'
           releaseName: ${{steps.generate-release-name.outputs.result}}       
