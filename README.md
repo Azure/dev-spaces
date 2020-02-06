@@ -1,5 +1,5 @@
 # Azure Dev Spaces
-AZDS is an Azure developer service that helps teams develop with speed on Kubernetes. [Click here for more information.](https://aka.ms/signup-azds)
+Azure Dev Spaces is an extension to AKS that allows you to easily run and debug YOUR code in the context of a larger application. You can test your code end-to-end, hit breakpoints on code running in the cluster, and share a development cluster between team members without interference. [Click here for more information.](https://aka.ms/signup-azds)
 
 # Purpose of this repository
 This source repository primarily hosts *AZDS code samples* to support product guides, as well as provide high-level insight into our product roadmap. Product documentation is hosted here: http://aka.ms/get-azds.
