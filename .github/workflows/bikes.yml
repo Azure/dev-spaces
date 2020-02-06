@@ -66,8 +66,7 @@ jobs:
           releaseName: ${{steps.generate-release-name.outputs.result}}       
           overrides: |             
             image.repository:${{ secrets.CONTAINER_REGISTRY }}/bikes
-            image.tag:${{ github.sha }}
-            imagePullSecrets[0].name:${{ secrets.IMAGE_PULL_SECRET }}
+            image.tag:${{ github.sha }}            
       id: bake
       
     # Deploy app to AKS
@@ -75,7 +74,9 @@ jobs:
       with:
         manifests: ${{ steps.bake.outputs.manifestsBundle }}
         namespace: ${{steps.generate-child-space-name.outputs.result}}
-      
+        imagepullsecrets: |
+          ${{ secrets.IMAGE_PULL_SECRET }}
+        
     - uses: azure/dev-spaces/actions/add-review-url@Releases/v2      
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}  
