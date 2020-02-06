@@ -58,11 +58,6 @@ jobs:
         release=${release::53}
         release=$(echo ${release//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
         echo ::set-output name=result::$release
-  
-    - uses: azure/setup-helm@v1
-      with:
-        version: 'v3.0.1' # default is latest stable
-      id: install-helm
       
     - uses: azure/k8s-bake@v1
       with:
