@@ -87,6 +87,7 @@ function requestIDParser(req, res, next) {
     console.log("RequestID start: " + reqID);
     next();
     console.log("RequestID done: " + reqID);
+
 }
 
 // api ------------------------------------------------------------
@@ -104,7 +105,7 @@ app.get('/api/availableBikes', function (req, res) {
         else {
             query[queryParam] = parseFloat(req.query[queryParam]);
         }
-    }
+    }    
 
     var cursor = mongoDB.collection(mongoDBCollection).find(query).sort({ hourlyCost: 1 }).limit(30);
     cursor.toArray(function(err, data) {
@@ -197,9 +198,9 @@ app.put('/api/bikes/:bikeId', function(req, res) {
             var msg = 'Unexpected number of bikes modified! Matched: "' + result.matchedCount + '" Modified: "' + result.modifiedCount + '"';
             console.log(requestID + " - " + msg);
             res.status(500).send(msg);
-            return;
-            
-        }     
+            return;            
+        }
+
 
         res.sendStatus(200);
     });
