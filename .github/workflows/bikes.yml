@@ -64,7 +64,7 @@ jobs:
           renderEngine: 'helm2'
           helmChart: './samples/BikeSharingApp/Bikes/charts/bikes/' 
           overrideFiles: './samples/BikeSharingApp/Bikes/charts/bikes/values.yaml'
-          releaseName: 's-tuli-trigger'       
+          releaseName: ${{steps.generate-release-name.outputs.result}}       
           overrides: |             
             image.repository:${{ secrets.CONTAINER_REGISTRY }}/bikes
             image.tag:$GITHUB_SHA
