@@ -3,9 +3,7 @@ name: PRFlow Bikes
 on: 
   pull_request:
     branches:
-    - master
-    paths:
-    - samples/BikeSharingApp/**
+    - master    
 
 jobs:
   build:
@@ -70,19 +68,23 @@ jobs:
       with:
           renderEngine: 'helm2'
           helmChart: './samples/BikeSharingApp/Bikes/charts/bikes/' 
-          overrideFiles: './samples/BikeSharingApp/Bikes/charts/bikes/values.yaml'          
+          overrideFiles: './samples/BikeSharingApp/Bikes/charts/bikes/values.yaml'
+          releaseName: 's-tuli-trigger'       
           overrides: |             
             image.repository:${{ secrets.CONTAINER_REGISTRY }}/bikes
             image.tag:$GITHUB_SHA
             imagePullSecrets[0].name:${{ secrets.IMAGE_PULL_SECRET }}
       id: bake
       
-    - name: Helm Upgrade PR
-      run: |        
-        cat ${{steps.bake.outputs.manifestsBundle}}
-        ${{steps.install-helm.outputs.helm-path}} upgrade \
-          --install  ${{steps.generate-release-name.outputs.result}} samples/BikeSharingApp/Bikes/charts/bikes \
-          --namespace ${{steps.generate-child-space-name.outputs.result}} \
+    # Deploy app to AKS
+    - uses: azure/k8s-deploy@v1
+      with:
+        manifests: ${{ steps.bake.outputs.manifestsBundle }}        
+        images: |
+          ${{ secrets.CONTAINER_REGISTRY }}/bikes:$GITHUB_SHA
+        imagepullsecrets: |
+          ${{ secrets.IMAGE_PULL_SECRET }}
+        namespace: ${{steps.generate-child-space-name.outputs.result}}
       
     - uses: azure/dev-spaces/actions/add-review-url@Releases/v2      
       with:
