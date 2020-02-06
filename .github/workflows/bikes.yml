@@ -67,7 +67,7 @@ jobs:
           releaseName: ${{steps.generate-release-name.outputs.result}}       
           overrides: |             
             image.repository:${{ secrets.CONTAINER_REGISTRY }}/bikes
-            image.tag:$GITHUB_SHA
+            image.tag:${{ github.sha }}
             imagePullSecrets[0].name:${{ secrets.IMAGE_PULL_SECRET }}
       id: bake
       
