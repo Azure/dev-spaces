@@ -93,8 +93,6 @@ jobs:
     - uses: azure/k8s-deploy@v1
       with:
         manifests: ${{ steps.bake.outputs.manifestsBundle }}        
-        images: |
-          ${{ secrets.CONTAINER_REGISTRY }}/bikes:${{ github.sha }} 
         imagepullsecrets: |
           ${{ secrets.IMAGE_PULL_SECRET }}
         namespace: ${{ secrets.MASTER_SPACE }}
