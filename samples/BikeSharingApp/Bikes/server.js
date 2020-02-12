@@ -85,9 +85,11 @@ function requestIDParser(req, res, next) {
     }
     
 
+
     console.log("RequestID start: " + reqID);
     next();
     console.log("RequestID done: " + reqID);
+    
 
 }
 
