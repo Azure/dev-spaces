@@ -1,0 +1,25 @@
+name: Pull Request Closed
+
+on:
+  pull_request:
+    types: [closed]
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:    
+      - name: Create valid child namespace name
+        id: generate-child-space-name
+        run: |
+          branch=${GITHUB_HEAD_REF::63}        
+          branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
+          echo ::set-output name=result::$branch
+          
+      - uses: azure/aks-set-context@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+          cluster-name: ${{ secrets.CLUSTER_NAME }}
+          resource-group: ${{ secrets.RESOURCE_GROUP }}
+            
+      - name: Remove PR Namespace
+        run: kubectl delete ns ${{steps.generate-child-space-name.outputs.result}}
