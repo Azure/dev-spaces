@@ -57,7 +57,7 @@ jobs:
         container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         secret-name: ${{ secrets.IMAGE_PULL_SECRET }}
       
-    - uses: azure/k8s-bake@releases/v1
+    - uses: azure/k8s-bake@v1
       with:
           renderEngine: 'helm2'
           helmChart: './samples/BikeSharingApp/charts/'             
