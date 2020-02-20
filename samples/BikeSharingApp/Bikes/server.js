@@ -82,8 +82,7 @@ function requestIDParser(req, res, next) {
     if (!test && req.path != "/hello") {
         res.status(400).send("Couldn't parse request id guid");
         return;
-    }
-    
+    }    
 
     console.log("RequestID start: " + reqID);
     next();
