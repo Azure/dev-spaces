@@ -60,8 +60,7 @@ jobs:
     - uses: azure/k8s-bake@v1
       with:
           renderEngine: 'helm2'
-          helmChart: './samples/BikeSharingApp/charts/'             
-          helm-version: 'v2.14.1'
+          helmChart: './samples/BikeSharingApp/charts/'
           releaseName: 'bikesharing'
           silent: 'false'
           overrides: |             
