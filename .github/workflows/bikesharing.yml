@@ -80,7 +80,7 @@ jobs:
             gateway.image.tag:${{ github.sha }}
             gateway.imagePullSecrets[0].name:${{ secrets.IMAGE_PULL_SECRET }}
             gateway.ingress.hosts[0]:${{ secrets.GATEWAY_HOST }} 
-            gateway.ingress.annotations.kubernetes\.io/ingress\.class=traefik-azds 
+            gateway.ingress.annotations.kubernetes\.io/ingress\.class:traefik-azds 
             reservation.image.repository:${{ secrets.CONTAINER_REGISTRY }}/reservation
             reservation.image.tag:${{ github.sha }}
             reservation.imagePullSecrets[0].name:${{ secrets.IMAGE_PULL_SECRET }}
