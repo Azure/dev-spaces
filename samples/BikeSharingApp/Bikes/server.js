@@ -104,7 +104,8 @@ app.get('/api/availableBikes', function (req, res) {
         else {
             query[queryParam] = parseFloat(req.query[queryParam]);
         }
-    }    
+    }
+        
 
     var cursor = mongoDB.collection(mongoDBCollection).find(query).sort({ hourlyCost: 1 }).limit(30);
     cursor.toArray(function(err, data) {
