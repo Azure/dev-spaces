@@ -71,7 +71,7 @@ jobs:
             bikesharingweb.image.repository:${{ secrets.CONTAINER_REGISTRY }}/bikesharingweb
             bikesharingweb.image.tag:${{ github.sha }}
             bikesharingweb.ingress.hosts[0]:${{ secrets.HOST }}
-            bikesharingweb.ingress.annotations.kubernetes\.io/ingress\.class=traefik-azds 
+            bikesharingweb.ingress.annotations.kubernetes\.io/ingress\.class:traefik-azds 
             bikesharingweb.imagePullSecrets[0].name:${{ secrets.IMAGE_PULL_SECRET }}
             billing.image.repository:${{ secrets.CONTAINER_REGISTRY }}/billing
             billing.image.tag:${{ github.sha }}
