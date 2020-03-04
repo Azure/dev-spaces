@@ -83,6 +83,7 @@ function requestIDParser(req, res, next) {
         res.status(400).send("Couldn't parse request id guid");
         return;
     }
+    
 
     console.log("RequestID start: " + reqID);
     next();
@@ -105,7 +106,7 @@ app.get('/api/availableBikes', function (req, res) {
             query[queryParam] = parseFloat(req.query[queryParam]);
         }
     }
-        
+
 
     var cursor = mongoDB.collection(mongoDBCollection).find(query).sort({ hourlyCost: 1 }).limit(30);
     cursor.toArray(function(err, data) {
