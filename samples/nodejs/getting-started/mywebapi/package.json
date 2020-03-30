@@ -2,7 +2,7 @@
   "name": "mywebapi",
   "version": "0.1.0",
   "devDependencies": {
-    "nodemon": "^1.14.7"
+    "nodemon": "^1.18.10"
   },
   "dependencies": {
     "express": "^4.16.2"

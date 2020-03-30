@@ -1,0 +1,111 @@
+# Note: This template assumes that you use Helm. If not, replace the Helm Install PR step with your own step
+# Note: For the secrets below please refer to the document: http://aka.ms/devspaces/pr-flow
+#
+# Name of the PlaceHolder                 -  Description
+########################################################################################################################
+# <NAME_OF_THE_WORKFLOW>                  - Workflow name. example: Bikes
+# <PATH_TO_THE_SERVICE>                   - The path to the service that must be modified in order for the workflow to trigger. - Example: samples/BikeSharingApp/Bikes. 
+# <PATH_TO_THE_DOCKERFILE>                - Path to the directory which contains the DockerFile for the modified service.
+# <NAME_OF_THE_SERVICE>                   - Pass this as a parameter for multiple steps below. Lower Cased Name of the Service, for example: bikes
+# <PATH_TO_THE_CHARTS_FOR_THAT_SERVICE>   - Pass this in as a parameter for the Helm Install PR step
+#                                           Path to the service's helm charts. example: samples/BikeSharingApp/Bikes/charts/bikes 
+# <RELEASE_NAME>                          - Pass this in as a parameter for the Helm Install PR step
+#                                           More details at Helm documentation at https://helm.sh/docs/helm/#helm-upgrade
+#                                           This is [RELEASE] in the helm upgrade [RELEASE] [CHART] [flags] command
+#                                           helm upgrade --install command is used for: If a release by this name doesn't already exist, run an install
+
+name: PRFlow <NAME_OF_THE_WORKFLOW>
+
+on: 
+  pull_request:
+    branches:
+    - master
+    paths:
+    - <PATH_TO_THE_SERVICE>/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - uses: actions/checkout@master
+    
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.CONTAINER_REGISTRY }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    
+    - name: docker build
+      run: |
+        docker build <PATH_TO_THE_DOCKERFILE>/ -t ${{ secrets.CONTAINER_REGISTRY }}/<NAME_OF_THE_SERVICE>:$GITHUB_SHA
+        docker push ${{ secrets.CONTAINER_REGISTRY }}/<NAME_OF_THE_SERVICE>:$GITHUB_SHA
+      
+    - uses: azure/aks-set-context@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: ${{ secrets.CLUSTER_NAME }}
+        resource-group: ${{ secrets.RESOURCE_GROUP }}
+                
+    - name: Create valid child namespace name
+      id: generate-child-space-name
+      run: |
+        branch=${GITHUB_HEAD_REF::63}
+        branch=$(echo ${branch//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
+        echo ::set-output name=result::$branch
+        
+    - name: Create child namespaces and add Dev Spaces labels
+      run:  |
+        if [ -n "$(kubectl get namespace ${{steps.generate-child-space-name.outputs.result}} --ignore-not-found -o name)" ]; then exit 0; fi
+        kubectl create namespace ${{steps.generate-child-space-name.outputs.result}} \
+        kubectl label namespace ${{steps.generate-child-space-name.outputs.result}} \
+          azds.io/parent-space=${{ secrets.MASTER_SPACE }} \
+          azds.io/space=true \
+          azds.io/pull-request-space=true
+        
+    - uses: azure/k8s-create-secret@v1
+      with:
+        namespace: ${{ steps.generate-child-space-name.outputs.result }}
+        container-registry-url: ${{ secrets.CONTAINER_REGISTRY }}
+        container-registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        container-registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        secret-name: ${{ secrets.IMAGE_PULL_SECRET }}
+
+    - name: Create valid release-name
+      id: generate-release-name
+      run: |
+        release=<RELEASE_NAME>-$GITHUB_HEAD_REF
+        release=${release::53}
+        release=$(echo ${release//[!0-9a-zA-Z]/-} | tr '[:upper:]' '[:lower:]' | sed -e 's/^-/z/' -e 's/-$/z/')
+        echo ::set-output name=result::$release
+
+    - name: Install Helm for client
+      id: install-helm-client
+      run: |
+        set -e        
+        clientversion=$(helm version --client --short | cut -d' ' -f2 | cut -d'+' -f1 | head -c 2 | tail -c 1)
+        if [ "$clientversion" == 3]; then   
+          echo The client is already using Helm 3
+          echo ::set-output name=helm::helm
+        else
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
+          chmod 700 get_helm.sh
+          ./get_helm.sh --version v3.0.1
+          echo ::set-output name=helm::helm
+        fi
+
+    - name: Helm Upgrade PR
+      run: |
+        ${{steps.install-helm-client.outputs.helm}} upgrade \
+          --install  ${{steps.generate-release-name.outputs.result}} <PATH_TO_THE_CHARTS_FOR_THAT_SERVICE> \
+          --namespace ${{steps.generate-child-space-name.outputs.result}} \
+          --set image.repository=${{ secrets.CONTAINER_REGISTRY }}/<NAME_OF_THE_SERVICE> \
+          --set image.tag=$GITHUB_SHA \
+          --set imagePullSecrets[0].name=${{ secrets.IMAGE_PULL_SECRET }}
+ 
+    - uses: azure/dev-spaces/actions/add-review-url@Releases/v2
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}  
+        host: ${{ secrets.HOST }}
+        child-space: ${{steps.generate-child-space-name.outputs.result}}		
+        protocol: 'http'

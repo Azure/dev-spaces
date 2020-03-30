@@ -1,0 +1,26 @@
+kind: helm-release
+apiVersion: 1.1
+build:
+  context: .
+  dockerfile: Dockerfile
+install:
+  chart: charts/billing
+  values:
+  - values.dev.yaml?
+  - secrets.dev.yaml?
+  set:
+    replicaCount: 1
+    image:
+      repository: billing
+      tag: $(tag)
+      pullPolicy: Never
+    ingress:
+      annotations:
+        kubernetes.io/ingress.class: traefik-azds
+      hosts:
+      # This expands to [space.s.][rootSpace.]billing.<random suffix>.<region>.azds.io
+      - $(spacePrefix)$(rootSpacePrefix)billing$(hostSuffix)
+configurations:
+  develop:
+    build:
+      useGitIgnore: true

@@ -1,0 +1,19 @@
+name: 'Add Dev Spaces Review Url'
+description: 'Add Review Url as a comment on PR'
+author: 'Azure Dev Spaces'
+inputs:  
+  repo-token:  # GitHub Authorization Token
+    description: "This is GitHub Authorization Token that is available by default as a GitHub secret. Set it's value to GITHUB_TOKEN secret in your workflow yml"
+    required: true
+  host:  # Complete host. 
+    description: "Complete host. This expands to: [rootSpace.]webfrontend.<random suffix>.<region>.azds.io. For more information see https://aka.ms/devspaces/routing"
+    required: true
+  child-space:  # Child space. 
+    description: "This is the child namespace name passed in from the workflow to construct the uri."
+    required: true
+  protocol: # This is an optional parameter that the user can specify (http vs https)
+    description: "This is an optional parameter that the user can specify: example values - http or https"
+    required: false
+runs:
+  using: 'node12'
+  main: 'lib/index.js'
