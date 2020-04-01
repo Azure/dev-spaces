@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "identity": {
+            "value": "{identity}"
+        },
+        "endpointType": {
+            "value": "Private"
+        },
+        "vm_password": {
+            "value": "{password}"
+        },
+        "aks_sp_id": {
+            "value": "{aks_sp_id}"
+        },
+        "aks_sp_secret": {
+            "value": "{aks_sp_secret}"
+        }
+    }
+}
