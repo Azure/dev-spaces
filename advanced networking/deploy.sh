@@ -26,7 +26,7 @@ sed -i "s/{aks_sp_id}/$aks_sp_id/g" devspaces-vnet-parameters.json
 sed -i "s/{password}/$password/g" devspaces-vnet-parameters.json
 
 # 6. Deploy the resources
-az group deployment create -g $resourceGroupName --template-file deployScripts.json --parameters @devspaces-vnet-parameters.json
+az group deployment create -g $resourceGroupName --template-file devspaces-vnet-template.json --parameters @devspaces-vnet-parameters.json
 
 # 7. Get the Public IP of the VM
 ip=$(az network public-ip show -g $resourceGroupName -n "private-vm_ip" --query ipAddress -o tsv)
