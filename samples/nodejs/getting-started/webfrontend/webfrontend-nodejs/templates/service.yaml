@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: webfrontend-service
+spec:
+  selector:
+    app: webfrontend
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
