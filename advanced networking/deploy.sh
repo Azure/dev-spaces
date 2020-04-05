@@ -1,9 +1,12 @@
 #!/bin/bash
-function get_random_string()
-{
-  random=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9!@#$%^&*()' | fold -w 12 | head -n 1)
-  echo $random
-}
+fatal()   { echo "[FATAL]   $*" ; exit 1 ; }
+
+if ! which az >/dev/null 2>/dev/null; then
+    fatal "Install azure cli to continue deploying resources."
+fi
+if ! which kubectl >/dev/null 2>/dev/null; then
+    fatal "Install kubectl to continue deploying resources."
+fi
 
 echo "This script will deploy resouces which will enable you to work securely in a private virtual network".
 echo "Enter the Resource Group name:" &&
@@ -12,6 +15,8 @@ echo "Enter the location:" &&
 read region &&
 echo "Enter the managed identity name:" &&
 read idName &&
+echo "Enter a password for connecting to vm:" &&
+read password &&
 
 # 1. Create resource group
 az group create -n $resourceGroupName -l $region
@@ -21,16 +26,14 @@ identity=$(az identity create -g $resourceGroupName -n $idName --query id -o tsv
 
 # 3. Assign contributor role for the MI on the RG
 mi_principal_id=$(az identity show -g $resourceGroupName -n $idName --query principalId -o tsv)
-az role assignment create --role 'Contributor' -g $resourceGroupName --assignee $mi_principal_id
 
 # 4. Create Service principal to be used by the AKS cluster
-sp_name="aks-sp-"$(get_random_string)
+sp_name="aks-sp-private"
 aks_sp_secret=$(az ad sp create-for-rbac --name "http://$sp_name" -o tsv --query password)
 aks_sp_id=$(az ad sp show --id http://$sp_name -o tsv --query appId)
 
 # 5. Updating the parameters of the ARM template
-$password=$(get_random_string)
-sed -i "s/{identity}/$identity/g" devspaces-vnet-parameters.json
+sed -i "s#{identity}#'$identity'#g" devspaces-vnet-parameters.json
 sed -i "s/{aks_sp_secret}/$aks_sp_secret/g" devspaces-vnet-parameters.json
 sed -i "s/{aks_sp_id}/$aks_sp_id/g" devspaces-vnet-parameters.json
 sed -i "s/{password}/$password/g" devspaces-vnet-parameters.json
@@ -42,7 +45,8 @@ az group deployment create -g $resourceGroupName --template-file devspaces-vnet-
 ip=$(az network public-ip show -g $resourceGroupName -n "bridge-vm_ip" --query ipAddress -o tsv)
 
 # 8. Get the kube-api server IP
-api_server=$(kubectl get endpoints -o=jsonpath='{.items[?(@.metadata.name == "kubernetes")].subsets[].addresses[].ip}')
+az aks get-credentials -n private-aks-cluster -g $resourceGroupName -f /tmp/kubeconfig
+api_server=$(kubectl get endpoints --kubeconfig=/tmp/kube-config -o=jsonpath='{.items[?(@.metadata.name == "kubernetes")].subsets[].addresses[].ip}')
 
 # add the api server ip to the firewall
 az extension add --name azure-firewall

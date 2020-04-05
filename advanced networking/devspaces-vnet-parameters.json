@@ -16,6 +16,9 @@
         },
         "aks_sp_secret": {
             "value": "{aks_sp_secret}"
+        },
+        "aks_dns_prefix": {
+            "value": "random-reffs32f"
         }
     }
 }

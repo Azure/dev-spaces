@@ -11,10 +11,13 @@
         "vm_password": {
             "type": "string"
         },
-        "aks_sp_ip": {
+        "aks_sp_id": {
             "type": "string"
         },
         "aks_sp_secret": {
+            "type": "string"
+        },
+        "aks_dns_prefix": {
             "type": "string"
         }
     },
@@ -44,7 +47,7 @@
             },
             "properties": {
                 "publicIPAddressVersion": "IPv4",
-                "publicIPAllocationMethod": "Dynamic",
+                "publicIPAllocationMethod": "Static",
                 "ipTags": []
             }
         },
@@ -123,24 +126,12 @@
             }
         },
         {
-            "type": "Microsoft.Storage/storageAccounts",
-            "apiVersion": "2018-11-01",
-            "name": "vm-storage",
-            "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Standard_LRS"
-            },
-            "kind": "Storage",
-            "properties": {} 
-        },
-        {
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2019-07-01",
             "name": "bridge-vm",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', 'private-nic')]",
-                "[resourceId('Microsoft.Storage/storageAccounts/', 'vm-storage')]"
+                "[resourceId('Microsoft.Network/networkInterfaces', 'private-nic')]"
             ],
             "properties": {
                 "hardwareProfile": {
@@ -159,24 +150,15 @@
                         "createOption": "FromImage",
                         "caching": "ReadWrite",
                         "managedDisk": {
-                            "storageAccountType": "Standard_LRS",
-                            "id": "[resourceId('Microsoft.Compute/disks', 'vm-storage')]"
+                            "storageAccountType": "Standard_LRS"
                         },
                         "diskSizeGB": 127
-                    },
-                    "dataDisks": []
+                    }
                 },
                 "osProfile": {
                     "computerName": "bridge-vm",
                     "adminUsername": "azureuser",
-                    "adminPassword": "[parameters('vm_password')]",
-                    "windowsConfiguration": {
-                        "provisionVMAgent": true,
-                        "enableAutomaticUpdates": true
-                    },
-                    "secrets": [],
-                    "allowExtensionOperations": true,
-                    "requireGuestProvisionSignal": true
+                    "adminPassword": "[parameters('vm_password')]"
                 },
                 "networkProfile": {
                     "networkInterfaces": [
@@ -197,6 +179,7 @@
             ],
             "properties": {
                 "kubernetesVersion": "1.14.8",
+                "dnsPrefix": "[parameters('aks_dns_prefix')]",
                 "agentPoolProfiles": [
                     {
                         "name": "nodepool1",
@@ -211,7 +194,7 @@
                     }
                 ],
                 "servicePrincipalProfile": {
-                    "clientId": "[parameters('aks_sp_ip')]",
+                    "clientId": "[parameters('aks_sp_id')]",
                     "secret": "[parameters('aks_sp_secret')]"
                 },
                 "enableRBAC": true,
@@ -250,7 +233,7 @@
               "forceUpdateTag": "1",
               "AzCliVersion": "2.0.80",
               "timeout": "PT30M",
-              "arguments": "'[resourceGroup().name]'",
+              "arguments": "[resourceGroup().name]",
               "scriptContent": "base64Config=$(az aks get-credentials -n private-aks-cluster -g $1 -f - | base64 | tr -d '\n');echo \"{'base64Config': '$base64Config'}\" > $AZ_SCRIPTS_OUTPUT_PATH",
               "cleanupPreference": "OnSuccess",
               "retentionInterval": "P1D"
@@ -338,10 +321,7 @@
                 "[resourceId('Microsoft.Network/virtualNetworks', 'private-vnet')]"
             ],
             "properties": {
-                "addressPrefix": "10.0.4.0/24",
-                "delegations": [],
-                "privateEndpointNetworkPolicies": "Enabled",
-                "privateLinkServiceNetworkPolicies": "Enabled"
+                "addressPrefix": "10.0.4.0/24"
             }
         },
         {
@@ -524,12 +504,37 @@
             }
         },
         {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "nsg-vm",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2018-03-01",
+            "properties": {
+              "securityRules": [
+                {
+                  "name": "allow-3389-port",
+                  "properties": {
+                    "description": "Allows RDP traffic",
+                    "protocol": "*",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "3389",
+                    "sourceAddressPrefix": "*",
+                    "destinationAddressPrefix": "*",
+                    "access": "Allow",
+                    "priority": 100,
+                    "direction": "Inbound"
+                  }
+                }
+              ]
+            }
+        },
+        {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-11-01",
             "name": "private-nic",
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/publicIPAddresses', 'bridge-vm_ip')]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'nsg-vm')]",
                 "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'private-vnet', 'vm-subnet')]"
             ],
             "tags": {
@@ -552,6 +557,9 @@
                         }
                     }
                 ],
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'nsg-vm')]"
+                  },
                 "dnsSettings": {
                     "dnsServers": []
                 },
