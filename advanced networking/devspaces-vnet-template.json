@@ -160,7 +160,7 @@
                         "caching": "ReadWrite",
                         "managedDisk": {
                             "storageAccountType": "Standard_LRS",
-                            "id": "[resourceId('Microsoft.Compute/disks', 'vm-storage'))]"
+                            "id": "[resourceId('Microsoft.Compute/disks', 'vm-storage')]"
                         },
                         "diskSizeGB": 127
                     },
