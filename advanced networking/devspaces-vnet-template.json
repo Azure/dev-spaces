@@ -23,7 +23,7 @@
         {
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2019-11-01",
-            "name": "firewall_piblic_ip",
+            "name": "firewall_public_ip",
             "location": "[resourceGroup().location]",
             "sku": {
                 "name": "Standard"
@@ -37,7 +37,7 @@
         {
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2019-11-01",
-            "name": "private-vm_ip",
+            "name": "bridge-vm_ip",
             "location": "[resourceGroup().location]",
             "sku": {
                 "name": "Standard"
@@ -107,8 +107,7 @@
                                 {
                                     "service": "Microsoft.Storage",
                                     "locations": [
-                                        "[resourceGroup().location]",
-                                        "westus2"
+                                        "*"
                                     ]
                                 }
                             ],
@@ -137,7 +136,7 @@
         {
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2019-07-01",
-            "name": "private-vm",
+            "name": "bridge-vm",
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces', 'private-nic')]",
@@ -156,7 +155,7 @@
                     },
                     "osDisk": {
                         "osType": "Windows",
-                        "name": "private-vm_OsDisk",
+                        "name": "bridge-vm_OsDisk",
                         "createOption": "FromImage",
                         "caching": "ReadWrite",
                         "managedDisk": {
@@ -168,7 +167,7 @@
                     "dataDisks": []
                 },
                 "osProfile": {
-                    "computerName": "private-vm",
+                    "computerName": "bridge-vm",
                     "adminUsername": "azureuser",
                     "adminPassword": "[parameters('vm_password')]",
                     "windowsConfiguration": {
@@ -198,7 +197,6 @@
             ],
             "properties": {
                 "kubernetesVersion": "1.14.8",
-                "dnsPrefix": "[concat(resourceGroup().name, 'aks-269c04')]",
                 "agentPoolProfiles": [
                     {
                         "name": "nodepool1",
@@ -253,7 +251,7 @@
               "AzCliVersion": "2.0.80",
               "timeout": "PT30M",
               "arguments": "'[resourceGroup().name]'",
-              "scriptContent": "az aks get-credentials -n private-aks-cluster -g $1 -f /tmp/kube-config;base64Config=$(base64 /tmp/kube-config); echo {\"base64Config\": \"$base64Config\"} > $AZ_SCRIPTS_OUTPUT_PATH",
+              "scriptContent": "base64Config=$(az aks get-credentials -n private-aks-cluster -g $1 -f - | base64 | tr -d '\n');echo \"{'base64Config': '$base64Config'}\" > $AZ_SCRIPTS_OUTPUT_PATH",
               "cleanupPreference": "OnSuccess",
               "retentionInterval": "P1D"
             }
@@ -352,7 +350,7 @@
             "name": "private-firewall",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', 'firewall_piblic_ip')]",
+                "[resourceId('Microsoft.Network/publicIPAddresses', 'firewall_public_ip')]",
                 "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'private-vnet', 'AzureFirewallSubnet')]"
             ],
             "properties": {
@@ -367,7 +365,7 @@
                         "name": "azureFirewalls-ip",
                         "properties": {
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'firewall_piblic_ip')]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'firewall_public_ip')]"
                             },
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'private-vnet', 'AzureFirewallSubnet')]"
@@ -376,38 +374,6 @@
                     }
                 ],
                 "networkRuleCollections": [
-                    {
-                        "name": "aksnetwork",
-                        "properties": {
-                            "priority": 100,
-                            "action": {
-                                "type": "Allow"
-                            },
-                            "rules": [
-                                {
-                                    "name": "allow network",
-                                    "description": "aks network rule",
-                                    "protocols": [
-                                        "TCP"
-                                    ],
-                                    "sourceAddresses": [
-                                        "*"
-                                    ],
-                                    "destinationAddresses": [
-                                        "52.161.186.207"
-                                    ],
-                                    "sourceIpGroups": [],
-                                    "destinationIpGroups": [],
-                                    "destinationFqdns": [],
-                                    "destinationPorts": [
-                                        "22",
-                                        "443",
-                                        "9000"
-                                    ]
-                                }
-                            ]
-                        }
-                    },
                     {
                         "name": "azdsnetwork",
                         "properties": {
@@ -563,7 +529,7 @@
             "name": "private-nic",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', 'private-vm_ip')]",
+                "[resourceId('Microsoft.Network/publicIPAddresses', 'bridge-vm_ip')]",
                 "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'private-vnet', 'vm-subnet')]"
             ],
             "tags": {
@@ -574,10 +540,9 @@
                     {
                         "name": "ipconfig1",
                         "properties": {
-                            "privateIPAddress": "10.0.4.4",
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'private-vm_ip')]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'bridge-vm_ip')]"
                             },
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'private-vnet', 'vm-subnet')]"
