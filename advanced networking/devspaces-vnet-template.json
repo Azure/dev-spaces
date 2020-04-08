@@ -18,6 +18,7 @@
             "type": "string"
         },
         "aks_dns_prefix": {
+            "defaultValue": "[concat('dns', uniqueString(resourceGroup().id))]",
             "type": "string"
         }
     },
