@@ -1,20 +1,21 @@
+# Advanced Networking
 This directory contains scripts and ARM templates to deploy resources which would show how to securely debug your projects using Azure Dev Spaces in a secured virtual network.  
 
 ## Overview
-These templates deploy a virtual network with an Azure firewall where the traffic from/to the vnet is secured/monitored by the firewall. The Azure Kubernetes cluster is deployed into a private virutal network in it's own subnet `aks-subnet`. An Azure Dev Spaces controller with `private` endpoint is created on this AKS cluster so that the endpoint is only available in the vnet where AKS is deployed. Further, to start debugging your projects, the arm templates deploy a windows 10 virtual machine in the subnet `vm-subnet` of the same virutal network. 
-The routing features enabled by Dev Spaces & the endpoint of your services are only available to the resources deployed in your virtual network which ensures the security of your services & development environment.
+These ARM templates deploy a virtual network with an Azure firewall. The virtual network and Azure firewall ensure the traffic into and out of the virtual network is secured and monitored by the firewall. The AKS cluster is deployed into a private virutal network into the `aks-subnet`. An Azure Dev Spaces controller with `private` endpoint is also created on this AKS cluster and the controller's endpoint is only available in the same virtual network as the AKS cluster. To use Azure Dev Spaces to start debugging your projects, the ARM templates deploy a Windows 10 virtual machine in the `vm-subnet` subnet, which is also in the same virtual network as the AKS cluster.
+The Azure Dev Spaces routing capabilities as well as the endpoints of your services are only available within the virtual network.
 
-To learn further about configuring the endpoint types & newtork architecture of an Azure Dev Spaces controller, please look at the documentation here: https://aka.ms/azds-networking
+To learn more about the network architecture of Azure Dev Spaces and configuring its endpoint types see [Configure networking for Azure Dev Spaces in different network topologies.](https://aka.ms/azds-networking)
 
-## Deployment
+## Deploying the ARM template
 This folder contains following files which would help in deploying resources:
- * deploy.sh
- * devspaces-vnet-parameters.json
- * devspaces-vnet-template.json  
+ * `devspaces-vnet-template.json` is the ARM template 
+ * `devspaces-vnet-parameters.json` defines the parameter values for the ARM template 
+ * `deploy.sh` is a script you can use to automate the deployment of the ARM template
 
-The script `deploy.sh` would automate the process of deploying the resources using the arm templates. 
-It requires following inputs:
+When using the `deploy.sh` script to deploy the ARM template, the script prompts you for the necessary values. For example:
 ```
+$ ./deploy.sh
 This script will deploy resouces which will enable you to work securely in a private virtual network.
 Enter the Resource Group name:
 < Enter a resource group name >
@@ -23,9 +24,12 @@ Enter the managed identity name:
 Enter a password for connecting to vm:
 < Enter password for the windows VM that is used as a development machine to debug your projects > 
 ```
+After the deployment is done, the script outputs the required details to connect to the VM for debugging. For example:
+```
+Use '< password >' password to connect to the '< ipaddress >' windows VM created in the Resource group '< resource group name >' to securely debug your projects with Azure Dev Spaces.
+```
 
-## Secure Development
-Connect to the VM using the ipaddress & password from the deployment script and start developing projects using Azure Dev Spaces by following this [documentation.](https://aka.ms/azds-quickstart-netcore)
+**Important:** The resources deployed using these templates should be used only as a starting point to secure your virtual network.
 
-## Note
-The resources deployed using this templates should be used only as a starting point to secure your virtual network. 
+## Connecting to the virtual network for secure development
+Use the virtual machine created by the ARM template on the virtual network to start developing on your AKS cluster with Azure Dev Spaces. You can use the IP address and the password you set when deploying the ARM template to connect to the virtual machine. For more details on developing with Azure Dev Spaces, see the [Azure Dev Spaces quickstart.](https://aka.ms/azds-quickstart-netcore)
