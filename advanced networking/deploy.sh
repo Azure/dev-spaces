@@ -33,7 +33,7 @@ aks_sp_secret=$(az ad sp create-for-rbac --name "http://$sp_name" -o tsv --query
 aks_sp_id=$(az ad sp show --id http://$sp_name -o tsv --query appId)
 
 # 5. Updating the parameters of the ARM template
-sed -i "s#{identity}#'$identity'#g" devspaces-vnet-parameters.json
+sed -i "s#{identity}#$identity#g" devspaces-vnet-parameters.json
 sed -i "s/{aks_sp_secret}/$aks_sp_secret/g" devspaces-vnet-parameters.json
 sed -i "s/{aks_sp_id}/$aks_sp_id/g" devspaces-vnet-parameters.json
 sed -i "s/{password}/$password/g" devspaces-vnet-parameters.json
