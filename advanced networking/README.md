@@ -7,6 +7,11 @@ The Azure Dev Spaces routing capabilities as well as the endpoints of your servi
 
 To learn more about the network architecture of Azure Dev Spaces and configuring its endpoint types see [Configure networking for Azure Dev Spaces in different network topologies.](https://aka.ms/azds-networking)
 
+## Prerequisites
+1. This scripts requires `az cli` & `kubectl` to set up the resources.
+2. Ensure that the subscription has `Microsoft.ContainerInstance` & `Microsoft.Storage` resource providers are registered. This is required as the
+   templates uses arm's deploymentScripts resource.
+
 ## Deploying the ARM template
 This folder contains following files which would help in deploying resources:
  * `devspaces-vnet-template.json` is the ARM template 
@@ -15,6 +20,7 @@ This folder contains following files which would help in deploying resources:
 
 When using the `deploy.sh` script to deploy the ARM template, the script prompts you for the necessary values. For example:
 ```
+$ chmod +x ./deploy.sh
 $ ./deploy.sh
 This script will deploy resouces which will enable you to work securely in a private virtual network.
 Enter the Resource Group name:
