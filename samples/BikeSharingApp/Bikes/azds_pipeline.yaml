@@ -107,17 +107,11 @@ stages:
               namespace: $(k8sNamespace)
               dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
 
-          - task: KubernetesManifest@0
-            displayName: bake
+          - task: Bash@3
             name: bake
             inputs:
-              action: bake
-              helmChart: '$(System.ArtifactsDirectory)/charts'
-              releaseName: bikesharing
-              overrides: |
-                image.repository:$(containerRegistry)/$(imageRepository)
-                image.tag:$(Build.BuildId)
-                buildID:"1"
+              targetType: 'inline'
+              script: 'helm template bikesharing $(System.ArtifactsDirectory)/charts --set image.repository=$(containerRegistry)/$(imageRepository) --set image.tag=$(Build.BuildId) --set buildID="1" > $(AGENT.TEMPDIRECTORY)/baked-template.yaml'
                
           - task: KubernetesManifest@0
             displayName: deploy
@@ -126,7 +120,7 @@ stages:
               kubernetesServiceConnection: $(k8sServiceConnection)
               action: deploy
               namespace: $(k8sNamespace)
-              manifests: $(bake.manifestsBundle)
+              manifests: $(AGENT.TEMPDIRECTORY)/baked-template.yaml
               imagePullSecrets: $(imagePullSecret)
 
 # Deploy all PR changes
@@ -156,7 +150,7 @@ stages:
             inputs:
               kubernetesServiceEndpoint: $(k8sServiceConnection)
               command: create
-              arguments: 'ns $(system.pullRequest.sourceBranch)'
+              arguments: 'ns $(k8sNamespaceforpr)'
               checkLatest: true
 
           - task: Kubernetes@1
@@ -164,7 +158,7 @@ stages:
             inputs:
               kubernetesServiceEndpoint: $(k8sServiceConnection)
               command: label
-              arguments: '--overwrite ns $(system.pullRequest.sourceBranch) azds.io/space=true'
+              arguments: '--overwrite ns $(k8sNamespaceforpr) azds.io/space=true'
               checkLatest: true
 
           - task: Kubernetes@1
@@ -172,7 +166,7 @@ stages:
             inputs:
               kubernetesServiceEndpoint: $(k8sServiceConnection)
               command: label
-              arguments: '--overwrite ns $(system.pullRequest.sourceBranch) azds.io/parent-space=$(k8sNamespace)'
+              arguments: '--overwrite ns $(k8sNamespaceforpr) azds.io/parent-space=$(k8sNamespace)'
               checkLatest: true
 
           - task: KubernetesManifest@0
@@ -184,17 +178,11 @@ stages:
               namespace: $(k8sNamespaceforpr)
               dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
 
-          - task: KubernetesManifest@0
-            displayName: bake
+          - task: Bash@3
             name: bake
             inputs:
-              action: bake
-              helmChart: '$(System.ArtifactsDirectory)/charts'
-              releaseName: bikesharing
-              overrides: |
-                image.repository:$(containerRegistry)/$(imageRepository)
-                image.tag:$(Build.BuildId)
-                buildID:"1"
+              targetType: 'inline'
+              script: 'helm template bikesharing $(System.ArtifactsDirectory)/charts --set image.repository=$(containerRegistry)/$(imageRepository) --set image.tag=$(Build.BuildId) --set buildID="1" > $(AGENT.TEMPDIRECTORY)/baked-template.yaml'
 
           - task: KubernetesManifest@0
             displayName: deploy
@@ -203,22 +191,27 @@ stages:
               kubernetesServiceConnection: $(k8sServiceConnection)
               action: deploy
               namespace: $(k8sNamespaceforpr)
-              manifests: $(bake.manifestsBundle)
+              manifests: $(AGENT.TEMPDIRECTORY)/baked-template.yaml
               imagePullSecrets: $(imagePullSecret)
           
-          - task: AzureCLI@1
-            displayName: 'List all review app URLs'
+          - task: Kubernetes@1
+            name: ListIng
+            displayName: 'List Ing'
             inputs:
-              azureSubscription: $(azureServiceConnection)
-              scriptLocation: inlineScript
-              inlineScript: |
-                az aks use-dev-spaces -n $(AZDSControllerName) -g $(AZDSControllerRG) -y -s $(k8sNamespace)/$(system.pullRequest.sourceBranch) --update
-                azds up -d
-                azds list-uris -o json 
-                azds list-uris -o json > $(AGENT.TEMPDIRECTORY)/azdsuri.txt
+              kubernetesServiceEndpoint: $(k8sServiceConnection)
+              command: get
+              arguments: 'ing -n $(k8sNamespace)'
+              checkLatest: true
+
+          - task: Bash@3
+            name: WriteURL
+            inputs:
+              targetType: 'inline'
+              script: echo '$(ListIng.KubectlOutput)' > $(AGENT.TEMPDIRECTORY)/azdsuri.txt
 
           - powershell: |
-              $uriret = (Get-Content $(AGENT.TEMPDIRECTORY)/azdsuri.txt | Out-String | ConvertFrom-Json)[0].uri
+              //This grabs the first URL available. Modify the below command to capture the correct host url
+              $uriret = (Get-Content $(AGENT.TEMPDIRECTORY)/azdsuri.txt | Out-String | ConvertFrom-Json).items[0].spec.rules[0].host
               Write-Host "##vso[task.setvariable variable=RETURI]$uriret"
               Write-Host "$uriret"
             displayName: 'Get PR review app url for the current PR'
@@ -231,7 +224,7 @@ stages:
               body: |
                 {
                   "state": "success",
-                  "target_url": "$(RETURI)",
+                  "target_url": "http://$(k8sNamespaceforpr).s.$(RETURI)",
                   "description": "available",
                   "context": "Dev Spaces review app"
                 }
