@@ -208,9 +208,9 @@ stages:
             inputs:
               targetType: 'inline'
               script: echo '$(ListIng.KubectlOutput)' > $(AGENT.TEMPDIRECTORY)/azdsuri.txt
-
+              
+          # This grabs the first URL available. Modify the below command to capture the correct host url
           - powershell: |
-              //This grabs the first URL available. Modify the below command to capture the correct host url
               $uriret = (Get-Content $(AGENT.TEMPDIRECTORY)/azdsuri.txt | Out-String | ConvertFrom-Json).items[0].spec.rules[0].host
               Write-Host "##vso[task.setvariable variable=RETURI]$uriret"
               Write-Host "$uriret"
