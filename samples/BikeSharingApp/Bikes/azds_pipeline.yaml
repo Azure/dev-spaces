@@ -44,7 +44,7 @@ variables:
   # Kubernetes Namespace where all changes from master branch are deployed
   k8sNamespace: 'dev'
   # Dynamically created Kubernetes Namespace where all pull request changes are deployed
-  k8sNamespaceforpr: $(system.pullRequest.sourceBranch)
+  k8sNamespaceForPr: $(system.pullRequest.sourceBranch)
   
   # Name of imagepullsecret
   imagePullSecret: 'builddemodfb0-auth'
@@ -150,7 +150,7 @@ stages:
             inputs:
               kubernetesServiceEndpoint: $(k8sServiceConnection)
               command: create
-              arguments: 'ns $(k8sNamespaceforpr)'
+              arguments: 'ns $(k8sNamespaceForPr)'
               checkLatest: true
 
           - task: Kubernetes@1
@@ -158,7 +158,7 @@ stages:
             inputs:
               kubernetesServiceEndpoint: $(k8sServiceConnection)
               command: label
-              arguments: '--overwrite ns $(k8sNamespaceforpr) azds.io/space=true'
+              arguments: '--overwrite ns $(k8sNamespaceForPr) azds.io/space=true'
               checkLatest: true
 
           - task: Kubernetes@1
@@ -166,7 +166,7 @@ stages:
             inputs:
               kubernetesServiceEndpoint: $(k8sServiceConnection)
               command: label
-              arguments: '--overwrite ns $(k8sNamespaceforpr) azds.io/parent-space=$(k8sNamespace)'
+              arguments: '--overwrite ns $(k8sNamespaceForPr) azds.io/parent-space=$(k8sNamespace)'
               checkLatest: true
 
           - task: KubernetesManifest@0
@@ -175,7 +175,7 @@ stages:
               kubernetesServiceConnection: $(k8sServiceConnection)
               action: createSecret
               secretName: $(imagePullSecret)
-              namespace: $(k8sNamespaceforpr)
+              namespace: $(k8sNamespaceForPr)
               dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
 
           - task: Bash@3
