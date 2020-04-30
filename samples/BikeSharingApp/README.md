@@ -38,9 +38,9 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
     ```bash
     azds show-context
 
-    Name                ResourceGroup     DevSpace  HostSuffix
-    ------------------  ----------------  --------  -----------------------
-    MyAKS               MyResourceGroup   dev       fedcab0987.eus.azds.io
+    Name                ResourceGroup     DevSpace  HostSuffix                 EndpointType
+    ------------------  ----------------  --------  -----------------------    ------------
+    MyAKS               MyResourceGroup   dev       fedcab0987.eus.azds.io     Public
     ```
 
 1. **Update the Helm chart with your HostSuffix.** Open [`charts/values.yaml`](https://github.com/Azure/dev-spaces/blob/master/samples/BikeSharingApp/charts/values.yaml) and replace all instances of `<REPLACE_ME_WITH_HOST_SUFFIX>` with the HostSuffix value you retrieved earlier. Save your changes and close the file.
@@ -48,7 +48,7 @@ Follow the steps below to deploy this sample app to Azure Kubernete Service (AKS
 1. **Deploy the sample application to Kubernetes.** We'll use Helm to run this sample application, but other tooling could be used to run your entire application in a namespace within a cluster. The Helm commands are targeting the namespace named `dev` you created earlier, and can take several minutes to complete.
     ```bash
     cd charts/
-    helm install bikesharing . --dependency-update --namespace dev --atomic
+    helm install bikesharingsampleapp . --dependency-update --namespace dev --atomic
     ```
 
 1. **Open your browser to the app's website.** Run the `azds list-uris` command to see the public endpoints in the running app. Navigate to the `bikesharingweb` service - in the below example, the public URL for the `bikesharingweb` service is http://dev.bikesharingweb.fedcab0987.eus.azds.io/. Select **Aurelia Briggs (customer)** as the user, then select a bike to rent.

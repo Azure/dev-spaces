@@ -380,8 +380,12 @@ function tryMongoConnect(callback, results) {
             console.error("Mongo connection error!");
             console.error(err);
         }
-
-        callback(err, db.db(mongoDBDatabase));
+        
+        if (db) {
+            callback(err, db.db(mongoDBDatabase));
+        } else {
+            callback(err, null);
+        }
     });
 }
 
