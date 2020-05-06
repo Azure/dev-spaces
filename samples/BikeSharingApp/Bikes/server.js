@@ -9,9 +9,9 @@ var ObjectId = require('mongodb').ObjectID;
 var express = require('express');
 var async = require('async');
 
-var mongoDBDatabase = process.env.mongo_database;
-var mongoDBCollection = process.env.mongo_collection;
-var mongoDBConnStr = process.env.mongo_connectionstring;
+var mongoDBDatabase = process.env.mongo_database || "admin";
+var mongoDBCollection = process.env.mongo_collection || "bikes";
+var mongoDBConnStr = process.env.mongo_connectionstring || "mongodb://databases-mongo";
 console.log("Database: " + mongoDBDatabase);
 console.log("Collection: " + mongoDBCollection);
 console.log("MongoDB connection string: " + mongoDBConnStr);
@@ -351,7 +351,7 @@ app.get('/hello', function(req, res) {
 });
 
 // start server ------------------------------------------------------------
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 80;
 var server = null;
 
 process.on("SIGINT", () => {
