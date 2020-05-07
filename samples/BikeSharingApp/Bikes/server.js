@@ -9,9 +9,9 @@ var ObjectId = require('mongodb').ObjectID;
 var express = require('express');
 var async = require('async');
 
-var mongoDBDatabase = process.env.mongo_database;
-var mongoDBCollection = process.env.mongo_collection;
-var mongoDBConnStr = process.env.mongo_connectionstring;
+var mongoDBDatabase = process.env.mongo_database || "admin";
+var mongoDBCollection = process.env.mongo_collection || "bikes";
+var mongoDBConnStr = process.env.mongo_connectionstring || "mongodb://databases-mongo";
 console.log("Database: " + mongoDBDatabase);
 console.log("Collection: " + mongoDBCollection);
 console.log("MongoDB connection string: " + mongoDBConnStr);
@@ -380,8 +380,12 @@ function tryMongoConnect(callback, results) {
             console.error("Mongo connection error!");
             console.error(err);
         }
-
-        callback(err, db.db(mongoDBDatabase));
+        
+        if (db) {
+            callback(err, db.db(mongoDBDatabase));
+        } else {
+            callback(err, null);
+        }
     });
 }
 

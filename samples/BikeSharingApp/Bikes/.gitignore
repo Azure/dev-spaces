@@ -2,8 +2,6 @@
 *.tgz
 requirements.lock
 
-.*/
-
 # Logs
 logs
 *.log

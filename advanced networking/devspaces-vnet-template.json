@@ -1,0 +1,572 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "identity": {
+            "type": "string"
+        },
+        "endpointType": {
+            "type": "string"
+        },
+        "vm_password": {
+            "type": "string"
+        },
+        "aks_sp_id": {
+            "type": "string"
+        },
+        "aks_sp_secret": {
+            "type": "string"
+        },
+        "aks_dns_prefix": {
+            "defaultValue": "[concat('dns', uniqueString(resourceGroup().id))]",
+            "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-11-01",
+            "name": "firewall_public_ip",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard"
+            },
+            "properties": {
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "ipTags": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-11-01",
+            "name": "bridge-vm_ip",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard"
+            },
+            "properties": {
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "ipTags": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2019-11-01",
+            "name": "private-vnet",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/16"
+                    ]
+                },
+                "dhcpOptions": {
+                    "dnsServers": []
+                },
+                "subnets": [
+                    {
+                        "name": "AzureFirewallSubnet",
+                        "properties": {
+                            "addressPrefix": "10.0.3.0/24",
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "vm-subnet",
+                        "properties": {
+                            "addressPrefix": "10.0.4.0/24",
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "aks-subnet",
+                        "properties": {
+                            "addressPrefix": "10.0.5.0/24",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.Sql",
+                                    "locations": [
+                                        "[resourceGroup().location]"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.AzureCosmosDB",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.KeyVault",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "*"
+                                    ]
+                                }
+                            ],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": [],
+                "enableDdosProtection": false,
+                "enableVmProtection": false
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "name": "bridge-vm",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', 'private-nic')]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_D2_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsDesktop",
+                        "offer": "Windows-10",
+                        "sku": "19h2-pro",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "name": "bridge-vm_OsDisk",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Standard_LRS"
+                        },
+                        "diskSizeGB": 127
+                    }
+                },
+                "osProfile": {
+                    "computerName": "bridge-vm",
+                    "adminUsername": "azureuser",
+                    "adminPassword": "[parameters('vm_password')]"
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', 'private-nic')]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.ContainerService/managedClusters",
+            "apiVersion": "2018-03-31",
+            "name": "private-aks-cluster",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'private-vnet', 'aks-subnet')]"
+            ],
+            "properties": {
+                "kubernetesVersion": "1.14.8",
+                "dnsPrefix": "[parameters('aks_dns_prefix')]",
+                "agentPoolProfiles": [
+                    {
+                        "name": "nodepool1",
+                        "count": 2,
+                        "vmSize": "Standard_DS2_v2",
+                        "osDiskSizeGB": 100,
+                        "vnetSubnetID": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'private-vnet', 'aks-subnet')]",
+                        "maxPods": 110,
+                        "type": "VirtualMachineScaleSets",
+                        "orchestratorVersion": "1.14.8",
+                        "osType": "Linux"
+                    }
+                ],
+                "servicePrincipalProfile": {
+                    "clientId": "[parameters('aks_sp_id')]",
+                    "secret": "[parameters('aks_sp_secret')]"
+                },
+                "enableRBAC": true,
+                "networkProfile": {
+                    "networkPlugin": "kubenet",
+                    "loadBalancerSku": "Standard",
+                    "loadBalancerProfile": {
+                        "managedOutboundIPs": {
+                            "count": 1
+                        }
+                    },
+                    "podCidr": "10.244.0.0/16",
+                    "serviceCidr": "10.2.0.0/24",
+                    "dnsServiceIP": "10.2.0.10",
+                    "dockerBridgeCidr": "172.17.0.1/16",
+                    "outboundType": "loadBalancer"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2019-10-01-preview",
+            "name": "runBashWithOutputs",
+            "location": "[resourceGroup().location]",
+            "kind": "AzureCLI",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerService/managedClusters', 'private-aks-cluster')]"
+            ],
+            "identity": {
+              "type": "UserAssigned",
+              "userAssignedIdentities": {
+                "[parameters('identity')]": {}
+              }
+            },
+            "properties": {
+              "forceUpdateTag": "1",
+              "AzCliVersion": "2.0.80",
+              "timeout": "PT30M",
+              "arguments": "[resourceGroup().name]",
+              "scriptContent": "base64Config=$(az aks get-credentials -n private-aks-cluster -g $1 -f - | base64 | tr -d '\n');echo \"{'base64Config': '$base64Config'}\" > $AZ_SCRIPTS_OUTPUT_PATH",
+              "cleanupPreference": "OnSuccess",
+              "retentionInterval": "P1D"
+            }
+        },
+        {
+            "type": "Microsoft.DevSpaces/controllers",
+            "apiVersion": "2019-04-01",
+            "name": "private_controller",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerService/managedClusters', 'private-aks-cluster')]",
+                "[resourceId('Microsoft.Resources/deploymentScripts', 'runBashWithOutputs')]"
+            ],
+            "sku": {
+                "name": "S1",
+                "tier": "Standard"
+            },
+            "properties": {
+                "targetContainerHostResourceId": "[resourceId('Microsoft.ContainerService/managedClusters', 'private-aks-cluster')]",
+                "targetContainerHostCredentialsBase64": "[reference('runBashWithOutputs').outputs.base64Config]",
+                "endpointType": "[parameters('endpointType')]"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2019-11-01",
+            "name": "[concat('private-vnet', '/aks-subnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', 'private-vnet')]"
+            ],
+            "properties": {
+                "addressPrefix": "10.0.5.0/24",
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.Sql",
+                        "locations": [
+                            "[resourceGroup().location]"
+                        ]
+                    },
+                    {
+                        "service": "Microsoft.AzureCosmosDB",
+                        "locations": [
+                            "*"
+                        ]
+                    },
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "*"
+                        ]
+                    },
+                    {
+                        "service": "Microsoft.Storage",
+                        "locations": [
+                            "[resourceGroup().location]",
+                            "westus2"
+                        ]
+                    }
+                ],
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2019-11-01",
+            "name": "[concat('private-vnet', '/AzureFirewallSubnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', 'private-vnet')]"
+            ],
+            "properties": {
+                "addressPrefix": "10.0.3.0/24",
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2019-11-01",
+            "name": "[concat('private-vnet', '/vm-subnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', 'private-vnet')]"
+            ],
+            "properties": {
+                "addressPrefix": "10.0.4.0/24"
+            }
+        },
+        {
+            "type": "Microsoft.Network/azureFirewalls",
+            "apiVersion": "2019-11-01",
+            "name": "private-firewall",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', 'firewall_public_ip')]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'private-vnet', 'AzureFirewallSubnet')]"
+            ],
+            "properties": {
+                "sku": {
+                    "name": "AZFW_VNet",
+                    "tier": "Standard"
+                },
+                "threatIntelMode": "Alert",
+                "additionalProperties": {},
+                "ipConfigurations": [
+                    {
+                        "name": "azureFirewalls-ip",
+                        "properties": {
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'firewall_public_ip')]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'private-vnet', 'AzureFirewallSubnet')]"
+                            }
+                        }
+                    }
+                ],
+                "networkRuleCollections": [
+                    {
+                        "name": "azdsnetwork",
+                        "properties": {
+                            "priority": 101,
+                            "action": {
+                                "type": "Allow"
+                            },
+                            "rules": [
+                                {
+                                    "name": "allow azds network",
+                                    "description": "azds network rule",
+                                    "protocols": [
+                                        "TCP"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "destinationAddresses": [
+                                        "AzureDevSpaces"
+                                    ],
+                                    "sourceIpGroups": [],
+                                    "destinationIpGroups": [],
+                                    "destinationFqdns": [],
+                                    "destinationPorts": [
+                                        "*"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "applicationRuleCollections": [
+                    {
+                        "name": "aksbasics",
+                        "properties": {
+                            "priority": 100,
+                            "action": {
+                                "type": "Allow"
+                            },
+                            "rules": [
+                                {
+                                    "name": "allow network",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Http",
+                                            "port": 80
+                                        },
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "*.azmk8s.io",
+                                        "aksrepos.azurecr.io",
+                                        "*.blob.core.windows.net",
+                                        "mcr.microsoft.com",
+                                        "*.cdn.mscr.io",
+                                        "management.azure.com",
+                                        "login.microsoftonline.com",
+                                        "api.snapcraft.io",
+                                        "*auth.docker.io",
+                                        "*cloudflare.docker.io",
+                                        "*cloudflare.docker.com",
+                                        "*registry-1.docker.io"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "osupdates",
+                        "properties": {
+                            "priority": 102,
+                            "action": {
+                                "type": "Allow"
+                            },
+                            "rules": [
+                                {
+                                    "name": "allow network",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Http",
+                                            "port": 80
+                                        },
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "download.opensuse.org",
+                                        "*.ubuntu.com",
+                                        "packages.microsoft.com",
+                                        "snapcraft.io",
+                                        "api.snapcraft.io"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "azdsbasics",
+                        "properties": {
+                            "priority": 103,
+                            "action": {
+                                "type": "Allow"
+                            },
+                            "rules": [
+                                {
+                                    "name": "allow network",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Http",
+                                            "port": 80
+                                        },
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "cloudflare.docker.com",
+                                        "gcr.io",
+                                        "storage.googleapis.com"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": []
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "natRuleCollections": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "nsg-vm",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2018-03-01",
+            "properties": {
+              "securityRules": [
+                {
+                  "name": "allow-3389-port",
+                  "properties": {
+                    "description": "Allows RDP traffic",
+                    "protocol": "*",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "3389",
+                    "sourceAddressPrefix": "*",
+                    "destinationAddressPrefix": "*",
+                    "access": "Allow",
+                    "priority": 100,
+                    "direction": "Inbound"
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2019-11-01",
+            "name": "private-nic",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', 'bridge-vm_ip')]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'nsg-vm')]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'private-vnet', 'vm-subnet')]"
+            ],
+            "tags": {
+                "fw-svc": "true"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'bridge-vm_ip')]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'private-vnet', 'vm-subnet')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'nsg-vm')]"
+                  },
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false
+            }
+        }
+    ]
+}
