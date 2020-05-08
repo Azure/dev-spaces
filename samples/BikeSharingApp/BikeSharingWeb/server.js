@@ -64,7 +64,8 @@ function getApiUrl(host) {
         start += 2;
     }
     var baseHost = hostArr.slice(start, hostArr.length).join('.');
+    var apiName = process.env.API_NAME || "gateway";
 
     // return full URL of API service (spacePrefix + rootSpace + apiName + host)
-    return prefix + hostArr[root] + "." + process.env.API_NAME + "." + baseHost;
+    return prefix + hostArr[root] + "." + apiName + "." + baseHost;
 }

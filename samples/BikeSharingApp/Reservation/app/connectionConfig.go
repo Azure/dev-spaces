@@ -4,7 +4,7 @@
 package main
 
 const (
-	reservationMongoDBConnectionString string = `dummyconnectionstring`
-	reservationMongoDBDatabase         string = `dummydatabase`
-	reservationMongoDBCollection       string = `dummycollection`
+	reservationMongoDBConnectionString string = `mongodb://databases-mongo`
+	reservationMongoDBDatabase         string = `resdb`
+	reservationMongoDBCollection       string = `reservation`
 )
