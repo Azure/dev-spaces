@@ -8,7 +8,7 @@ namespace app.Controllers
     [Route("hello")]
     public class HelloController : Controller
     {
-        // GET: api/hello
+        // GET: hello
         [HttpGet]
         public string Hello()
         {
