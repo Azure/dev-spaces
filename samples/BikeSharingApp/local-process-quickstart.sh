@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Please install the below pre-requisites if using this on your local machine, or alternately, you can just use azure bash cloudshell for a seamless experience.
+#1. az
+#2. kubectl
+#3. curl
+#4. gunzip
+#5. tar
+#6. perl
+
 INGRESSNAME=bikesharing-traefik
 PIPNAME=BikeSharingPip
 HELMDIR=/var/tmp/helm_azds
