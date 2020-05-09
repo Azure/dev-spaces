@@ -7,6 +7,7 @@
 #4. gunzip
 #5. tar
 #6. perl
+#7. cut
 
 INGRESSNAME=bikesharing-traefik
 PIPNAME=BikeSharingPip
@@ -102,6 +103,9 @@ echo "helm install traefik ingress controller"
 kubectl api-versions | grep "rbac.authorization.k8s.io"
 if [[ $? -eq 0 ]]
 then
+   SUB=$(az account show --query id | cut -d'"' -f2)
+   SPID=$(az aks show -n pragmeaks77-rbac -g pragmeaks77-rbac --query servicePrincipalProfile.clientId | cut -d'"' -f2)
+   az role assignment create --assignee ${SPID} --scope /subscriptions/${SUB}/resourceGroups/${RGNAME} --role "Network Contributor"
    ${HELMDIR}/helm install $INGRESSNAME stable/traefik \
       --namespace $INGRESSNAME \
       --set kubernetes.ingressClass=traefik \
