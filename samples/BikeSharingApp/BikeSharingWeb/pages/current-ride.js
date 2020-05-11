@@ -43,7 +43,7 @@ class CurrentRideBase extends Component {
         }
         catch (error) {
             console.error(error);
-            this.setState({errorMessage: `Error while retrieving current user's data. Make sure that your Gateway and Users services are up and running (run "azds list-up"). Details: ${error.message}`});
+            this.setState({errorMessage: `Error while retrieving current user's data. Make sure that your Gateway and Users services are up and running. Details: ${error.message}`});
             return;
         }
 
@@ -66,7 +66,7 @@ class CurrentRideBase extends Component {
         }
         catch (error) {
             console.error(error);
-            this.setState({errorMessage: `Error while retrieving current reservation's data. Make sure that your Gateway and Reservation services are up and running (run "azds list-up"). Details: ${error.message}`});
+            this.setState({errorMessage: `Error while retrieving current reservation's data. Make sure that your Gateway and Reservation services are up and running. Details: ${error.message}`});
             return;
         }
 
@@ -81,7 +81,7 @@ class CurrentRideBase extends Component {
         }
         catch (error) {
             console.error(error);
-            this.setState({errorMessage: `Error while retrieving bike's data. Make sure that your Gateway and Bikes services are up and running (run "azds list-up"). Details: ${error.message}`});
+            this.setState({errorMessage: `Error while retrieving bike's data. Make sure that your Gateway and Bikes services are up and running. Details: ${error.message}`});
             return;
         }
 
@@ -96,7 +96,7 @@ class CurrentRideBase extends Component {
         }
         catch (error) {
             console.error(error);
-            this.setState({errorMessage: `Error while retrieving bike's vendor's data. Make sure that your Gateway and Users services are up and running (run "azds list-up"). Details: ${error.message}`});
+            this.setState({errorMessage: `Error while retrieving bike's vendor's data. Make sure that your Gateway and Users services are up and running. Details: ${error.message}`});
             return;
         }
 
@@ -129,7 +129,7 @@ class CurrentRideBase extends Component {
         }
         catch (error) {
             console.error(error);
-            this.setState({errorMessage: `Error while creating a reservation for the bike. Make sure that your Gateway and ReservationEngine services are up and running (run "azds list-up"). Details: ${error.message}`});
+            this.setState({errorMessage: `Error while creating a reservation for the bike. Make sure that your Gateway and ReservationEngine services are up and running. Details: ${error.message}`});
             return;
         }
         
