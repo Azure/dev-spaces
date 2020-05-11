@@ -78,10 +78,16 @@ then
    else
       cleanupFunction
    fi
-elif [ -z "$RGNAME" ] || [ -z "$AKSNAME" ] || [ -z "$REPOROOT" ]
+elif [ -z "$RGNAME" ] || [ -z "$AKSNAME" ]
 then
    echo "Some or all of the parameters are empty";
    helpFunction
+fi
+
+if [ -z "$REPOROOT" ]
+then
+   echo "Defaulting Dev spaces repository root to current directory : ${PWD}"
+   REPOROOT=$PWD
 fi
 
 installHelmFunction
@@ -104,7 +110,7 @@ kubectl api-versions | grep "rbac.authorization.k8s.io"
 if [[ $? -eq 0 ]]
 then
    SUB=$(az account show --query id | cut -d'"' -f2)
-   SPID=$(az aks show -n pragmeaks77-rbac -g pragmeaks77-rbac --query servicePrincipalProfile.clientId | cut -d'"' -f2)
+   SPID=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query servicePrincipalProfile.clientId | cut -d'"' -f2)
    az role assignment create --assignee ${SPID} --scope /subscriptions/${SUB}/resourceGroups/${RGNAME} --role "Network Contributor"
    ${HELMDIR}/helm install $INGRESSNAME stable/traefik \
       --namespace $INGRESSNAME \
