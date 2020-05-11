@@ -39,7 +39,7 @@ export default class Index extends Component {
         }
         catch (error) {
             console.error(error);
-            this.setState({errorMessage: `Error while retrieving current user's data. Make sure that your Gateway and Users services are up and running (run "azds list-up"). Details: ${error.message}`});
+            this.setState({errorMessage: `Error while retrieving current user's data. Make sure that your Gateway and Users services are up and running. Details: ${error.message}`});
             return;
         }
 
@@ -56,7 +56,7 @@ export default class Index extends Component {
         }
         catch (error) {
             console.error(error);
-            this.setState({errorMessage: `Error while retrieving bikes' reservations. Make sure that your Gateway and Reservation services are up and running (run "azds list-up"). Details: ${error.message}`});
+            this.setState({errorMessage: `Error while retrieving bikes' reservations. Make sure that your Gateway and Reservation services are up and running. Details: ${error.message}`});
             return;
         }
 
@@ -70,7 +70,7 @@ export default class Index extends Component {
         }
         catch (error) {
             console.error(error);
-            this.setState({errorMessage: `Error while retrieving bikes' data. Make sure that your Gateway and Bikes services are up and running (run "azds list-up"). Details: ${error.message}`});
+            this.setState({errorMessage: `Error while retrieving bikes' data. Make sure that your Gateway and Bikes services are up and running. Details: ${error.message}`});
             return;
         }
     }

@@ -44,7 +44,7 @@ export default class DevSignin extends Component {
         }
         catch (error) {
             console.error(error);
-            this.setState({errorMessage: `Error while retrieving users to select. Make sure that your Gateway and Users services are up and running (run "azds list-up"). Details: ${error.message}`});
+            this.setState({errorMessage: `Error while retrieving users to select. Make sure that your Gateway and Users services are up and running. Details: ${error.message}`});
             return;
         }
     }
