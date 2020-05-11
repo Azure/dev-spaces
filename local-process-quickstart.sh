@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Please install the below pre-requisites if using this on your local machine, or alternately, you can just use azure bash cloudshell for a seamless experience.
-#1. az
-#2. kubectl
+#1. azure cli    :   https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
+#2. kubectl      :   https://kubernetes.io/docs/tasks/tools/install-kubectl/
 #3. curl
 #4. gunzip
 #5. tar
@@ -46,7 +46,12 @@ cleanupFunction()
    echo ""
    ${HELMDIR}/helm --namespace dev uninstall bikesharingapp
    ${HELMDIR}/helm --namespace $INGRESSNAME uninstall $INGRESSNAME
-   kubectl delete namespace dev
+   echo "Delete namespace dev? (Y/n) : "
+   read RESPONSE
+   if [ "${RESPONSE}" == "y" ] || [ "${RESPONSE}" == "Y" ]
+   then
+      kubectl delete namespace dev
+   fi
    kubectl delete ns $INGRESSNAME
    rm -rf $HELMDIR
    res=$(az network public-ip delete --name $PIPNAME --resource-group $RGNAME | grep "still allocated to resource")
