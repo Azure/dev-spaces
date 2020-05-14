@@ -6,8 +6,7 @@
 #3. curl
 #4. gunzip
 #5. tar
-#6. perl
-#7. cut
+#6. cut
 
 INGRESSNAME=bikesharing-traefik
 PIPNAME=BikeSharingPip
@@ -54,8 +53,8 @@ cleanupFunction()
    fi
    kubectl delete ns $INGRESSNAME
    rm -rf $HELMDIR
-   res=$(az network public-ip delete --name $PIPNAME --resource-group $RGNAME | grep "still allocated to resource")
-   if [[ "$res" -ne "" ]]
+   az network public-ip delete --name $PIPNAME --resource-group $RGNAME
+   if [ $? -eq 1 ]
    then
       echo "Please delete the Public IP address ${PIPNAME} in resource group ${RGNAME} manually"
    fi
@@ -148,13 +147,12 @@ echo "Chart directory: $CHARTDIR"
 echo "Create namespace dev"
 kubectl create ns dev
 
-echo "Replacing ingress controller annotation in values.yaml"
-perl -i -pe's/traefik-azds/traefik/g' ${CHARTDIR}/values.yaml
-
 echo "helm install bikesharingapp"
 ${HELMDIR}/helm install bikesharingapp $CHARTDIR \
                 --set bikesharingweb.ingress.hosts={dev.bikesharingweb.${NIPIOFQDN}} \
                 --set gateway.ingress.hosts={dev.gateway.${NIPIOFQDN}} \
+                --set bikesharingweb.ingress.annotations."kubernetes\.io/ingress\.class"="traefik" \
+                --set gateway.ingress.annotations."kubernetes\.io/ingress\.class"="traefik" \
                 --dependency-update \
                 --namespace dev \
                 --atomic \
