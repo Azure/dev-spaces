@@ -41,7 +41,7 @@ export default class CompleteReturn extends Component {
         }
         catch (error) {
             console.error(error);
-            this.setState({errorMessage: `Error while retrieving current user's data. Make sure that your Gateway and Users services are up and running (run "azds list-up"). Details: ${error.message}`});
+            this.setState({errorMessage: `Error while retrieving current user's data. Make sure that your Gateway and Users services are up and running. Details: ${error.message}`});
             return;
         }
 
@@ -64,7 +64,7 @@ export default class CompleteReturn extends Component {
         }
         catch (error) {
             console.error(error);
-            this.setState({errorMessage: `Error while retrieving current reservation's data. Make sure that your Gateway and Reservation services are up and running (run "azds list-up"). Details: ${error.message}`});
+            this.setState({errorMessage: `Error while retrieving current reservation's data. Make sure that your Gateway and Reservation services are up and running. Details: ${error.message}`});
             return;
         }
 
@@ -79,7 +79,7 @@ export default class CompleteReturn extends Component {
         }
         catch (error) {
             console.error(error);
-            this.setState({errorMessage: `Error while retrieving bike's data. Make sure that your Gateway and Bikes services are up and running (run "azds list-up"). Details: ${error.message}`});
+            this.setState({errorMessage: `Error while retrieving bike's data. Make sure that your Gateway and Bikes services are up and running. Details: ${error.message}`});
             return;
         }
 
@@ -94,7 +94,7 @@ export default class CompleteReturn extends Component {
         }
         catch (error) {
             console.error(error);
-            this.setState({errorMessage: `Error while retrieving invoice's data. Make sure that your Gateway and Billing services are up and running (run "azds list-up"). Details: ${error.message}`});
+            this.setState({errorMessage: `Error while retrieving invoice's data. Make sure that your Gateway and Billing services are up and running. Details: ${error.message}`});
             return;
         }
 

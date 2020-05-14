@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"os/signal"
@@ -55,14 +54,11 @@ func init() {
 		shutdown()
 	}
 	Log("Environment options: %s", string(envOptsJSON))
-	if EnvMongoDbConnectionString == "" ||
-		EnvMongoDbName == "" {
-		requiredParams := []string{
-			mongoDbConnectionStringEnvName,
-			mongoDbNameEnvName,
-		}
-		LogErrFormat("Must specify the following environment variables: %s", strings.Join(requiredParams, ", "))
-		os.Exit(1)
+	if EnvMongoDbConnectionString == "" {
+		EnvMongoDbConnectionString = "mongodb://databases-mongo"
+	}
+	if EnvMongoDbName == "" {
+		EnvMongoDbName = "billing"
 	}
 
 	DbConnection, err = NewDbConnection("DbConnection", EnvMongoDbConnectionString, EnvMongoDbName, ShutdownWaitGroup)

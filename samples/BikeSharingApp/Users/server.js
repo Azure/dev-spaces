@@ -19,13 +19,13 @@ app.use(bodyParser.json());
 var Request = require('tedious').Request;
 var TYPES = require('tedious').TYPES;
 var config = JSON.parse(fs.readFileSync('ConnectionConfig.json', 'utf8')).config;
-config.authentication.options.userName = process.env.sql_username;
-config.authentication.options.password = process.env.sql_password;
-config.server = process.env.sql_server;
-config.options.database = process.env.sql_database;
+config.authentication.options.userName = process.env.sql_username || 'SA';
+config.authentication.options.password = process.env.sql_password || '!DummyPassword123!';
+config.server = process.env.sql_server || 'databases-sql';
+config.options.database = process.env.sql_database || 'tempdb';
 var dbConnection = Connection.prototype; // Will be initialized below
 
-var tableName = process.env.sql_table || 'Users'
+var tableName = process.env.sql_table || 'myTable'
 var jsonColumnName = "JSON_F52E2B61-18A1-11d1-B105-00805F49916B"
 
 var userSchema = {
