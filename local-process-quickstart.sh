@@ -6,7 +6,6 @@
 #3. curl
 #4. gunzip
 #5. tar
-#6. cut
 
 INGRESSNAME=bikesharing-traefik
 PIPNAME=BikeSharingPip
@@ -125,29 +124,15 @@ if [[ "${SPID}" == "msi" ]]; then
    SPID=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query identity.principalId -o tsv)
 fi
 az role assignment create --assignee ${SPID} --scope "/subscriptions/${SUB}/resourceGroups/${RGNAME}" --role "Network Contributor"
-kubectl api-versions | grep "rbac.authorization.k8s.io"
-if [[ $? -eq 0 ]]
-then
-   ${HELMDIR}/helm install $INGRESSNAME stable/traefik \
-      --namespace $INGRESSNAME \
-      --set kubernetes.ingressClass=traefik \
-      --set fullnameOverride=$INGRESSNAME \
-      --set rbac.enabled=true \
-      --set service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"="$RGNAME" \
-      --set loadBalancerIP=$PUBLICIP \
-      --set kubernetes.ingressEndpoint.useDefaultPublishedService=true \
-      --version 1.85.0
-else
-   ${HELMDIR}/helm install $INGRESSNAME stable/traefik \
-      --namespace $INGRESSNAME \
-      --set kubernetes.ingressClass=traefik \
-      --set fullnameOverride=$INGRESSNAME \
-      --set rbac.enabled=false \
-      --set service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"="$RGNAME" \
-      --set loadBalancerIP=$PUBLICIP \
-      --set kubernetes.ingressEndpoint.useDefaultPublishedService=true \
-      --version 1.85.0
-fi
+${HELMDIR}/helm install $INGRESSNAME stable/traefik \
+   --namespace $INGRESSNAME \
+   --set kubernetes.ingressClass=traefik \
+   --set fullnameOverride=$INGRESSNAME \
+   --set rbac.enabled=true \
+   --set service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"="$RGNAME" \
+   --set loadBalancerIP=$PUBLICIP \
+   --set kubernetes.ingressEndpoint.useDefaultPublishedService=true \
+   --version 1.85.0
  
 NIPIOFQDN=${PUBLICIP}.nip.io
 echo "The Nip.IO FQDN would be " $NIPIOFQDN
