@@ -61,7 +61,8 @@ cleanupFunction()
       SPID=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query identity.principalId -o tsv)
    fi
    az role assignment delete --assignee ${SPID} --scope "/subscriptions/${SUB}/resourceGroups/${RGNAME}" --role "Network Contributor"
-   az network public-ip delete --name $PIPNAME --resource-group $RGNAME
+   AKSAGENTRG=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query nodeResourceGroup -o tsv)
+   az network public-ip delete --name $PIPNAME --resource-group $AKSAGENTRG
    if [ $? -eq 1 ]
    then
       echo "Please delete the Public IP address ${PIPNAME} in resource group ${RGNAME} manually"
@@ -108,7 +109,8 @@ echo "Setting the Kube context"
 az aks get-credentials -g $RGNAME -n $AKSNAME
 
 AKSLOCATION=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query location -o tsv)
-PUBLICIP=$(az network public-ip create --resource-group $RGNAME --name $PIPNAME --location $AKSLOCATION --sku Standard --allocation-method static --query publicIp.ipAddress -o tsv)
+AKSAGENTRG=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query nodeResourceGroup -o tsv)
+PUBLICIP=$(az network public-ip create --resource-group $AKSAGENTRG --name $PIPNAME --location $AKSLOCATION --sku Standard --allocation-method static --query publicIp.ipAddress -o tsv)
 echo "BikeSharing ingress Public ip: " $PUBLICIP
  
 echo "Create namespace ${INGRESSNAME}"
