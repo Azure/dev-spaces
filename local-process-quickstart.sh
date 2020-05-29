@@ -54,13 +54,6 @@ cleanupFunction()
    fi
    kubectl delete ns $INGRESSNAME
    rm -rf $HELMDIR
-   SUB=$(az account show --query id -o tsv)
-   SPID=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query servicePrincipalProfile.clientId -o tsv)
-   if [[ "${SPID}" == "msi" ]]; then
-      # Managed identity cluster
-      SPID=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query identity.principalId -o tsv)
-   fi
-   az role assignment delete --assignee ${SPID} --scope "/subscriptions/${SUB}/resourceGroups/${RGNAME}" --role "Network Contributor"
    AKSAGENTRG=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query nodeResourceGroup -o tsv)
    az network public-ip delete --name $PIPNAME --resource-group $AKSAGENTRG
    if [ $? -eq 1 ]
@@ -121,13 +114,6 @@ echo "helm repo add && helm repo update"
 ${HELMDIR}/helm repo add stable https://kubernetes-charts.storage.googleapis.com/
 ${HELMDIR}/helm repo update
 echo "helm install traefik ingress controller"
-SUB=$(az account show --query id -o tsv)
-SPID=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query servicePrincipalProfile.clientId -o tsv)
-if [[ "${SPID}" == "msi" ]]; then
-   # Managed identity cluster
-   SPID=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query identity.principalId -o tsv)
-fi
-az role assignment create --assignee ${SPID} --scope "/subscriptions/${SUB}/resourceGroups/${RGNAME}" --role "Network Contributor"
 ${HELMDIR}/helm install $INGRESSNAME stable/traefik \
    --namespace $INGRESSNAME \
    --set kubernetes.ingressClass=traefik \
