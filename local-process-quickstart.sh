@@ -6,7 +6,6 @@
 #3. curl
 #4. gunzip
 #5. tar
-#6. cut
 
 INGRESSNAME=bikesharing-traefik
 PIPNAME=BikeSharingPip
@@ -53,6 +52,13 @@ cleanupFunction()
    fi
    kubectl delete ns $INGRESSNAME
    rm -rf $HELMDIR
+   SUB=$(az account show --query id -o tsv)
+   SPID=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query servicePrincipalProfile.clientId -o tsv)
+   if [[ "${SPID}" == "msi" ]]; then
+      # Managed identity cluster
+      SPID=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query identity.principalId -o tsv)
+   fi
+   az role assignment delete --assignee ${SPID} --scope "/subscriptions/${SUB}/resourceGroups/${RGNAME}" --role "Network Contributor"
    az network public-ip delete --name $PIPNAME --resource-group $RGNAME
    if [ $? -eq 1 ]
    then
@@ -98,8 +104,9 @@ installHelmFunction
  
 echo "Setting the Kube context"
 az aks get-credentials -g $RGNAME -n $AKSNAME
- 
-PUBLICIP=$(az network public-ip create --resource-group $RGNAME --name $PIPNAME --sku Standard --allocation-method static --query publicIp.ipAddress -o tsv)
+
+AKSLOCATION=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query location -o tsv)
+PUBLICIP=$(az network public-ip create --resource-group $RGNAME --name $PIPNAME --location $AKSLOCATION --sku Standard --allocation-method static --query publicIp.ipAddress -o tsv)
 echo "BikeSharing ingress Public ip: " $PUBLICIP
  
 echo "Create namespace ${INGRESSNAME}"
@@ -110,32 +117,22 @@ echo "helm repo add && helm repo update"
 ${HELMDIR}/helm repo add stable https://kubernetes-charts.storage.googleapis.com/
 ${HELMDIR}/helm repo update
 echo "helm install traefik ingress controller"
-kubectl api-versions | grep "rbac.authorization.k8s.io"
-if [[ $? -eq 0 ]]
-then
-   SUB=$(az account show --query id | cut -d'"' -f2)
-   SPID=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query servicePrincipalProfile.clientId | cut -d'"' -f2)
-   az role assignment create --assignee ${SPID} --scope /subscriptions/${SUB}/resourceGroups/${RGNAME} --role "Network Contributor"
-   ${HELMDIR}/helm install $INGRESSNAME stable/traefik \
-      --namespace $INGRESSNAME \
-      --set kubernetes.ingressClass=traefik \
-      --set fullnameOverride=$INGRESSNAME \
-      --set rbac.enabled=true \
-      --set service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"="$RGNAME" \
-      --set loadBalancerIP=$PUBLICIP \
-      --set kubernetes.ingressEndpoint.useDefaultPublishedService=true \
-      --version 1.85.0
-else
-   ${HELMDIR}/helm install $INGRESSNAME stable/traefik \
-      --namespace $INGRESSNAME \
-      --set kubernetes.ingressClass=traefik \
-      --set fullnameOverride=$INGRESSNAME \
-      --set rbac.enabled=false \
-      --set service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"="$RGNAME" \
-      --set loadBalancerIP=$PUBLICIP \
-      --set kubernetes.ingressEndpoint.useDefaultPublishedService=true \
-      --version 1.85.0
+SUB=$(az account show --query id -o tsv)
+SPID=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query servicePrincipalProfile.clientId -o tsv)
+if [[ "${SPID}" == "msi" ]]; then
+   # Managed identity cluster
+   SPID=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query identity.principalId -o tsv)
 fi
+az role assignment create --assignee ${SPID} --scope "/subscriptions/${SUB}/resourceGroups/${RGNAME}" --role "Network Contributor"
+${HELMDIR}/helm install $INGRESSNAME stable/traefik \
+   --namespace $INGRESSNAME \
+   --set kubernetes.ingressClass=traefik \
+   --set fullnameOverride=$INGRESSNAME \
+   --set rbac.enabled=true \
+   --set service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"="$RGNAME" \
+   --set loadBalancerIP=$PUBLICIP \
+   --set kubernetes.ingressEndpoint.useDefaultPublishedService=true \
+   --version 1.85.0
  
 NIPIOFQDN=${PUBLICIP}.nip.io
 echo "The Nip.IO FQDN would be " $NIPIOFQDN
