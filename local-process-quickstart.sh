@@ -119,7 +119,6 @@ ${HELMDIR}/helm install $INGRESSNAME stable/traefik \
    --set kubernetes.ingressClass=traefik \
    --set fullnameOverride=$INGRESSNAME \
    --set rbac.enabled=true \
-   --set service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"="$RGNAME" \
    --set loadBalancerIP=$PUBLICIP \
    --set kubernetes.ingressEndpoint.useDefaultPublishedService=true \
    --version 1.85.0
