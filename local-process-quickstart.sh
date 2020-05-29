@@ -42,6 +42,8 @@ installHelmFunction()
 cleanupFunction()
 {
    echo ""
+   echo "Setting the Kube context"
+   az aks get-credentials -g $RGNAME -n $AKSNAME
    ${HELMDIR}/helm --namespace dev uninstall bikesharingapp
    ${HELMDIR}/helm --namespace $INGRESSNAME uninstall $INGRESSNAME
    echo "Delete namespace dev? (Y/n) : "
