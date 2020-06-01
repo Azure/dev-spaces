@@ -1,6 +1,6 @@
 ### Local Debugging pre-requisites
 * ```dotnet restore```
-* [Debugging dotnet core app in VS Code](https://docs.microsoft.com/en-us/dotnet/core/tutorials/debugging-with-visual-studio-code)
+* [Debugging .NET Core app in VS Code](https://docs.microsoft.com/en-us/dotnet/core/tutorials/debugging-with-visual-studio-code)
 
 <br/>
 
