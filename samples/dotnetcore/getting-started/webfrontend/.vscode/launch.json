@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/bin/Debug/netcoreapp2.2/mywebapi.dll",
+            "program": "${workspaceFolder}/bin/Debug/netcoreapp2.2/webfrontend.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
@@ -18,7 +18,7 @@
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "^\\s*Now listening on:\\s+http://\\S+:([0-9]+)",
-                "uriFormat": "http://localhost:%s/api/values"
+                "uriFormat": "http://localhost:%s"
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
