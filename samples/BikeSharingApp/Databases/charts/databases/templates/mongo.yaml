@@ -1,12 +1,13 @@
 {{ if .Values.hostedMongo.enabled }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ template "databases.fullname" . }}-mongo
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
   replicas: 1
+  serviceName: databases-mongo
   selector:
     matchLabels:      
       app: {{ template "databases.fullname" . }}-mongo
@@ -15,6 +16,10 @@ spec:
       labels:
         app: {{ template "databases.fullname" . }}-mongo
     spec:
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ template "databases.fullname" . }}-mongo
       containers:
       - name: {{ .Chart.Name }}-mongo
         image: "mongo:3.4"
@@ -25,4 +30,7 @@ spec:
           requests:
             cpu: 100m
             memory: 512Mi
+        volumeMounts:
+          - name: data
+            mountPath: /data/db
 {{ end }}

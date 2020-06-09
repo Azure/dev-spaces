@@ -22,7 +22,7 @@ var config = JSON.parse(fs.readFileSync('ConnectionConfig.json', 'utf8')).config
 config.authentication.options.userName = process.env.sql_username || 'SA';
 config.authentication.options.password = process.env.sql_password || '!DummyPassword123!';
 config.server = process.env.sql_server || 'databases-sql';
-config.options.database = process.env.sql_database || 'tempdb';
+config.options.database = process.env.sql_database || 'master';
 var dbConnection = Connection.prototype; // Will be initialized below
 
 var tableName = process.env.sql_table || 'myTable'

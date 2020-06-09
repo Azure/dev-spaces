@@ -37,7 +37,7 @@ secrets:
     username: SA
     password: "!DummyPassword123!"
     server: databases-sql
-    database: tempdb
+    database: master
     table: myTable
   # Optionally specify a set of secret objects whose values
   # will be injected as environment variables by default.
