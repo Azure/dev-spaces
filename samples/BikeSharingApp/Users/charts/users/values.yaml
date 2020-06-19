@@ -5,7 +5,7 @@ fullnameOverride: users
 replicaCount: 1
 image:
   repository: azdspublic/bikesharing-users
-  tag: build.20200204.1
+  tag: build.20200619.3
   pullPolicy: IfNotPresent
 imagePullSecrets: []
   # Optionally specify an array of imagePullSecrets.
