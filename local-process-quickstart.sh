@@ -103,22 +103,11 @@ then
 fi
 
 installHelmFunction
- 
+
 echo "Setting the Kube context"
 az aks get-credentials -g $RGNAME -n $AKSNAME
 
-AKSLOCATION=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query location -o tsv)
-PUBLICIP=$(az network public-ip create --resource-group $RGNAME --name $PIPNAME --location $AKSLOCATION --sku Standard --allocation-method static --query publicIp.ipAddress -o tsv)
-echo "BikeSharing ingress Public ip: " $PUBLICIP
- 
-echo "Create namespace ${INGRESSNAME}"
-kubectl create namespace $INGRESSNAME
- 
-# Use Helm to deploy a traefik ingress controller
-echo "helm repo add && helm repo update"
-${HELMDIR}/helm repo add stable https://kubernetes-charts.storage.googleapis.com/
-${HELMDIR}/helm repo update
-echo "helm install traefik ingress controller"
+echo "Applying role assignment"
 SUB=$(az account show --query id -o tsv)
 SPID=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query servicePrincipalProfile.clientId -o tsv)
 if [[ "${SPID}" == "msi" ]]; then
@@ -126,6 +115,20 @@ if [[ "${SPID}" == "msi" ]]; then
    SPID=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query identity.principalId -o tsv)
 fi
 az role assignment create --assignee ${SPID} --scope "/subscriptions/${SUB}/resourceGroups/${RGNAME}" --role "Network Contributor"
+
+echo "Creating Public IP"
+AKSLOCATION=$(az aks show -n ${AKSNAME} -g ${RGNAME} --query location -o tsv)
+PUBLICIP=$(az network public-ip create --resource-group $RGNAME --name $PIPNAME --location $AKSLOCATION --sku Standard --allocation-method static --query publicIp.ipAddress -o tsv)
+echo "BikeSharing ingress Public IP: " $PUBLICIP
+ 
+echo "Create namespace ${INGRESSNAME}"
+kubectl create namespace $INGRESSNAME
+
+# Use Helm to deploy a traefik ingress controller
+echo "helm repo add && helm repo update"
+${HELMDIR}/helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+${HELMDIR}/helm repo update
+echo "helm install traefik ingress controller"
 ${HELMDIR}/helm install $INGRESSNAME stable/traefik \
    --namespace $INGRESSNAME \
    --set kubernetes.ingressClass=traefik \

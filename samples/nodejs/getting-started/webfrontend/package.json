@@ -1,15 +1,16 @@
 {
-  "name": "webfrontend",
-  "version": "0.1.0",
-  "devDependencies": {
-    "nodemon": "^1.18.10"
-  },
-  "dependencies": {
-    "express": "^4.16.2",
-    "request": "2.83.0"
-  },
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  }
+    "name": "webfrontend",
+    "version": "0.1.0",
+    "devDependencies": {
+        "nodemon": "^1.18.10"
+    },
+    "dependencies": {
+        "express": "^4.16.2",
+        "request": "2.83.0"
+    },
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "debug": "node --nolazy --inspect-brk=9229 server.js"
+    }
 }

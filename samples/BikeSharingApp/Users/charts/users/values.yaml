@@ -5,7 +5,7 @@ fullnameOverride: users
 replicaCount: 1
 image:
   repository: azdspublic/bikesharing-users
-  tag: build.20200204.1
+  tag: build.20200619.3
   pullPolicy: IfNotPresent
 imagePullSecrets: []
   # Optionally specify an array of imagePullSecrets.
@@ -37,7 +37,7 @@ secrets:
     username: SA
     password: "!DummyPassword123!"
     server: databases-sql
-    database: tempdb
+    database: master
     table: myTable
   # Optionally specify a set of secret objects whose values
   # will be injected as environment variables by default.
