@@ -67,5 +67,9 @@ function getApiUrl(host) {
     var apiName = process.env.API_NAME || "gateway";
 
     // return full URL of API service (spacePrefix + rootSpace + apiName + host)
-    return prefix + hostArr[root] + "." + apiName + "." + baseHost;
+    if (prefix !== "")
+    {
+        return prefix + hostArr[root] + "." + apiName + "." + baseHost;
+    }
+    return host.replace("bikesharingweb", apiName);
 }
