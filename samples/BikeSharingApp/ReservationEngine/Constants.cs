@@ -17,6 +17,8 @@ namespace app
 
         public const string RequestIdHeaderName = "x-contoso-request-id";
 
-        public const string RouteAsHeaderName = "azds-route-as";
+        public const string AzdsRouteAsHeaderName = "azds-route-as";
+
+        public const string KubernetesRouteAsHeaderName = "kubernetes-route-as";
     }
 }

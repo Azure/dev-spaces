@@ -52,9 +52,14 @@ namespace app
         {
             Stopwatch stopWatch = Stopwatch.StartNew();
             request.Headers.Add(Constants.RequestIdHeaderName, requestId.ToString());
-            if (originRequest.Headers.ContainsKey(Constants.RouteAsHeaderName))
+            if (originRequest.Headers.ContainsKey(Constants.AzdsRouteAsHeaderName))
             {
-                request.Headers.Add(Constants.RouteAsHeaderName, originRequest.Headers[Constants.RouteAsHeaderName].ToArray());
+                request.Headers.Add(Constants.AzdsRouteAsHeaderName, originRequest.Headers[Constants.AzdsRouteAsHeaderName].ToArray());
+            }
+
+            if (originRequest.Headers.ContainsKey(Constants.KubernetesRouteAsHeaderName))
+            {
+                request.Headers.Add(Constants.KubernetesRouteAsHeaderName, originRequest.Headers[Constants.KubernetesRouteAsHeaderName].ToArray());
             }
             var response = await _httpClient.SendAsync(request);
             LogUtility.LogWithContext(requestId, "Dependency: {0} {1} - {2} - {3}ms", request.Method.Method, request.RequestUri.ToString(), response.StatusCode.ToString(), stopWatch.ElapsedMilliseconds.ToString());
