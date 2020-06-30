@@ -67,5 +67,10 @@ function getApiUrl(host) {
     var apiName = process.env.API_NAME || "gateway";
 
     // return full URL of API service (spacePrefix + rootSpace + apiName + host)
-    return prefix + hostArr[root] + "." + apiName + "." + baseHost;
+    if (prefix !== "" && prefix !== null)
+    {
+        return prefix + hostArr[root] + "." + apiName + "." + baseHost;
+    }
+    // The below will construct the URL for Connect with routing scenarios where there is no .s. convention
+    return host.replace("bikesharingweb", apiName);
 }
