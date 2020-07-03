@@ -159,7 +159,7 @@ app.post('/api/bikes', function (req, res) {
             dbError(res, err, requestID);
             return;
         }
-        
+
         newBike.id = newBike._id;
         delete newBike._id;
         console.log(requestID + ' - inserted new bikeId: ' + newBike.id);
@@ -231,8 +231,6 @@ app.get('/api/bikes/:bikeId', function(req, res) {
         }
 
         var theBike = result;
-        // Hard code image url *FIX ME*
-        theBike.imageUrl = "/static/logo.svg";
         theBike.id = theBike._id;
         delete theBike._id;
 
@@ -252,7 +250,7 @@ app.delete('/api/bikes/:bikeId', function(req, res) {
         res.status(400).send(req.params.bikeId + ' is not a valid bikeId!');
         return;
     }
-    
+
     mongoDB.collection(mongoDBCollection).deleteOne({ _id: new ObjectId(req.params.bikeId) }, function(err, result) {
         if (err) {
             dbError(res, err, requestID);
@@ -268,7 +266,7 @@ app.delete('/api/bikes/:bikeId', function(req, res) {
             res.status(500).send(msg);
             return;
         }
-        
+
         res.sendStatus(200);
     });
 });
@@ -323,7 +321,7 @@ function processReservation(res, bikeId, changeTo, requestID) {
                     res.status(400).send('Invalid reservation request was made for BikeId ' + bikeId);
                 }
             });
-            
+
             return;
         }
         if (result.matchedCount !== 1 && result.modifiedCount !== 1) {
@@ -380,7 +378,7 @@ function tryMongoConnect(callback, results) {
             console.error("Mongo connection error!");
             console.error(err);
         }
-        
+
         if (db) {
             callback(err, db.db(mongoDBDatabase));
         } else {
