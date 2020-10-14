@@ -1,9 +1,16 @@
-# Azure Dev Spaces
-Azure Dev Spaces is an extension to AKS that allows you to easily run and debug YOUR code in the context of a larger application. You can test your code end-to-end, hit breakpoints on code running in the cluster, and share a development cluster between team members without interference. [Click here for more information.](https://aka.ms/signup-azds)
+# Azure Dev Spaces is retiring on 31 October 2023. 
 
-# Purpose of this repository
-This source repository primarily hosts *AZDS code samples* to support product guides, as well as provide high-level insight into our product roadmap. Product documentation is hosted here: http://aka.ms/get-azds.
+Azure Dev Spaces will be retired on October 31, 2023. Developers should move to using [Bridge to Kubernetes](https://aka.ms/bridge-to-k8s-ga), a client developer tool.
 
+The purpose of Azure Dev Spaces was about easing developers into developing on Kubernetes. A significant tradeoff in the approach of Azure Dev Spaces was putting extra burden on developers to understand Docker and Kubernetes configurations as well as Kubernetes deployment concepts. Over time, it also became clear that the approach of Azure Dev Spaces did not effectively decrease the speed of inner loop development on Kubernetes. Bridge to Kubernetes effectively decreases the speed of inner loop development and avoids unnecessary burden on developers.
+
+The core mission remains unchanged: Build the best developer experiences to develop, test, and debug microservice code in the context of the larger application.
+
+### How does this affect me?
+After 31 October 2023, Azure Dev Spaces will no longer be supported, and all projects using Azure Dev Spaces will no longer function.
+
+### What action should I take?
+Transition to [Bridge to Kubernetes](https://aka.ms/bridge-to-k8s-ga). More information on migration options is available [here](https://aka.ms/migrate-to-bridge).
 
 # Contributing
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
