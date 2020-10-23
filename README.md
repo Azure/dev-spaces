@@ -11,7 +11,7 @@ After October 31st, 2023, Azure Dev Spaces will no longer be supported, and all 
 
 ### What action should I take?
 Transition to [Bridge to Kubernetes](https://aka.ms/bridge-to-k8s-ga). More information on migration options is available [here](https://aka.ms/migrate-to-bridge).
-If you have migration questions, or need tecnical assistance, please email [BridgeToKubernetes@microsoft.com](BridgeToKubernetes@microsoft.com).
+If you have migration questions, or need technical assistance, please email [BridgeToKubernetes@microsoft.com](BridgeToKubernetes@microsoft.com).
 
 # Contributing
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
