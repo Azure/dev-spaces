@@ -1,13 +1,13 @@
-# Azure Dev Spaces is being retired on October 31st, 2023. 
+# Azure Dev Spaces is retired as of May 15, 2021.
 
-Azure Dev Spaces will be retired on October 31st, 2023. Developers should move to using [Bridge to Kubernetes](https://aka.ms/bridge-to-k8s-ga), a client developer tool.
+Azure Dev Spaces is retired as of May 15, 2021. Developers should use [Bridge to Kubernetes](https://aka.ms/bridge-to-k8s-ga), a client developer tool.
 
 The purpose of Azure Dev Spaces was about easing developers into developing on Kubernetes. A significant tradeoff in the approach of Azure Dev Spaces was putting extra burden on developers to understand Docker and Kubernetes configurations as well as Kubernetes deployment concepts. Over time, it also became clear that the approach of Azure Dev Spaces did not effectively decrease the speed of inner loop development on Kubernetes. Bridge to Kubernetes effectively decreases the speed of inner loop development and avoids unnecessary burden on developers.
 
 The core mission remains unchanged: Build the best developer experiences to develop, test, and debug microservice code in the context of the larger application.
 
 ### How does this affect me?
-After October 31st, 2023, Azure Dev Spaces will no longer be supported, and all projects using Azure Dev Spaces will no longer function.
+Azure Dev Spaces is no longer supported, and all projects using Azure Dev Spaces will no longer function.
 
 ### What action should I take?
 Transition to [Bridge to Kubernetes](https://aka.ms/bridge-to-k8s-ga). More information on migration options is available [here](https://aka.ms/migrate-to-bridge).
