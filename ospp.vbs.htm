@@ -1,0 +1,23 @@
+Prior to running ospp.vbs ensure that:
+
+Windows firewall allows WMI traffic on remote computer.
+
+You have or pass credentials with required permissions on remote computer.
+
+Cmd.exe is elevated (right click > Run as administrator).
+
+Sample Usage
+
+cscript ospp.vbs /act  'Activate Office on local computer.
+
+cscript ospp.vbs /act mypc1  'Activate Office on remote computer mypc1 with current credentials.
+
+cscript ospp.vbs /inpkey:MFKXT-F6DT2-THMRV-KDWH2-TCDTC  'Install an Office product key on local computer.
+
+cscript ospp.vbs /inslic:\\myserver\licenses\tail.xrm-ms 'Install license on local computer.
+
+cscript ospp.vbs /inslic:"\\myserver\work licenses\office2016 tail.xrm-ms" mypc1 'Install license on remote computer mypc1. Note the path is enclosed in "" since the value contains spaces.
+
+cscript ospp.vbs /ddescr:0xC004F009 'Display the description for error code.
+
+cscript ospp.vbs /actype:1 'Set volume activation type to Active Directory only.
