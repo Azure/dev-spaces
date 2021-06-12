@@ -1,4 +1,4 @@
-FROM golang:1.10
+FROM golang:1.15.12
 EXPOSE 80
 
 WORKDIR /go/src
